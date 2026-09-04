@@ -15,10 +15,12 @@ public class ChessPiece {
     //DATA
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType type;
+    private boolean hasMoved;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
+        this.hasMoved = false;
     }
 
     /**
@@ -55,7 +57,20 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented"); //TODO
+        Collection<ChessMove> collection = new HashSet<>();
+        switch (board.getPiece(myPosition).getPieceType()) {
+            case KING -> collection.addAll(kingMoves(board, myPosition));
+            case QUEEN -> {
+                collection.addAll(diagonalMoves(board, myPosition));
+                collection.addAll(horizontalMoves(board, myPosition));
+            }
+            case BISHOP -> collection.addAll(diagonalMoves(board, myPosition));
+            case KNIGHT -> collection.addAll(knightMoves(board, myPosition));
+            case ROOK -> collection.addAll(horizontalMoves(board, myPosition));
+            case PAWN -> collection.addAll(pawnMoves(board, myPosition));
+            default -> throw new IllegalArgumentException("Invalid piece type");
+        }
+        return collection;
     }
 
     /**
@@ -135,7 +150,9 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented"); //TODO
+        Collection<ChessMove> collection = new HashSet<>();
+        //TODO
+        return collection;
     }
 
     /**
@@ -146,7 +163,9 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented"); //TODO
+        Collection<ChessMove> collection = new HashSet<>();
+        //TODO
+        return collection;
     }
 
 

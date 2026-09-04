@@ -43,6 +43,14 @@ public class ChessPosition {
     }
 
 
+    public ChessPosition add(int deltaRow, int deltaCol) {
+        return new ChessPosition(
+            getRow() + deltaRow,
+            getColumn() + deltaCol
+        );
+    }
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChessPosition other) {

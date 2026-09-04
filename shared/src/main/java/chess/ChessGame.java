@@ -43,19 +43,29 @@ public class ChessGame {
      * Swaps which teams turn it is
      */
     public void swapTeamTurn() {
-        if (currentTeam == TeamColor.WHITE) {
-            currentTeam = TeamColor.BLACK;
-        } else {
-            currentTeam = TeamColor.WHITE;
-        }
+        currentTeam = currentTeam.getOpposite();
     }
 
     /**
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
-        WHITE,
-        BLACK
+        WHITE(1),
+        BLACK(-1);
+
+        private final int direction;
+
+        TeamColor(int direction) {
+            this.direction = direction;
+        }
+
+        public int getDirection() {
+            return this.direction;
+        }
+
+        public TeamColor getOpposite() {
+            return (this == WHITE) ? BLACK : WHITE;
+        }
     }
 
     /**

@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Objects;
+
 public class ChessVector {
     
     //DATA
@@ -23,5 +25,21 @@ public class ChessVector {
             getDeltaRow() * scalar,
             getDeltaCol() * scalar
         );
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ChessVector other) {
+            return (
+                this.getDeltaRow() == other.getDeltaRow() &&
+                this.getDeltaCol() == other.getDeltaCol()
+            );
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDeltaRow(), getDeltaCol());
     }
 }

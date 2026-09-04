@@ -49,6 +49,17 @@ public class ChessBoard {
     public boolean isFilled(ChessPosition position) {
         return (getPiece(position) != null);
     }
+
+    /**
+     * Is the given position filled with a piece of given color
+     * 
+     * @param position The position to check
+     * @return boolean on if the position is filled with a piece
+     */
+    public boolean isFilled(ChessPosition position, ChessGame.TeamColor color) {
+        return (getPiece(position) != null && getPiece(position).getTeamColor() == color);
+    }
+
     /**
      * Gets the location of the team's king
      * 
