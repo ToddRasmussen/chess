@@ -53,7 +53,7 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         piece = board.getPiece(startPosition);
-        if (piece == null) return null
+        if (piece == null) return null;
         piece.pieceMoves(board, startPosition);
     }
 
@@ -65,9 +65,8 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         color = board.getPiece(move.getStartPosition()).getTeamColor();
-        if (color != currentTeam) raise InvalidMoveException("Incorrect Team")
-        
-        validMoves = this.validMoves(move.getStartPosition())
+        if (color != currentTeam) throw InvalidMoveException("Incorrect Team");
+        validMoves = this.validMoves(move.getStartPosition());
         //TODO: Throw exception if move not in validMoves
         //TODO: Move Piece on board
         //TODO: append to history

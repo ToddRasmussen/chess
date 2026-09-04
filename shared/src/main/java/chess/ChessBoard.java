@@ -12,7 +12,7 @@ public class ChessBoard {
     private Map<ChessPosition, ChessPiece> board;
 
     public ChessBoard() {
-        resetBoard()
+        resetBoard();
     }
 
     /**
@@ -22,7 +22,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        board.add(position, piece)
+        board.add(position, piece);
     }
 
     /**
@@ -33,7 +33,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return board.get(position)
+        return board.get(position);
     }
 
     /**
