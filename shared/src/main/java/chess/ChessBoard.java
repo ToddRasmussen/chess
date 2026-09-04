@@ -37,6 +37,25 @@ public class ChessBoard {
     }
 
     /**
+     * Is the given position filled with a piece
+     * 
+     * @param position The position to check
+     * @return bool on if the position is filled with a piece
+     */
+    public Bool isFilled(ChessPosition position) {
+        return getPiece != null;
+    }
+    /**
+     * Gets the location of the team's king
+     * 
+     * @param teamColor The team of the king
+     * @return position of the king
+     */
+    public ChessPosition getKing(ChessGame.TeamColor teamColor) {
+        //TODO: implement
+    }
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */

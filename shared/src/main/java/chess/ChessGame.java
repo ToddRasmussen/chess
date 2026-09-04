@@ -37,6 +37,17 @@ public class ChessGame {
     }
 
     /**
+     * Swaps which teams turn it is
+     */
+    public void swapTeamTurn() {
+        if (currentTeam == TeamColor.WHITE) {
+            currentTeam = TeamColor.BLACK;
+        } else {
+            currentTeam = TeamColor.WHITE;
+        }
+    }
+
+    /**
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
@@ -70,7 +81,7 @@ public class ChessGame {
         //TODO: Throw exception if move not in validMoves
         //TODO: Move Piece on board
         //TODO: append to history
-        //TODO: swap currentTeam
+        swapTeamTurn();
     }
 
     /**
