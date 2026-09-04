@@ -43,4 +43,8 @@ public class ChessMove {
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
     }
+
+    public boolean equals(ChessMove other) {
+
+    }
 }

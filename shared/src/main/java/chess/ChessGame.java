@@ -1,6 +1,8 @@
 package chess;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -13,11 +15,13 @@ public class ChessGame {
     //DATA
     private ChessBoard board;
     private TeamColor currentTeam;
+    private Queue<ChessMove> moveHistory;
     //TODO: Move History
 
     public ChessGame() {
         board = new ChessBoard();
         currentTeam = TeamColor.WHITE;
+        moveHistory = new LinkedList<>();
     }
 
     /**
@@ -78,9 +82,9 @@ public class ChessGame {
         color = board.getPiece(move.getStartPosition()).getTeamColor();
         if (color != currentTeam) throw InvalidMoveException("Incorrect Team");
         validMoves = this.validMoves(move.getStartPosition());
-        //TODO: Throw exception if move not in validMoves
+        if (!validMoves.contains(move)) throw InvalidMoveException("Invalid Move");
         //TODO: Move Piece on board
-        //TODO: append to history
+        moveHistory.add(move)
         swapTeamTurn();
     }
 
