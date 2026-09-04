@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -146,5 +147,22 @@ public class ChessPiece {
      */
     private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented"); //TODO
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ChessPiece other) {
+            return (
+                this.getPieceType() == other.getPieceType() &&
+                this.getTeamColor() == other.getTeamColor()
+            );
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPieceType(), getTeamColor());
     }
 }
