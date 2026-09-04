@@ -13,7 +13,7 @@ public class ChessGame {
     //DATA
     private ChessBoard board;
     private TeamColor currentTeam;
-    //Move History
+    //TODO: Move History
 
     public ChessGame() {
         board = new ChessBoard;
