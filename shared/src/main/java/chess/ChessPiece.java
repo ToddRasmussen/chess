@@ -55,4 +55,28 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented"); //TODO
     }
+
+    /**
+     * Calculates all the positions a chess piece can move to in a diagonal direction
+     * Does not take into account moves that are illegal due to leaving the king in
+     * danger or being incorrect type of piece
+     *
+     * @return Collection of valid moves
+     */
+    private Collection<ChessMove> diagonalMoves(ChessBoard board, ChessPosition myPosition) {
+
+    }
+
+    /**
+     * Calculates all the positions a chess piece can move to in a horizontal direction
+     * Does not take into account moves that are illegal due to leaving the king in
+     * danger or being incorrect type of piece
+     *
+     * @return Collection of valid moves
+     */
+    private Collection<ChessMove> horizontalMoves(ChessBoard board, ChessPosition myPosition) {
+
+    }
+
+    private Collection<ChessMove> vectorMoves(ChessBoard board, ChessPosition)
 }

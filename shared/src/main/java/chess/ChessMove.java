@@ -22,6 +22,12 @@ public class ChessMove {
         this.promotionPiece = promotionPiece;
     }
 
+    public ChessMove(ChessPosition startPosition, ChessVector vector, ChessPiece.PieceType promotionPiece) {
+        this.startPosition = startPosition;
+        this.endPosition = startPosition.add(vector);
+        this.promotionPiece = promotionPiece;
+    }
+
     /**
      * @return ChessPosition of starting location
      */
@@ -34,6 +40,13 @@ public class ChessMove {
      */
     public ChessPosition getEndPosition() {
         return endPosition;
+    }
+
+    public ChessVector getVector() {
+        return new ChessVector(
+            getEndPosition().getRow() - getStartPosition().getRow(),
+            getEndPosition().getCol() - getStartPosition().getCol()
+        );
     }
 
     /**

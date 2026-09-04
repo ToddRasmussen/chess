@@ -32,4 +32,11 @@ public class ChessPosition {
     public int getColumn() {
         return col;
     }
+
+    public ChessPosition add(ChessVector vector) {
+        return new ChessPosition(
+            getRow() + vector.getDeltaRow(),
+            getCol() + vector.getDeltaCol()
+        )
+    }
 }
