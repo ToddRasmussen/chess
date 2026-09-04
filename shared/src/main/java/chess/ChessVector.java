@@ -22,6 +22,6 @@ public class ChessVector {
         return new ChessVector(
             getDeltaRow() * scalar,
             getDeltaCol() * scalar
-        )
+        );
     }
 }

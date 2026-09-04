@@ -64,7 +64,15 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> diagonalMoves(ChessBoard board, ChessPosition myPosition) {
-        //TODO: Implement
+        collection = new Collection<ChessMove>();
+
+        for (int deltaRow : new int[]{-1, 1}) {
+            for (int deltaCol : new int[]{-1, 1}) {
+                collection += vectorMoves(board, myPosition, new ChessVector(deltaRow, deltaCol));
+            }
+        }
+
+        return collection;
     }
 
     /**
@@ -75,7 +83,15 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> horizontalMoves(ChessBoard board, ChessPosition myPosition) {
-        //TODO: Implement
+        collection = new Collection<ChessMove>();
+
+        for (int deltaRow : new int[]{-1, 1}) {
+            collection += vectorMoves(board, myPosition, new ChessVector(deltaRow, 0));
+        }
+        for (int deltaCol : new int[]{-1, 1}) {
+            collection += vectorMoves(board, myPosition, new ChessVector(0, deltaCol));
+
+        return collection;
     }
 
     /**
@@ -97,7 +113,16 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition) {
-        //TODO: Implement
+        collection = new Collection<ChessMove>();
+        ChessVector[] vectors = {
+            new ChessVector(-2, -1), new ChessVector(-2, 1), new ChessVector(-1, -2), new ChessVector(-1, 2),
+            new ChessVector(1, -2), new ChessVector(1, 2), new ChessVector(2, -1), new ChessVector(2, 1)
+        };
+
+        for (ChessVector vector : vectors) {
+            //TODO
+        }
+        return collection;
     }
 
     /**

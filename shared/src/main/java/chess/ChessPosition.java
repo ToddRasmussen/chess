@@ -37,6 +37,6 @@ public class ChessPosition {
         return new ChessPosition(
             getRow() + vector.getDeltaRow(),
             getCol() + vector.getDeltaCol()
-        )
+        );
     }
 }
