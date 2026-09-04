@@ -45,7 +45,7 @@ public class ChessMove {
     public ChessVector getVector() {
         return new ChessVector(
             getEndPosition().getRow() - getStartPosition().getRow(),
-            getEndPosition().getCol() - getStartPosition().getCol()
+            getEndPosition().getColumn() - getStartPosition().getColumn()
         );
     }
 
@@ -62,15 +62,16 @@ public class ChessMove {
     //TODO: Verify this is how you do it
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
-        return (
-            this.getStartPosition() == obj.getStartPosition() &&
-            this.getEndPosition() == obj.getEndPosition() &&
-            // We might want to remove this later as strictly speaking the promotionPiece
-            // is irrelevant to if the move in equal to another
-            this.getPromotionPiece() == obj.getPromotionPiece()
-        );
+        if (obj instanceof ChessMove other) {
+            return (
+                this.getStartPosition() == other.getStartPosition() &&
+                this.getEndPosition() == other.getEndPosition() &&
+                // We might want to remove this later as strictly speaking the promotionPiece
+                // is irrelevant to if the move in equal to another
+                this.getPromotionPiece() == other.getPromotionPiece()
+            );
+        }
+        return false;
     }
 
     @Override

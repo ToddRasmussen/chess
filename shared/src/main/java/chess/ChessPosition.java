@@ -9,8 +9,8 @@ package chess;
 public class ChessPosition {
     
     //DATA
-    private int row;
-    private int col;
+    private final int row;
+    private final int col;
 
     public ChessPosition(int row, int col) {
         this.row = row;
@@ -36,7 +36,7 @@ public class ChessPosition {
     public ChessPosition add(ChessVector vector) {
         return new ChessPosition(
             getRow() + vector.getDeltaRow(),
-            getCol() + vector.getDeltaCol()
+            getColumn() + vector.getDeltaCol()
         );
     }
 }

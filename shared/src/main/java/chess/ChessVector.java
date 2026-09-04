@@ -3,8 +3,8 @@ package chess;
 public class ChessVector {
     
     //DATA
-    private int deltaRow;
-    private int deltaCol;
+    private final int deltaRow;
+    private final int deltaCol;
 
     public ChessVector(int deltaRow, int deltaCol) {
         this.deltaRow = deltaRow;

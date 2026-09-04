@@ -15,13 +15,12 @@ public class ChessGame {
     //DATA
     private ChessBoard board;
     private TeamColor currentTeam;
-    private Queue<ChessMove> moveHistory;
+    private final Queue<ChessMove> moveHistory = new LinkedList<>();
     //TODO: Move History
 
     public ChessGame() {
         board = new ChessBoard();
         currentTeam = TeamColor.WHITE;
-        moveHistory = new LinkedList<>();
     }
 
     /**
@@ -67,9 +66,10 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        piece = board.getPiece(startPosition);
+        ChessPiece piece = board.getPiece(startPosition);
         if (piece == null) return null;
-        piece.pieceMoves(board, startPosition);
+        return piece.pieceMoves(board, startPosition);
+        //TODO: Validate Moves (cant put in check)
     }
 
     /**
@@ -79,12 +79,12 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        color = board.getPiece(move.getStartPosition()).getTeamColor();
-        if (color != currentTeam) throw InvalidMoveException("Incorrect Team");
-        validMoves = this.validMoves(move.getStartPosition());
-        if (!validMoves.contains(move)) throw InvalidMoveException("Invalid Move");
+        TeamColor color = board.getPiece(move.getStartPosition()).getTeamColor();
+        if (color != currentTeam) throw new InvalidMoveException("Incorrect Team");
+        Collection<ChessMove> validMoves = this.validMoves(move.getStartPosition());
+        if (!validMoves.contains(move)) throw new InvalidMoveException("Invalid Move");
         //TODO: Move Piece on board
-        moveHistory.add(move)
+        moveHistory.add(move);
         swapTeamTurn();
     }
 

@@ -1,5 +1,5 @@
 package chess;
-
+import java.util.Map;
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -22,7 +22,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        board.add(position, piece);
+        board.put(position, piece);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ChessBoard {
      * @return boolean on if the position is filled with a piece
      */
     public boolean isFilled(ChessPosition position) {
-        return getPiece != null;
+        return (getPiece(position) != null);
     }
     /**
      * Gets the location of the team's king
@@ -52,7 +52,13 @@ public class ChessBoard {
      * @return position of the king
      */
     public ChessPosition getKing(ChessGame.TeamColor teamColor) {
-        //TODO: implement
+        for (ChessPosition position : board.keySet()) {
+            ChessPiece piece = board.get(position);
+            if (piece != null && piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
+                return position;
+            }
+        }
+        throw new RuntimeException("King not found");
     }
 
     /**
