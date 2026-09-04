@@ -1,6 +1,9 @@
 package chess;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -13,7 +16,7 @@ public class ChessBoard {
     private Map<ChessPosition, ChessPiece> board;
 
     public ChessBoard() {
-        resetBoard();
+        board = new HashMap<>();
     }
 
     /**
@@ -67,10 +70,75 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        // r n b q k b n r
+        // p p p p p p p p
+        // . . . . . . . .
+        // . . . . . . . .
+        // . . . . . . . .
+        // . . . . . . . .
+        // P P P P P P P P
+        // R N B Q K B N R
+
         board = new HashMap<>();
-        //TODO Black Base
-        //TODO Black Pawns
-        //TODO White Pawns
-        //TODO White Base
+        Queue<ChessPiece.PieceType> base = new LinkedList<>();
+        
+        base.add(ChessPiece.PieceType.ROOK);
+        base.add(ChessPiece.PieceType.KNIGHT);
+        base.add(ChessPiece.PieceType.BISHOP);
+        base.add(ChessPiece.PieceType.QUEEN);
+        base.add(ChessPiece.PieceType.KING);
+        base.add(ChessPiece.PieceType.BISHOP);
+        base.add(ChessPiece.PieceType.KNIGHT);
+        base.add(ChessPiece.PieceType.ROOK);
+
+        // Black Base
+        // r n b q k b n r
+        ChessGame.TeamColor color = ChessGame.TeamColor.BLACK;
+        int row = 8;
+        int col = 1;
+        for (ChessPiece.PieceType type : base) {
+            board.put(new ChessPosition(row, col), new ChessPiece(color, type));
+            col++;
+        }
+
+        // Black Pawns
+        // p p p p p p p p
+        row = 7;
+        for (col = 1; col <= 8; col++) {
+            board.put(new ChessPosition(row, col), new ChessPiece(color, ChessPiece.PieceType.PAWN));
+        }
+
+        // Pawns
+        // P P P P P P P P
+        color = ChessGame.TeamColor.WHITE;
+        row = 2;
+        for (col = 1; col <= 8; col++) {
+            board.put(new ChessPosition(row, col), new ChessPiece(color, ChessPiece.PieceType.PAWN));
+        }
+
+        // Base
+        // R N B Q K B N R
+        row = 1;
+        col = 1;
+        for (ChessPiece.PieceType type : base) {
+            board.put(new ChessPosition(row, col), new ChessPiece(color, type));
+            col++;
+        }
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ChessBoard other) {
+            return (
+                Objects.equals(this.board, other.board)
+            );
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board);
     }
 }
