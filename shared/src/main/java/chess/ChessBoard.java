@@ -1,4 +1,5 @@
 package chess;
+import java.util.HashMap;
 import java.util.Map;
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -66,6 +67,10 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented"); //TODO
+        board = new HashMap<>();
+        //TODO Black Base
+        //TODO Black Pawns
+        //TODO White Pawns
+        //TODO White Base
     }
 }

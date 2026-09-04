@@ -59,15 +59,12 @@ public class ChessMove {
         return promotionPiece;
     }
 
-    //TODO: Verify this is how you do it
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChessMove other) {
             return (
-                this.getStartPosition() == other.getStartPosition() &&
-                this.getEndPosition() == other.getEndPosition() &&
-                // We might want to remove this later as strictly speaking the promotionPiece
-                // is irrelevant to if the move in equal to another
+                Objects.equals(this.getStartPosition(), other.getStartPosition()) &&
+                Objects.equals(this.getEndPosition(), other.getEndPosition()) &&
                 this.getPromotionPiece() == other.getPromotionPiece()
             );
         }
