@@ -9,16 +9,22 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
-    //TODO: Data
+
+    //DATA
+    private ChessBoard board;
+    private TeamColor currentTeam;
+    //Move History
+
     public ChessGame() {
-        //TODO: Initialize
+        board = new ChessBoard;
+        currentTeam = TeamColor.WHITE;
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented"); //TODO
+        return currentTeam;
     }
 
     /**
@@ -27,7 +33,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented"); //TODO
+        currentTeam = team;
     }
 
     /**
@@ -46,7 +52,9 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented"); //TODO
+        piece = board.getPiece(startPosition);
+        if (piece == null) return null
+        piece.pieceMoves(board, startPosition);
     }
 
     /**
@@ -56,7 +64,14 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented"); //TODO
+        color = board.getPiece(move.getStartPosition()).getTeamColor();
+        if (color != currentTeam) raise InvalidMoveException("Incorrect Team")
+        
+        validMoves = this.validMoves(move.getStartPosition())
+        //TODO: Throw exception if move not in validMoves
+        //TODO: Move Piece on board
+        //TODO: append to history
+        //TODO: swap currentTeam
     }
 
     /**
@@ -96,7 +111,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented"); //TODO
+        this.board = board;
     }
 
     /**
@@ -105,6 +120,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented"); //TODO
+        return board;
     }
 }
