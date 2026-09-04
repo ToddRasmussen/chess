@@ -16,7 +16,7 @@ public class ChessGame {
     //TODO: Move History
 
     public ChessGame() {
-        board = new ChessBoard;
+        board = new ChessBoard();
         currentTeam = TeamColor.WHITE;
     }
 
