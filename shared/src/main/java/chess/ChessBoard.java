@@ -7,9 +7,12 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    //TODO: Data
+    
+    //DATA
+    private Map<ChessPosition, ChessPiece> board;
+
     public ChessBoard() {
-        //TODO: Initalize
+        resetBoard()
     }
 
     /**
@@ -19,7 +22,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented"); //TODO
+        board.add(position, piece)
     }
 
     /**
@@ -30,7 +33,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented"); //TODO
+        return board.get(position)
     }
 
     /**
