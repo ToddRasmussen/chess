@@ -40,9 +40,9 @@ public class ChessBoard {
      * Is the given position filled with a piece
      * 
      * @param position The position to check
-     * @return bool on if the position is filled with a piece
+     * @return boolean on if the position is filled with a piece
      */
-    public Bool isFilled(ChessPosition position) {
+    public boolean isFilled(ChessPosition position) {
         return getPiece != null;
     }
     /**
