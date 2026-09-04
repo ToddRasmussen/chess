@@ -7,8 +7,9 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessPosition {
-
+    //TODO: Data
     public ChessPosition(int row, int col) {
+        //TODO: Initalize
     }
 
     /**
@@ -16,7 +17,7 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        throw new RuntimeException("Not implemented");
+        throw new RuntimeException("Not implemented"); //TODO
     }
 
     /**
@@ -24,6 +25,6 @@ public class ChessPosition {
      * 1 codes for the left column
      */
     public int getColumn() {
-        throw new RuntimeException("Not implemented");
+        throw new RuntimeException("Not implemented"); //TODO
     }
 }
