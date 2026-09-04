@@ -119,7 +119,27 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> vectorMoves(ChessBoard board, ChessPosition myPosition, ChessVector vector) {
-        throw new RuntimeException("Not implemented"); //TODO
+        Collection<ChessMove> collection = new HashSet<>();
+        ChessGame.TeamColor color = board.getPieceColor(myPosition);
+        int scalar = 1;
+
+        while (true) {
+            ChessPosition newPosition = myPosition.add(vector.multiply(scalar));
+        
+            if (!newPosition.isInBounds()) {
+                break;
+            }
+
+            if (!board.isFilled(newPosition, color)) {
+                collection.add(new ChessMove(myPosition, newPosition, null));
+            }
+
+            if (board.isFilled(newPosition)) break;
+
+            scalar++;
+        }
+
+        return collection;
     }
 
     /**
@@ -131,13 +151,16 @@ public class ChessPiece {
      */
     private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> collection = new HashSet<>();
+        ChessGame.TeamColor color = board.getPieceColor(myPosition);
         ChessVector[] vectors = {
             new ChessVector(-2, -1), new ChessVector(-2, 1), new ChessVector(-1, -2), new ChessVector(-1, 2),
             new ChessVector(1, -2), new ChessVector(1, 2), new ChessVector(2, -1), new ChessVector(2, 1)
         };
 
         for (ChessVector vector : vectors) {
-            //TODO
+            if (myPosition.isInBounds(vector) && !board.isFilled(myPosition.add(vector), color)) {
+                collection.add(new ChessMove(myPosition, vector, null));
+            }
         }
         return collection;
     }
@@ -164,7 +187,15 @@ public class ChessPiece {
      */
     private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> collection = new HashSet<>();
-        //TODO
+        ChessGame.TeamColor color = board.getPieceColor(myPosition);
+        for (int deltaRow : new int[]{-1, 0, 1}) {
+            for (int deltaCol : new int[]{-1, 0, 1}) {
+                if (myPosition.isInBounds(deltaRow, deltaCol) && !board.isFilled(myPosition.add(deltaRow, deltaCol), color)) {
+                    collection.add(new ChessMove(myPosition, deltaRow, deltaCol, null));
+                }
+            }
+        }
+        // TODO: Castling
         return collection;
     }
 

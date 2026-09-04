@@ -28,6 +28,12 @@ public class ChessMove {
         this.promotionPiece = promotionPiece;
     }
 
+    public ChessMove(ChessPosition startPosition, int deltaRow, int deltaCol, ChessPiece.PieceType promotionPiece) {
+        this.startPosition = startPosition;
+        this.endPosition = startPosition.add(deltaRow, deltaCol);
+        this.promotionPiece = promotionPiece;
+    }
+
     /**
      * @return ChessPosition of starting location
      */
@@ -48,6 +54,13 @@ public class ChessMove {
             getEndPosition().getColumn() - getStartPosition().getColumn()
         );
     }
+
+
+    public boolean isInBounds() {
+        return endPosition.isInBounds();
+    }
+
+
 
     /**
      * Gets the type of piece to promote a pawn to if pawn promotion is part of this

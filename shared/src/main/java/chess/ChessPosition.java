@@ -50,6 +50,18 @@ public class ChessPosition {
         );
     }
 
+    public boolean isInBounds() {
+        return row >= 1 && row <= 8 && col >= 1 && col <= 8;
+    }
+
+    public boolean isInBounds(ChessVector vector) {
+        return this.add(vector).isInBounds();
+    }
+
+    public boolean isInBounds(int deltaRow, int deltaCol) {
+        return this.add(deltaRow, deltaCol).isInBounds();
+    }
+
 
     @Override
     public boolean equals(Object obj) {

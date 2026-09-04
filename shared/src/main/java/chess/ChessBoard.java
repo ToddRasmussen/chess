@@ -40,6 +40,10 @@ public class ChessBoard {
         return board.get(position);
     }
 
+    public ChessGame.TeamColor getPieceColor(ChessPosition position) {
+        return board.get(position).getTeamColor();
+    }
+
     /**
      * Is the given position filled with a piece
      * 
