@@ -64,7 +64,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> diagonalMoves(ChessBoard board, ChessPosition myPosition) {
-
+        //TODO: Implement
     }
 
     /**
@@ -75,8 +75,50 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> horizontalMoves(ChessBoard board, ChessPosition myPosition) {
-
+        //TODO: Implement
     }
 
-    private Collection<ChessMove> vectorMoves(ChessBoard board, ChessPosition)
+    /**
+     * Calculates all the positions a chess piece can move using the given vector
+     * Does not take into account moves that are illegal due to leaving the king in
+     * danger or being incorrect type of piece
+     *
+     * @return Collection of valid moves
+     */
+    private Collection<ChessMove> vectorMoves(ChessBoard board, ChessPosition myPosition, ChessVector vector) {
+        //TODO: Implement
+    }
+
+    /**
+     * Calculates all the positions a chess piece can move using the 'l' shape knights move in
+     * Does not take into account moves that are illegal due to leaving the king in
+     * danger or being incorrect type of piece
+     *
+     * @return Collection of valid moves
+     */
+    private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition) {
+        //TODO: Implement
+    }
+
+    /**
+     * Calculates all the positions a chess piece can move if its a pawn
+     * Does not take into account moves that are illegal due to leaving the king in
+     * danger or being incorrect type of piece
+     *
+     * @return Collection of valid moves
+     */
+    private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
+        //TODO: Implement
+    }
+
+    /**
+     * Calculates all the positions a chess piece can move if its a king
+     * Does not take into account moves that are illegal due to making the king in
+     * danger or being incorrect type of piece
+     *
+     * @return Collection of valid moves
+     */
+    private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
+        //TODO: Implement
+    }
 }
