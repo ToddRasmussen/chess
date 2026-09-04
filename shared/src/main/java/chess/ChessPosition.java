@@ -22,7 +22,7 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        return row
+        return row;
     }
 
     /**
@@ -30,6 +30,6 @@ public class ChessPosition {
      * 1 codes for the left column
      */
     public int getColumn() {
-        return col
+        return col;
     }
 }
