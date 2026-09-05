@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -90,15 +91,28 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = board.getPiece(startPosition);
-        if (piece == null) return null;
-        Collection<ChessMove> collection = piece.pieceMoves(board, startPosition);
-        ChessBoard boardCopy = new ChessBoard(this.board);
-        boardCopy.removePiece(startPosition);
-        boardCopy.addPiece(startPosition, piece);
-        if (isInCheck(currentTeam, boardCopy)) {
-            return new LinkedList<>();
+        Collection<ChessMove> legalMoves = new ArrayList<>();
+        if (piece == null) return legalMoves;
+
+        Collection<ChessMove> candidateMoves = piece.pieceMoves(board, startPosition);
+
+        for (ChessMove move : candidateMoves) {
+            ChessBoard boardCopy = new ChessBoard(this.board);
+
+            boardCopy.removePiece(move.getStartPosition());
+
+            if (move.getPromotionPiece() == null) {
+                boardCopy.addPiece(move.getEndPosition(), piece);
+            } else {
+                boardCopy.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+            }
+
+            if (!isInCheck(piece.getTeamColor(), boardCopy)) {
+                legalMoves.add(move);
+            }
         }
-        return collection;
+
+        return legalMoves;
     }
 
     /**
@@ -108,6 +122,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if (board.getPiece(move.getStartPosition()) == null) throw new InvalidMoveException("No piece at starting position");
         TeamColor color = board.getPiece(move.getStartPosition()).getTeamColor();
         if (color != currentTeam) throw new InvalidMoveException("Incorrect Team");
         if (!validMoves(move.getStartPosition()).contains(move)) throw new InvalidMoveException("Invalid Move");
