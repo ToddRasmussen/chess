@@ -110,14 +110,16 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         TeamColor color = board.getPiece(move.getStartPosition()).getTeamColor();
         if (color != currentTeam) throw new InvalidMoveException("Incorrect Team");
-        Collection<ChessMove> validMoves = this.validMoves(move.getStartPosition());
-        if (!validMoves.contains(move)) throw new InvalidMoveException("Invalid Move");
+        if (!validMoves(move.getStartPosition()).contains(move)) throw new InvalidMoveException("Invalid Move");
+
         ChessPiece piece = board.removePiece(move.getStartPosition());
-        if (move.getPromotionPiece() == null)
-            board.addPiece(move.getStartPosition(), piece);
-        else {
-            board.addPiece(move.getStartPosition(), new ChessPiece(color, move.getPromotionPiece()));
+
+        if (move.getPromotionPiece() == null) {
+            board.addPiece(move.getEndPosition(), piece); 
+        } else {
+            board.addPiece(move.getEndPosition(), new ChessPiece(color, move.getPromotionPiece()));
         }
+
         moveHistory.add(move);
         swapTeamTurn();
     }
