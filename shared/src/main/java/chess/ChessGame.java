@@ -180,22 +180,7 @@ public class ChessGame {
     }
 
     public boolean isInCheckmate(TeamColor teamColor, ChessBoard board) {
-        if (!isInCheck(teamColor)) {
-            return false;
-        }
-
-        for (Map.Entry<ChessPosition, ChessPiece> entry : board.entrySet()) {
-            ChessPosition position = entry.getKey();
-            ChessPiece piece = entry.getValue();
-
-            if (piece.getTeamColor() == teamColor) {
-                if (!validMoves(position).isEmpty()) {
-                    return false; // Found a legal move
-                }
-            }
-        }
-
-        return true;
+        return isInCheck(teamColor) && canMove(teamColor);
     }
 
 
@@ -207,10 +192,11 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        if (isInCheck(teamColor)) {
-            return false;
-        }
+        return !isInCheck(teamColor) && canMove(teamColor);
+    }
 
+
+    private boolean canMove(TeamColor teamColor) {
         for (Map.Entry<ChessPosition, ChessPiece> entry : board.entrySet()) {
             ChessPosition position = entry.getKey();
             ChessPiece piece = entry.getValue();
@@ -221,7 +207,6 @@ public class ChessGame {
                 }
             }
         }
-
         return true;
     }
 
