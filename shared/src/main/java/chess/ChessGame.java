@@ -2,9 +2,10 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -17,7 +18,7 @@ public class ChessGame {
     //DATA
     private ChessBoard board;
     private TeamColor currentTeam;
-    private final Queue<ChessMove> moveHistory = new LinkedList<>();
+    private final Deque<ChessMove> moveHistory = new LinkedList<>();
 
     public ChessGame() {
         board = new ChessBoard();
@@ -134,7 +135,7 @@ public class ChessGame {
         } else {
             board.addPiece(move.getEndPosition(), new ChessPiece(color, move.getPromotionPiece()));
         }
-
+        piece.updateMoved();
         moveHistory.add(move);
         swapTeamTurn();
     }
@@ -239,5 +240,22 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    public ChessMove getLastMove() {
+        return moveHistory.peekLast();
+    }
+
+    public ChessMove getLastMove(ChessGame.TeamColor team) {
+        Iterator<ChessMove> iterator = moveHistory.descendingIterator();
+
+        boolean lastMoveWasWhite = (moveHistory.size() % 2 != 0);
+        boolean lastMoveIsRequestedTeam = (team == ChessGame.TeamColor.WHITE) == lastMoveWasWhite;
+
+        if (!lastMoveIsRequestedTeam && iterator.hasNext()) {
+            iterator.next();
+        }
+
+        return iterator.hasNext() ? iterator.next() : null;
     }
 }

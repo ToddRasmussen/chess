@@ -11,16 +11,16 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-    
+
     //DATA
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType type;
-    private boolean hasMoved;
+    private int moveCount;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
-        this.hasMoved = false;
+        this.moveCount = 0;
     }
 
     /**
@@ -37,7 +37,7 @@ public class ChessPiece {
         public boolean canPromote() {
             return this == PAWN;
         }
-        
+
     }
 
     private Collection<PieceType> getPromotionOptions() {
@@ -246,6 +246,17 @@ public class ChessPiece {
         return collection;
     }
 
+    public void updateMoved() {
+        moveCount++;
+    }
+
+    public boolean getHasMoved() {
+        return moveCount > 0;
+    }
+
+    public int getMoveCount() {
+        return moveCount;
+    }
 
     @Override
     public boolean equals(Object obj) {
