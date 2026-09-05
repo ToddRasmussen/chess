@@ -112,6 +112,27 @@ public class ChessGame {
                 legalMoves.add(move);
             }
         }
+        //CASTLING
+        if (
+            piece.getPieceType() == ChessPiece.PieceType.KING &&
+            !isInCheck(piece.getTeamColor()) && //Condition 3.1
+            !piece.getHasMoved() //Condition 1.1
+            ) {
+            for (int deltaCol : new int[]{-1, 1}) {
+                boolean meetsConditions = true;
+                ChessVector vector = new ChessVector(0, deltaCol);
+                Collection<ChessMove> IntermidateMoves = piece.vectorMoves(board, startPosition, vector);
+                for (ChessMove intermediateMove : IntermidateMoves) {
+                    ChessBoard boardCopy = new ChessBoard(this.board);
+                    boardCopy.removePiece(startPosition);
+                    boardCopy.addPiece(startPosition.add(vector), piece);
+                    if (isInCheck(piece.getTeamColor(), boardCopy)) {
+                        meetsConditions = false; //Condition 2
+                        break;
+                    }
+                }
+            }
+        }
 
         return legalMoves;
     }

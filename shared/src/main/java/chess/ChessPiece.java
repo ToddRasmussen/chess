@@ -134,7 +134,7 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    private Collection<ChessMove> vectorMoves(ChessBoard board, ChessPosition myPosition, ChessVector vector) {
+    public Collection<ChessMove> vectorMoves(ChessBoard board, ChessPosition myPosition, ChessVector vector) {
         Collection<ChessMove> collection = new HashSet<>();
         ChessGame.TeamColor color = board.getPieceColor(myPosition);
         int scalar = 1;
