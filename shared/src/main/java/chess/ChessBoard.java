@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.Set;
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -19,6 +20,16 @@ public class ChessBoard {
         board = new HashMap<>();
     }
 
+    public ChessBoard(ChessBoard original) {
+        board = new HashMap<>(original.board);
+    }
+
+
+    public Set<Map.Entry<ChessPosition, ChessPiece>> entrySet() {
+        return this.board.entrySet();
+    }
+
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -27,6 +38,12 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board.put(position, piece);
+    }
+
+    public ChessPiece removePiece(ChessPosition position) {
+        ChessPiece piece = getPiece(position);
+        board.remove(position, piece);
+        return piece;
     }
 
     /**
@@ -70,11 +87,26 @@ public class ChessBoard {
      * @param teamColor The team of the king
      * @return position of the king
      */
-    public ChessPosition getKing(ChessGame.TeamColor teamColor) {
+    public ChessPosition getKingPosition(ChessGame.TeamColor teamColor) {
         for (ChessPosition position : board.keySet()) {
             ChessPiece piece = board.get(position);
             if (piece != null && piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
                 return position;
+            }
+        }
+        throw new RuntimeException("King not found");
+    }
+
+    /**
+     * Gets the team's king
+     * 
+     * @param teamColor The team of the king
+     * @return the king
+     */
+    public ChessPiece getKing(ChessGame.TeamColor teamColor) {
+        for (ChessPiece piece : board.values()) {
+            if (piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
+                return piece;
             }
         }
         throw new RuntimeException("King not found");
@@ -141,7 +173,6 @@ public class ChessBoard {
         }
     }
 
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChessBoard other) {
@@ -155,5 +186,14 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Objects.hash(board);
+    }
+    /**
+     * gets the piece that would be captured by the given move
+     * 
+     * @param move The move that is being tested
+     * @return the piece that would be captured
+     */
+    public ChessPiece getCaptured(ChessMove move) {
+        return getPiece(move.getEndPosition());
     }
 }
