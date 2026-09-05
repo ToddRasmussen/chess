@@ -6,6 +6,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -257,5 +258,20 @@ public class ChessGame {
         }
 
         return iterator.hasNext() ? iterator.next() : null;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ChessGame other) {
+            return Objects.equals(this.board, other.board) &&
+                this.currentTeam == other.currentTeam;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, currentTeam);
     }
 }
