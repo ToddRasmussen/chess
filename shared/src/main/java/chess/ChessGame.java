@@ -50,15 +50,17 @@ public class ChessGame {
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
-        WHITE(1, 1),
-        BLACK(-1, 8);
+        WHITE(1, 1, 2),
+        BLACK(-1, 8, 7);
 
         private final int direction;
         private final int homeRow;
+        private final int pawnRow;
 
-        TeamColor(int direction, int homeRow) {
+        TeamColor(int direction, int homeRow, int pawnRow) {
             this.direction = direction;
             this.homeRow = homeRow;
+            this.pawnRow = pawnRow;
         }
 
         public int getDirection() {
@@ -67,6 +69,10 @@ public class ChessGame {
 
         public int getHomeRow() {
             return this.homeRow;
+        }
+
+        public int getPawnRow() {
+            return this.pawnRow;
         }
 
         public TeamColor getOpposite() {

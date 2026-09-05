@@ -32,7 +32,23 @@ public class ChessPiece {
         BISHOP,
         KNIGHT,
         ROOK,
-        PAWN
+        PAWN;
+
+        public boolean canPromote() {
+            return this == PAWN;
+        }
+        
+    }
+
+    private Collection<PieceType> getPromotionOptions() {
+        Collection<PieceType> collection = new HashSet<>();
+
+        collection.add(PieceType.QUEEN);
+        collection.add(PieceType.BISHOP);
+        collection.add(PieceType.KNIGHT);
+        collection.add(PieceType.ROOK);
+
+        return collection;
     }
 
     /**
@@ -174,7 +190,38 @@ public class ChessPiece {
      */
     private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> collection = new HashSet<>();
-        //TODO
+        ChessGame.TeamColor color = board.getPieceColor(myPosition);
+
+        ChessVector vector = new ChessVector(color.getDirection(),0);
+        if (myPosition.isInBounds(vector) && !board.isFilled(myPosition.add(vector))) {
+            if (myPosition.add(vector).getRow() == color.getOpposite().getHomeRow()) {
+                for (PieceType type : getPromotionOptions()) {
+                    collection.add(new ChessMove(myPosition, vector, type));
+                }
+            } else {
+                collection.add(new ChessMove(myPosition, vector, null));
+            }
+            vector = vector.multiply(2);
+            if (myPosition.getRow() == color.getPawnRow() && myPosition.isInBounds(vector) && !board.isFilled(myPosition.add(vector))) {
+                collection.add(new ChessMove(myPosition, vector, null));
+            }
+        }
+
+        for (int deltaCol : new int[]{-1, 1}) {
+            ChessPosition newPosition = myPosition.add(color.getDirection(),deltaCol);
+            if (board.isFilled(newPosition, color.getOpposite())) {
+                if (newPosition.getRow() == color.getOpposite().getHomeRow()) {
+                    for (PieceType type : getPromotionOptions()) {
+                        collection.add(new ChessMove(myPosition, newPosition, type));
+                    }
+                } else {
+                    collection.add(new ChessMove(myPosition, newPosition, null));
+                }
+            }
+        }
+
+        // TODO: Special Move Rule (En Passant)
+
         return collection;
     }
 
