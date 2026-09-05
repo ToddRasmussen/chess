@@ -8,6 +8,7 @@ out/
 
 ### VS Code ###
 lib/
+.vscode/
 
 ### Mac OS ###
 .DS_Store
