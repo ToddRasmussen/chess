@@ -37,11 +37,11 @@ public class Server {
     }
 
 
-    private void Error(Context ctx, int code, String Message) {
+    private void error(Context ctx, int code, String Message) {
         ctx.status(code).json(Map.of("message", Message));
     }
 
-    private void Respond(Context ctx, int code, Object data) {
+    private void respond(Context ctx, int code, Object data) {
         ctx.status(code).json(data);
     }
 
@@ -61,7 +61,7 @@ public class Server {
 
         //TODO
 
-        Respond(ctx, 200, null);
+        respond(ctx, 200, null);
     }
 
 
@@ -74,12 +74,12 @@ public class Server {
 
         for (String credential : new String[]{username, password, email}) {
             if (credential == null || credential.isEmpty()) {
-                Error(ctx, 400, "Error: bad request");
+                error(ctx, 400, "Error: bad request");
                 return;
             }
         }
         if (password.length() < 8) {
-            Error(ctx,500, "Error: Password must be at least 8 long");
+            error(ctx,402, "Error: Password must be at least 8 long");
             return;
         }
 
@@ -90,7 +90,7 @@ public class Server {
         //TODO: Logic to get AuthToken
         String authToken;
 
-        Respond(ctx, 200, new RegisterResult(username, authToken));
+        respond(ctx, 200, new RegisterResult(username, authToken));
     }
     
     
@@ -102,7 +102,7 @@ public class Server {
 
         for (String credential : new String[]{username, password}) {
             if (credential == null || credential.isEmpty()) {
-                Error(ctx, 400, "Error: bad request");
+                error(ctx, 400, "Error: bad request");
                 return;
             }
         }
@@ -112,7 +112,7 @@ public class Server {
         //TODO: Logic to get AuthToken
         String authToken
 
-        Respond(ctx, 200, new LoginResult(username, authToken));
+        respond(ctx, 200, new LoginResult(username, authToken));
     }
 
 
@@ -127,7 +127,8 @@ public class Server {
     private void logoutUser(Context ctx) {
         String username = checkAuthentication(ctx);
         if (username == null) {
-            Error(ctx, 401, "Error: unauthorized");
+            error(ctx, 401, "Error: unauthorized");
+            return;
         }
 
         //TODO: Logic to deactivate authToken
@@ -137,31 +138,34 @@ public class Server {
     private void listGames(Context ctx) {
         String username = checkAuthentication(ctx);
         if (username == null) {
-            Error(ctx, 401, "Error: unauthorized");
+            error(ctx, 401, "Error: unauthorized");
+            return;
         }
 
         //TODO: Fetch list of games
-        Respond(ctx, 200, new gameListResult(gameList));
+        respond(ctx, 200, new gameListResult(gameList));
     }
 
 
     private void createGame(Context ctx) {
         String username = checkAuthentication(ctx);
         if (username == null) {
-            Error(ctx, 401, "Error: unauthorized");
+            error(ctx, 401, "Error: unauthorized");
+            return;
         }
         NewGameRequest req = ctx.bodyAsClass(NewGameRequest.class);
         String gameName = req.gameName();
 
         //TODO: Logic to create game
 
-        Respond(ctx, 200, new gameResult(gameID, "", "", gameName));
+        respond(ctx, 200, new gameResult(gameID, "", "", gameName));
     }
 
     private void joinGame(Context ctx) {
         String username = checkAuthentication(ctx);
         if (username == null) {
-            Error(ctx, 401, "Error: unauthorized");
+            error(ctx, 401, "Error: unauthorized");
+            return;
         }
         JoinGameRequest req = ctx.bodyAsClass(JoinGameRequest.class);
         String playerColor = req.playerColor();
@@ -172,7 +176,7 @@ public class Server {
 
         //TODO: Logic to get game info
 
-        Respond(ctx, 200, new gameResult(gameID, whiteUsername, blackUsername, gameName));
+        respond(ctx, 200, new gameResult(gameID, whiteUsername, blackUsername, gameName));
     }
 
 }
