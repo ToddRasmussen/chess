@@ -2,6 +2,7 @@ package server;
 
 
 import java.util.Map;
+import java.util.Collection;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -41,10 +42,14 @@ public class Server {
 
     private record RegisterRequest(String username, String password, String email) {}
     private record LoginRequest(String username, String password) {}
+    private record NewGameRequest(String gameName) {}
+    private record JoinGameRequest(String playerColor, int gameID) {}
 
 
     private record LoginResult(String username, String authToken) {}
-
+    private record gameResult(int gameID, String whiteUsername, String blackUsername, String gameName) {}
+    private record gameListResult(Collection<gameResult> games) {}
+    
 
 
     private void registerUser(Context ctx) {
@@ -89,14 +94,72 @@ public class Server {
             }
         }
 
-        //TODO: Logic to check if its a known username
-
         //TODO: Logic to check if correct password for username
 
         //TODO: Logic to get AuthToken
         String authToken
 
         Respond(ctx, 200, new LoginResult(username, authToken));
+    }
+
+
+
+    private String checkAuthentication(Context ctx) {
+        String authToken = ctx.header("authorization");
+        //TODO: Logic to check if AuthToken is valid (if not return null)
+
+        //TODO: Logic to get username of authToken
+    }
+
+    private void logoutUser(Context ctx) {
+        String username = checkAuthentication(ctx);
+        if (username == null) {
+            Error(ctx, 401, "Error: unauthorized");
+        }
+
+        //TODO: Logic to deactivate authToken
+    }
+
+
+    private void listGames(Context ctx) {
+        String username = checkAuthentication(ctx);
+        if (username == null) {
+            Error(ctx, 401, "Error: unauthorized");
+        }
+
+        //TODO: Fetch list of games
+        Respond(ctx, 200, new gameListResult(gameList));
+    }
+
+
+    private void createGame(Context ctx) {
+        String username = checkAuthentication(ctx);
+        if (username == null) {
+            Error(ctx, 401, "Error: unauthorized");
+        }
+        NewGameRequest req = ctx.bodyAsClass(NewGameRequest.class);
+        String gameName = req.gameName();
+
+        //TODO: Logic to create game
+
+        Respond(ctx, 200, new gameResult(gameID, "", "", gameName));
+    }
+
+    private void joinGame(Context ctx) {
+        String username = checkAuthentication(ctx);
+        if (username == null) {
+            Error(ctx, 401, "Error: unauthorized");
+        }
+        JoinGameRequest req = ctx.bodyAsClass(JoinGameRequest.class);
+        String playerColor = req.playerColor();
+        int gameID = req.gameID();
+
+        //TODO: Logic to add username as game color
+
+
+        //TODO: Logic to get game info
+
+        Respond(ctx, 200, new gameResult(gameID, whiteUsername, blackUsername, gameName));
     }
 
 }
