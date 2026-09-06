@@ -14,12 +14,6 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
-        // Register your endpoints and exception handlers here.
-
-    }
-
-    public int run(int desiredPort) {
-
         javalin.delete("/db", this::clearApplication);
         javalin.post("/user", this::registerUser);
         javalin.post("/session", this::loginUser);
@@ -27,6 +21,10 @@ public class Server {
         javalin.get("/game", this::listGames);
         javalin.post("/game", this::createGame);
         javalin.put("/game", this::joinGame);
+
+    }
+
+    public int run(int desiredPort) {
 
         javalin.start(desiredPort);
         return javalin.port();
@@ -52,8 +50,8 @@ public class Server {
 
 
     private record LoginResult(String username, String authToken) {}
-    private record gameResult(int gameID, String whiteUsername, String blackUsername, String gameName) {}
-    private record gameListResult(Collection<gameResult> games) {}
+    private record GameResult(int gameID, String whiteUsername, String blackUsername, String gameName) {}
+    private record GameListResult(Collection<GameResult> games) {}
     
 
 
@@ -143,7 +141,7 @@ public class Server {
         }
 
         //TODO: Fetch list of games
-        respond(ctx, 200, new gameListResult(gameList));
+        respond(ctx, 200, new GameListResult(gameList));
     }
 
 
@@ -158,7 +156,7 @@ public class Server {
 
         //TODO: Logic to create game
 
-        respond(ctx, 200, new gameResult(gameID, "", "", gameName));
+        respond(ctx, 200, new GameResult(gameID, "", "", gameName));
     }
 
     private void joinGame(Context ctx) {
@@ -176,7 +174,7 @@ public class Server {
 
         //TODO: Logic to get game info
 
-        respond(ctx, 200, new gameResult(gameID, whiteUsername, blackUsername, gameName));
+        respond(ctx, 200, new GameResult(gameID, whiteUsername, blackUsername, gameName));
     }
 
 }
