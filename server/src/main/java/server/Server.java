@@ -20,8 +20,13 @@ public class Server {
 
     public int run(int desiredPort) {
 
+        javalin.delete("/db", this::clearApplication);
         javalin.post("/user", this::registerUser);
         javalin.post("/session", this::loginUser);
+        javalin.delete("/session", this:: logoutUser);
+        javalin.get("/game", this::listGames);
+        javalin.post("/game", this::createGame);
+        javalin.put("/game", this::joinGame);
 
         javalin.start(desiredPort);
         return javalin.port();
@@ -52,6 +57,14 @@ public class Server {
     
 
 
+    private void clearApplication(Context ctx) {
+
+        //TODO
+
+        Respond(ctx, 200, null);
+    }
+
+
     private void registerUser(Context ctx) {
 
         RegisterRequest req = ctx.bodyAsClass(RegisterRequest.class);
@@ -60,7 +73,7 @@ public class Server {
         String email = req.email();
 
         for (String credential : new String[]{username, password, email}) {
-            if (credential == null || credential == "") {
+            if (credential == null || credential.isEmpty()) {
                 Error(ctx, 400, "Error: bad request");
                 return;
             }
@@ -88,7 +101,7 @@ public class Server {
         String password = req.password();
 
         for (String credential : new String[]{username, password}) {
-            if (credential == null || credential == "") {
+            if (credential == null || credential.isEmpty()) {
                 Error(ctx, 400, "Error: bad request");
                 return;
             }
