@@ -88,7 +88,7 @@ public class Server {
         //TODO: Logic to get AuthToken
         String authToken;
 
-        respond(ctx, 200, new RegisterResult(username, authToken));
+        respond(ctx, 200, new LoginResult(username, authToken));
     }
     
     
@@ -108,7 +108,7 @@ public class Server {
         //TODO: Logic to check if correct password for username
 
         //TODO: Logic to get AuthToken
-        String authToken
+        String authToken;
 
         respond(ctx, 200, new LoginResult(username, authToken));
     }
