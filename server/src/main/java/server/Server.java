@@ -25,7 +25,6 @@ public class Server {
     }
 
     public int run(int desiredPort) {
-
         javalin.start(desiredPort);
         return javalin.port();
     }
@@ -81,13 +80,15 @@ public class Server {
             return;
         }
 
-        //TODO: Logic to reject if username or email already in use
-
-        //TODO: Logic to add to database
-
-        //TODO: Logic to get AuthToken
-        String authToken;
-
+        if (isExistingUsername(username)) {
+            error(ctx, 400, "Error: Username Already in Use");
+            return;
+        } else if (isExistingEmail(email)) {
+            error(ctx, 400, "Error: Email Already in Use");
+            return;
+        }
+        registerNewUser(username, email, password);
+        String authToken = generateAuthToken();
         respond(ctx, 200, new LoginResult(username, authToken));
     }
     
@@ -105,17 +106,18 @@ public class Server {
             }
         }
 
-        //TODO: Logic to check if correct password for username
+        if (!isExistingUsername(username) || !validatePassword(username, password)) {
+            error(ctx, 400, "Error: Incorrect Username and/or Password");
+            return;
+        }
 
-        //TODO: Logic to get AuthToken
-        String authToken;
+        String authToken = generateAuthToken();
 
         respond(ctx, 200, new LoginResult(username, authToken));
     }
 
-
-
     private String checkAuthentication(Context ctx) {
+        //TODO: Remove
         String authToken = ctx.header("authorization");
         //TODO: Logic to check if AuthToken is valid (if not return null)
 
@@ -131,7 +133,6 @@ public class Server {
 
         //TODO: Logic to deactivate authToken
     }
-
 
     private void listGames(Context ctx) {
         String username = checkAuthentication(ctx);
