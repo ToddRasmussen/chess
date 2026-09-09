@@ -14,7 +14,7 @@ public class AuthDAO {
         sessions.put(auth);
     }
 
-    public AuthData getAuth() {
+    public AuthData getAuth(UserData user) {
 
     }
 
