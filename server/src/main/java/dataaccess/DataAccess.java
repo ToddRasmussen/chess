@@ -1,37 +1,38 @@
-package server;
 
-
-import java.util.Map;
 import java.util.Collection;
 
 
-public boolean isExistingUsername(String username) {
+
+
+
+public void clear() {
     //TODO
 }
 
-public boolean isExistingEmail(String email) {
+public void createUser(UserData user) {
     //TODO
 }
 
-public void registerNewUser(String username, String email, String password) {
+public void getUser(UserData user) {
     //TODO
 }
 
-public static String generateAuthToken() {
-    String authToken = UUID.randomUUID().toString();
-    //TODO: To Database
-    return authToken;
+public Collection<GameData> listGames() {
+    //TODO
 }
 
-public boolean validatePassword(String username, String password) {
-    //TODO:
+public GameData updateGame(int gameID) {
+    //TODO
 }
 
+public String createAuth(UserData user) {
+    //TODO
+}
 
+public AuthData getAuth() {
+    //TODO
+}
 
-
-private String checkAuthentication(String authToken) {
-    //TODO: Logic to check if AuthToken is valid (if not return null)
-
-    //TODO: Logic to get username of authToken
+public void deleteAuth(AuthData auth) {
+    //TODO
 }
