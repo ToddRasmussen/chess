@@ -1,25 +1,43 @@
 
-
+import java.util.UUID;
 
 
 public class AuthDAO {
 
-    private Collection<AuthData> sessions;
+    private Map<String, String> sessions;
 
     public AuthDAO() {
-        this.sessions = new ArrayList<>();
+        this.sessions = new HashMap<>();
     }
 
-    public void createAuth(AuthData auth) {
-        sessions.put(auth);
+    private String generateToken() {
+        return UUID.randomUUID().toString();
     }
 
-    public boolean validAuth(AuthData user) {
+    public AuthData createAuth(UserData user) {
+        AuthData auth = new AuthData(generateToken(), user.username());
+        sessions.put(auth.authToken(), auth.user());
+        return auth;
+    }
 
+    public String getUser(String authToken) {
+        return sessions.get(authToken);
+    }
+
+    public boolean validAuth(String authToken) {
+        return (getUser(authToken) != null);
+    }
+
+    public boolean validAuth(AuthData auth) {
+        return validAuth(auth.authToken);
+    }
+
+    public void deleteAuth(String authToken) {
+        //TODO
     }
 
     public void deleteAuth(AuthData auth) {
-        sessions.remove(auth);
+        deleteAuth(auth.authToken());
     }
 
     

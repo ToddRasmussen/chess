@@ -14,56 +14,70 @@ public class Service {
         gameData = new GameDAO();
     }
 
+    private record Message(String message) {}
 
 
     public Result registerUser(UserData user) {
         UserData existingUser = userData.getUser(user.username());
         if (existingUser != null) {
-            return;
+            return new Result(403, new Message("Error: Username Already Taken"));
         }
-        userData.registerUser(user);
-        authData.createAuth(user);
+        userData.createUser(user);
+        AuthData auth = authData.createAuth(user);
+        return new Result(200, auth);
     }
 
     public Result loginUser(UserData user) {
         UserData existingUser = userData.getUser(user.username());
         if (existingUser == null) {
-            return;
+            return new Result(403, new Message("Error: Unknown Username"));
         }
         if (existingUser.password() != user.password()) {
-            return;
+            return new Result(403, new Message("Error: Incorrect Password"));
         }
-        authData.createAuth(user);
+        AuthData auth = authData.createAuth(user);
+        return new Result(200, auth);
     }
 
-    private Result checkAuth(AuthData auth) {
-        if (!authData.validAuth(auth)) {
-            return;
+    private Result checkAuth(String authToken) {
+        if (!authData.validAuth(authToken)) {
+            return new Result(401, new Message("Error: Unauthorized"));
         }
+        return null;
     }
 
-    public Result logoutUser(AuthData auth) {
-        Result out = checkAuth(auth);
+    public Result logoutUser(String authToken) {
+        Result out = checkAuth(authToken);
         if (out != null) {
             return out;
         }
-        authData.deleteAuth(auth);
+        authData.deleteAuth(authToken);
+        return new Result(200, null);
     }
 
-    public Result listGames(AuthData auth) {
-        Result out = checkAuth(auth);
+    public Result listGames(String authToken) {
+        Result out = checkAuth(authToken);
         if (out != null) {
             return out;
         }
-        Collection<GameData> games = gameData.listGames()
+        Collection<GameData> games = gameData.listGames();
+        return new Result(200, games);
     }
 
-    public Result joinGame(AuthData auth, String gameID) {
-        Result out = checkAuth(auth);
+    public Result createGame(String authToken, String gameName) {
+        Result out = checkAuth(authToken);
         if (out != null) {
             return out;
         }
-        
+
+    }
+
+    public Result joinGame(String authToken, String gameID) {
+        Result out = checkAuth(authToken);
+        if (out != null) {
+            return out;
+        }
+
     }
 
 }
