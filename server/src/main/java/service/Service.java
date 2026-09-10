@@ -36,4 +36,34 @@ public class Service {
         authData.createAuth(user);
     }
 
+    private Result checkAuth(AuthData auth) {
+        if (!authData.validAuth(auth)) {
+            return;
+        }
+    }
+
+    public Result logoutUser(AuthData auth) {
+        Result out = checkAuth(auth);
+        if (out != null) {
+            return out;
+        }
+        authData.deleteAuth(auth);
+    }
+
+    public Result listGames(AuthData auth) {
+        Result out = checkAuth(auth);
+        if (out != null) {
+            return out;
+        }
+        Collection<GameData> games = gameData.listGames()
+    }
+
+    public Result joinGame(AuthData auth, String gameID) {
+        Result out = checkAuth(auth);
+        if (out != null) {
+            return out;
+        }
+        
+    }
+
 }
