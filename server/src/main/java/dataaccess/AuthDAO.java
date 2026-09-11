@@ -40,5 +40,4 @@ public class AuthDAO {
         deleteAuth(auth.authToken());
     }
 
-    
 }

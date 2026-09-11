@@ -36,46 +36,30 @@ public class Service {
         return authData.createAuth(user);
     }
 
-    private Result checkAuth(String authToken) {
+    private void checkAuth(String authToken) {
         if (!authData.validAuth(authToken)) {
-            return new Result(401, new Message("Error: Unauthorized"));
+            throw new InvalidAuthorizationException("Error: Unauthorized"));
         }
-        return null;
     }
 
-    public Result logoutUser(String authToken) {
-        Result out = checkAuth(authToken);
-        if (out != null) {
-            return out;
-        }
+    public void logoutUser(String authToken) {
+        checkAuth(authToken);
         authData.deleteAuth(authToken);
-        return new Result(200, null);
     }
 
-    public Result listGames(String authToken) {
-        Result out = checkAuth(authToken);
-        if (out != null) {
-            return out;
-        }
-        Collection<GameData> games = gameData.listGames();
-        return new Result(200, games);
+    public Collection<GameData> listGames(String authToken) {
+        checkAuth(authToken);
+        return gameData.listGames();
     }
 
-    public Result createGame(String authToken, String gameName) {
-        Result out = checkAuth(authToken);
-        if (out != null) {
-            return out;
-        }
-        String gameID = GameData.createGame();
-        return new Result(200, gameID);
+    public String createGame(String authToken, String gameName) {
+        checkAuth(authToken);
+        return GameData.createGame();
     }
 
     public Result joinGame(String authToken, String gameID) {
-        Result out = checkAuth(authToken);
-        if (out != null) {
-            return out;
-        }
-
+        checkAuth(authToken);
+        //TODO
     }
 
 }
