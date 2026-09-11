@@ -17,7 +17,7 @@ public class Service {
     private record Message(String message) {}
 
 
-    public AuthData registerUser(UserData user) {
+    public AuthData registerUser(UserData user)  throws AlreadyTakenException {
         if (userData.isUser(user)) {
             throw new AlreadyTakenException("Username Already Taken");
         }
@@ -25,7 +25,7 @@ public class Service {
         return authData.createAuth(user);
     }
 
-    public AuthData loginUser(UserData user) {
+    public AuthData loginUser(UserData user) throws DoesNotExistException, IncorrectPasswordException {
         if (!userData.isUser(user)) {
             throw new DoesNotExistException("Unknown Username");
         }
@@ -36,28 +36,28 @@ public class Service {
         return authData.createAuth(user);
     }
 
-    private void checkAuth(String authToken) {
+    private void checkAuth(String authToken) throws InvalidAuthorizationException {
         if (!authData.validAuth(authToken)) {
-            throw new InvalidAuthorizationException("Error: Unauthorized"));
+            throw new InvalidAuthorizationException("Error: Unauthorized");
         }
     }
 
-    public void logoutUser(String authToken) {
+    public void logoutUser(String authToken) throws InvalidAuthorizationException {
         checkAuth(authToken);
         authData.deleteAuth(authToken);
     }
 
-    public Collection<GameData> listGames(String authToken) {
+    public Collection<GameData> listGames(String authToken) throws InvalidAuthorizationException {
         checkAuth(authToken);
         return gameData.listGames();
     }
 
-    public String createGame(String authToken, String gameName) {
+    public String createGame(String authToken, String gameName) throws InvalidAuthorizationException {
         checkAuth(authToken);
         return GameData.createGame();
     }
 
-    public Result joinGame(String authToken, String gameID) {
+    public Result joinGame(String authToken, String gameID) throws InvalidAuthorizationException {
         checkAuth(authToken);
         //TODO
     }
