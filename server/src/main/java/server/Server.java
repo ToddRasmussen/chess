@@ -49,6 +49,10 @@ public class Server {
         //TODO
     }
 
+    private UserData getUser(Context ctx) {
+        return ctx.bodyAsClass(UserData.class);;
+    }
+
     private void clearApplication(Context ctx) {
         //TODO
     }
@@ -56,7 +60,7 @@ public class Server {
 
     private void registerUser(Context ctx) {
         try {
-            UserData user = ctx.bodyAsClass(UserData.class);
+            UserData user = getUser(ctx);
             AuthData auth = service.registerUser(user);
             sendSuccess(auth);
         } catch (AlreadyTakenException e) {
@@ -68,7 +72,7 @@ public class Server {
 
     private void loginUser(Context ctx) {
         try {
-            UserData user = ctx.bodyAsClass(UserData.class);
+            UserData user = getUser(ctx);
             AuthData auth = service.loginUser(user);
             sendSuccess(auth);
         } catch (DoesNotExistException | IncorrectPasswordException e) {

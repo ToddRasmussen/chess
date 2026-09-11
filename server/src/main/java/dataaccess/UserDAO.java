@@ -33,7 +33,7 @@ public class UserDAO {
 
     public boolean validatePassword(String username, String password) {
         UserData user = getUser(username);
-        return password == user.password();
+        return password.equals(user.password());
     }
 
     public boolean validatePassword(UserData user) {

@@ -33,7 +33,7 @@ public class AuthDAO {
     }
 
     public void deleteAuth(String authToken) {
-        //TODO
+        sessions.remove(authToken);
     }
 
     public void deleteAuth(AuthData auth) {
