@@ -17,26 +17,23 @@ public class Service {
     private record Message(String message) {}
 
 
-    public Result registerUser(UserData user) {
-        UserData existingUser = userData.getUser(user.username());
-        if (existingUser != null) {
-            return new Result(403, new Message("Error: Username Already Taken"));
+    public AuthData registerUser(UserData user) {
+        if (userData.isUser(user)) {
+            throw new AlreadyTakenException("Username Already Taken");
         }
         userData.createUser(user);
-        AuthData auth = authData.createAuth(user);
-        return new Result(200, auth);
+        return authData.createAuth(user);
     }
 
-    public Result loginUser(UserData user) {
-        UserData existingUser = userData.getUser(user.username());
-        if (existingUser == null) {
-            return new Result(403, new Message("Error: Unknown Username"));
+    public AuthData loginUser(UserData user) {
+        if (!userData.isUser(user)) {
+            throw new DoesNotExistException("Unknown Username");
         }
-        if (existingUser.password() != user.password()) {
-            return new Result(403, new Message("Error: Incorrect Password"));
+
+        if (!userData.validatePassword(user)) {
+            throw new IncorrectPasswordException("Incorrect Password");
         }
-        AuthData auth = authData.createAuth(user);
-        return new Result(200, auth);
+        return authData.createAuth(user);
     }
 
     private Result checkAuth(String authToken) {
@@ -78,7 +75,7 @@ public class Service {
         if (out != null) {
             return out;
         }
-        
+
     }
 
 }

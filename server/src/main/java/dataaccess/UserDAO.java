@@ -22,4 +22,21 @@ public class UserDAO {
     public void clear() {
         this.users = new HashMap<>();
     }
+
+    public boolean isUser(String username) {
+        return (getUser(username) != null);
+    }
+
+    public boolean isUser(UserData user) {
+        return isUser(user.username());
+    }
+
+    public boolean validatePassword(String username, String password) {
+        UserData user = getUser(username);
+        return password == user.password();
+    }
+
+    public boolean validatePassword(UserData user) {
+        return validatePassword(user.username(), user.password());
+    }
 }
