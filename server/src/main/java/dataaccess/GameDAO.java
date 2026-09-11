@@ -32,20 +32,25 @@ public class GameDAO {
         } else {
             return getGame(gameID).blackUsername();
         }
-        
     }
 
-    public void joinGame(String gameID, String playerColor, String username) {
+    public void joinGame(String gameID, String playerColor, String username) throws ColorAlreadyTakenException {
         GameData game = getGame(gameID);
-
         if (playerColor == "White") {
             if (game.whiteUsername().isEmpty()) {
-                game.whiteUsername = username
-
+                game.whiteUsername = username;
+            } else {
+                throw new ColorAlreadyTakenException("White is already taken");
             }
-            
+        } else if (playerColor == "Black") {
+            if (game.blackUsername.isEmpty()) {
+                game.blackUsername = username;
+            } else {
+                throw new ColorAlreadyTakenException("Black is already taken");
+            }
+        } else {
+            throw new UnknownColorException("Unknown Color");
         }
-
     }
 
     public String addGame(GameData game) {

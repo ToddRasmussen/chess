@@ -54,12 +54,13 @@ public class Service {
 
     public String createGame(String authToken, String gameName) throws InvalidAuthorizationException {
         checkAuth(authToken);
-        return GameData.createGame();
+        return gameData.createGame();
     }
 
-    public Result joinGame(String authToken, String gameID) throws InvalidAuthorizationException {
+    public Result joinGame(String authToken, String gameID, String playerColor) throws InvalidAuthorizationException, ColorAlreadyTakenException {
         checkAuth(authToken);
-        //TODO
+        String username = authData.getUser(authToken);
+        joinGame(gameID, playerColor, username);
     }
 
 }

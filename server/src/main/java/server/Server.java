@@ -123,6 +123,8 @@ public class Server {
             //TODO
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
+        } catch (ColorAlreadyTakenException e) {
+            sendErrorMessage(e, 403)
         } catch (Exception e){
             sendErrorMessage(e, 500);
         }
