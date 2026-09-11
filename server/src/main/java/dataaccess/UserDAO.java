@@ -1,8 +1,8 @@
 package dataaccess;
 
-
 import java.util.HashMap;
 import java.util.Map;
+import model.UserData;
 
 public class UserDAO {
     private Map<String, UserData> users;

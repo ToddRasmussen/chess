@@ -1,8 +1,10 @@
 package dataaccess;
 
-
 import java.util.UUID;
-
+import model.AuthData;
+import model.UserData;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthDAO {
 

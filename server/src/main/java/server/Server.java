@@ -3,6 +3,10 @@ package server;
 
 import java.util.Map;
 import java.util.Collection;
+import service.Service;
+import model.UserData;
+import model.GameData;
+import model.AuthData;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;

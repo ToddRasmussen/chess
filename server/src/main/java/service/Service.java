@@ -1,5 +1,11 @@
 package service;
 
+import dataaccess.AuthDAO;
+import dataaccess.UserDAO;
+import dataaccess.GameDAO;
+import model.GameData;
+import model.AuthData;
+import model.UserData;
 
 
 public class Service {
