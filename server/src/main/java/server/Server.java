@@ -45,8 +45,12 @@ public class Server {
         ctx.status(200).json(Map.of(obj));
     }
 
-    private void clearApplication(Context ctx) {
+    private String getAuth(Context ctx) {
+        //TODO
+    }
 
+    private void clearApplication(Context ctx) {
+        //TODO
     }
 
 
@@ -78,7 +82,7 @@ public class Server {
     private void logoutUser(Context ctx) {
         try {
             service.logoutUser(/*TODO*/);
-            //TODO
+            sendSuccess(null);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
         } catch (Exception e){
@@ -88,8 +92,8 @@ public class Server {
 
     private void listGames(Context ctx) {
         try {
-            service.listGames(/*TODO*/);
-            //TODO
+            Collection<GameData> games = service.listGames(/*TODO*/);
+            sendSuccess(games);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
         } catch (Exception e){
@@ -100,8 +104,8 @@ public class Server {
 
     private void createGame(Context ctx) {
         try {
-            service.createGame(/*TODO*/);
-            //TODO
+            String gameID = service.createGame(/*TODO*/);
+            sendSuccess(gameID);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
         } catch (Exception e){
