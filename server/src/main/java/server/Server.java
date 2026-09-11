@@ -46,7 +46,7 @@ public class Server {
     }
 
     private String getAuth(Context ctx) {
-        //TODO
+        return ctx.header("authToken");
     }
 
     private UserData getUser(Context ctx) {
@@ -85,7 +85,8 @@ public class Server {
 
     private void logoutUser(Context ctx) {
         try {
-            service.logoutUser(/*TODO*/);
+            String authToken = getAuth(ctx);
+            service.logoutUser(authToken);
             sendSuccess(null);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
@@ -96,7 +97,8 @@ public class Server {
 
     private void listGames(Context ctx) {
         try {
-            Collection<GameData> games = service.listGames(/*TODO*/);
+            String authToken = getAuth(ctx);
+            Collection<GameData> games = service.listGames(authToken);
             sendSuccess(games);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
@@ -108,7 +110,8 @@ public class Server {
 
     private void createGame(Context ctx) {
         try {
-            String gameID = service.createGame(/*TODO*/);
+            String authToken = getAuth(ctx);
+            String gameID = service.createGame(authToken/*TODO*/);
             sendSuccess(gameID);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
@@ -119,8 +122,9 @@ public class Server {
 
     private void joinGame(Context ctx) {
         try {
-            service.joinGame(/*TODO*/);
-            //TODO
+            String authToken = getAuth(ctx);
+            service.joinGame(authToken/*TODO*/);
+            sendSuccess(null);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
         } catch (ColorAlreadyTakenException e) {

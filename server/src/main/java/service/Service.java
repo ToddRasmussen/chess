@@ -57,7 +57,7 @@ public class Service {
         return gameData.createGame();
     }
 
-    public Result joinGame(String authToken, String gameID, String playerColor) throws InvalidAuthorizationException, ColorAlreadyTakenException {
+    public void joinGame(String authToken, String gameID, String playerColor) throws InvalidAuthorizationException, ColorAlreadyTakenException {
         checkAuth(authToken);
         String username = authData.getUser(authToken);
         joinGame(gameID, playerColor, username);
