@@ -69,7 +69,8 @@ public class Service {
         if (out != null) {
             return out;
         }
-
+        String gameID = GameData.createGame();
+        return new Result(200, gameID);
     }
 
     public Result joinGame(String authToken, String gameID) {
@@ -77,7 +78,7 @@ public class Service {
         if (out != null) {
             return out;
         }
-
+        
     }
 
 }
