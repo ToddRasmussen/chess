@@ -50,7 +50,7 @@ public class Server {
     }
 
     private UserData getUser(Context ctx) {
-        return ctx.bodyAsClass(UserData.class);;
+        return ctx.bodyAsClass(UserData.class);
     }
 
     private void clearApplication(Context ctx) {
@@ -111,7 +111,9 @@ public class Server {
     private void createGame(Context ctx) {
         try {
             String authToken = getAuth(ctx);
-            String gameID = service.createGame(authToken/*TODO*/);
+            Map<String, Object> body = ctx.bodyAsClass(Map.class);
+            String gameName = (String) body.get("gameName");
+            String gameID = service.createGame(authToken, gameName);
             sendSuccess(gameID);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
@@ -123,7 +125,10 @@ public class Server {
     private void joinGame(Context ctx) {
         try {
             String authToken = getAuth(ctx);
-            service.joinGame(authToken/*TODO*/);
+            Map<String, Object> body = ctx.bodyAsClass(Map.class);
+            String playerColor = (String) body.get("playerColor");
+            String gameID = (String) body.get("gameID");
+            service.joinGame(authToken, playerColor, gameID);
             sendSuccess(null);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
