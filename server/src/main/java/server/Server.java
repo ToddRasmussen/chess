@@ -41,6 +41,10 @@ public class Server {
         ctx.status(code).json(Map.of("message", "error: " + e.getMessage()));
     }
 
+    private void sendSuccess(Object obj) {
+        ctx.status(200).json(Map.of(obj));
+    }
+
     private void clearApplication(Context ctx) {
 
     }
@@ -48,19 +52,25 @@ public class Server {
 
     private void registerUser(Context ctx) {
         try {
-            service.registerUser(ctx.bodyAsClass(UserData.class));
-            //TODO
+            UserData user = ctx.bodyAsClass(UserData.class);
+            AuthData auth = service.registerUser(user);
+            sendSuccess(auth);
         } catch (AlreadyTakenException e) {
             sendErrorMessage(e, 403);
+        } catch (Exception e){
+            sendErrorMessage(e, 500);
         }
     }
 
     private void loginUser(Context ctx) {
         try {
-            service.loginUser(ctx.bodyAsClass(UserData.class));
-            //TODO
-        } catch (DoesNotExistException | IncorrectPasswordException) {
+            UserData user = ctx.bodyAsClass(UserData.class);
+            AuthData auth = service.loginUser(user);
+            sendSuccess(auth);
+        } catch (DoesNotExistException | IncorrectPasswordException e) {
             sendErrorMessage(e, 403);
+        } catch (Exception e){
+            sendErrorMessage(e, 500);
         }
     }
 
@@ -69,8 +79,10 @@ public class Server {
         try {
             service.logoutUser(/*TODO*/);
             //TODO
-        } catch (InvalidAuthorizationException) {
+        } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
+        } catch (Exception e){
+            sendErrorMessage(e, 500);
         }
     }
 
@@ -78,8 +90,10 @@ public class Server {
         try {
             service.listGames(/*TODO*/);
             //TODO
-        } catch (InvalidAuthorizationException) {
+        } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
+        } catch (Exception e){
+            sendErrorMessage(e, 500);
         }
     }
 
@@ -88,8 +102,10 @@ public class Server {
         try {
             service.createGame(/*TODO*/);
             //TODO
-        } catch (InvalidAuthorizationException) {
+        } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
+        } catch (Exception e){
+            sendErrorMessage(e, 500);
         }
     }
 
@@ -97,8 +113,10 @@ public class Server {
         try {
             service.joinGame(/*TODO*/);
             //TODO
-        } catch (InvalidAuthorizationException) {
+        } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
+        } catch (Exception e){
+            sendErrorMessage(e, 500);
         }
     }
 
