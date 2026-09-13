@@ -1,7 +1,7 @@
 package service;
 
 /**
- * Indicates there was an error as the username was already taken
+ * Indicates there was an error as the username does not exist
  */
 public class DoesNotExistException extends Exception{
     public DoesNotExistException(String message) {

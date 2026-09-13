@@ -1,12 +1,11 @@
 package dataaccess;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import chess.ChessGame;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Collection;
 import model.GameData;
 
 public class GameDAO {
@@ -41,7 +40,7 @@ public class GameDAO {
         }
     }
 
-    public void joinGame(String gameID, String playerColor, String username) throws ColorAlreadyTakenException {
+    public void joinGame(String gameID, String playerColor, String username) throws ColorAlreadyTakenException, UnknownColorException {
         GameData game = getGame(gameID);
         if (playerColor.equals("White")) {
             if (game.getWhiteUsername() == null || game.getWhiteUsername().isEmpty()) {

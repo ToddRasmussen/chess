@@ -1,23 +1,20 @@
 package server;
 
 
+import java.util.Collection;
 import java.util.Map;
 
 import dataaccess.ColorAlreadyTakenException;
-
-import java.util.Collection;
-
+import io.javalin.Javalin;
+import io.javalin.http.Context;
+import model.AuthData;
+import model.GameData;
+import model.UserData;
 import service.AlreadyTakenException;
 import service.DoesNotExistException;
 import service.IncorrectPasswordException;
 import service.InvalidAuthorizationException;
 import service.Service;
-import model.UserData;
-import model.GameData;
-import model.AuthData;
-
-import io.javalin.Javalin;
-import io.javalin.http.Context;
 
 public class Server {
 
@@ -74,11 +71,11 @@ public class Server {
         try {
             UserData user = getUser(ctx);
             AuthData auth = service.registerUser(user);
-            sendSuccess(auth);
+            sendSuccess(ctx, auth);
         } catch (AlreadyTakenException e) {
-            sendErrorMessage(e, 403);
+            sendErrorMessage(ctx, e, 403);
         } catch (Exception e){
-            sendErrorMessage(e, 500);
+            sendErrorMessage(ctx, e, 500);
         }
     }
 
@@ -86,11 +83,11 @@ public class Server {
         try {
             UserData user = getUser(ctx);
             AuthData auth = service.loginUser(user);
-            sendSuccess(auth);
+            sendSuccess(ctx, auth);
         } catch (DoesNotExistException | IncorrectPasswordException e) {
-            sendErrorMessage(e, 403);
+            sendErrorMessage(ctx, e, 403);
         } catch (Exception e){
-            sendErrorMessage(e, 500);
+            sendErrorMessage(ctx, e, 500);
         }
     }
 
@@ -99,11 +96,11 @@ public class Server {
         try {
             String authToken = getAuth(ctx);
             service.logoutUser(authToken);
-            sendSuccess(null);
+            sendSuccess(ctx, null);
         } catch (InvalidAuthorizationException e) {
-            sendErrorMessage(e, 401);
+            sendErrorMessage(ctx, e, 401);
         } catch (Exception e){
-            sendErrorMessage(e, 500);
+            sendErrorMessage(ctx, e, 500);
         }
     }
 
@@ -111,11 +108,11 @@ public class Server {
         try {
             String authToken = getAuth(ctx);
             Collection<GameData> games = service.listGames(authToken);
-            sendSuccess(games);
+            sendSuccess(ctx, games);
         } catch (InvalidAuthorizationException e) {
-            sendErrorMessage(e, 401);
+            sendErrorMessage(ctx, e, 401);
         } catch (Exception e){
-            sendErrorMessage(e, 500);
+            sendErrorMessage(ctx, e, 500);
         }
     }
 
@@ -126,11 +123,11 @@ public class Server {
             Map<String, Object> body = ctx.bodyAsClass(Map.class);
             String gameName = (String) body.get("gameName");
             String gameID = service.createGame(authToken, gameName);
-            sendSuccess(gameID);
+            sendSuccess(ctx, gameID);
         } catch (InvalidAuthorizationException e) {
-            sendErrorMessage(e, 401);
+            sendErrorMessage(ctx, e, 401);
         } catch (Exception e){
-            sendErrorMessage(e, 500);
+            sendErrorMessage(ctx, e, 500);
         }
     }
 
@@ -141,13 +138,13 @@ public class Server {
             String playerColor = (String) body.get("playerColor");
             String gameID = (String) body.get("gameID");
             service.joinGame(authToken, gameID, playerColor);
-            sendSuccess(null);
+            sendSuccess(ctx, null);
         } catch (InvalidAuthorizationException e) {
-            sendErrorMessage(e, 401);
+            sendErrorMessage(ctx, e, 401);
         } catch (ColorAlreadyTakenException e) {
-            sendErrorMessage(e, 403);
+            sendErrorMessage(ctx, e, 403);
         } catch (Exception e){
-            sendErrorMessage(e, 500);
+            sendErrorMessage(ctx, e, 500);
         }
     }
 

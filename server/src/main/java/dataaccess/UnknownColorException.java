@@ -1,7 +1,7 @@
 package dataaccess;
 
 /**
- * Indicates there was an error connecting to the database
+ * Indicates was given a unknown color (was not black or white)
  */
 public class UnknownColorException extends Exception{
     public UnknownColorException(String message) {

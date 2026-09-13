@@ -1,7 +1,7 @@
 package dataaccess;
 
 /**
- * Indicates there was an error connecting to the database
+ * Indicates color is already taken and cant be overriden
  */
 public class ColorAlreadyTakenException extends Exception{
     public ColorAlreadyTakenException(String message) {

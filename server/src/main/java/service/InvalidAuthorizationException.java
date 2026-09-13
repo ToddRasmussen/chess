@@ -1,7 +1,7 @@
 package service;
 
 /**
- * Indicates there was an error as the username was already taken
+ * Indicates invalid/insufficient authorization
  */
 public class InvalidAuthorizationException extends Exception{
     public InvalidAuthorizationException(String message) {
