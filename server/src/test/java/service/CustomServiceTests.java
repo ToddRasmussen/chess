@@ -5,6 +5,8 @@ import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import dataaccess.ColorAlreadyTakenException;
+import dataaccess.UnknownColorException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -142,15 +144,47 @@ public class CustomServiceTests {
     @Test
     public void testJoinGamePositive() {
         //Tests Joining Game
+        //Arrange
+        Service service = new Service();
+        UserData user = new UserData("player1", "password123", "p1@email.com");
+        AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
+        String gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
+        //Act + Assert
+        Assertions.assertDoesNotThrow(() -> {
+            service.joinGame(auth.authToken(), gameID, "Black");
+        });
     }
 
     @Test
     public void testJoinGameTeamAlreadyTakenNegative() {
         //Tests Attempting to join team when already taken
+        //Arrange
+        Service service = new Service();
+        UserData user1 = new UserData("player1", "password123", "p1@email.com");
+        UserData user2 = new UserData("player2", "password123", "p2@email.com");
+        AuthData auth1 = Assertions.assertDoesNotThrow(() -> service.registerUser(user1));
+        AuthData auth2 = Assertions.assertDoesNotThrow(() -> service.registerUser(user2));
+        String gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth1.authToken(), "Epic Chess Game"));
+        // Player 1 claims White
+        Assertions.assertDoesNotThrow(() -> service.joinGame(auth1.authToken(), gameID, "White"));
+        //Act + Assert
+        // Player 2 tries to claim White and should throw a ColorAlreadyTakenException since Player 1 already claimed White
+        Assertions.assertThrows(ColorAlreadyTakenException.class, () -> {
+            service.joinGame(auth2.authToken(), gameID, "White");
+        });
     }
 
     @Test
     public void testJoinGameInvalidColorNegative() {
         //Tests Attempting to join team that does not exist
+        //Arrange
+        Service service = new Service();
+        UserData user = new UserData("player1", "password123", "p1@email.com");
+        AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
+        String gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
+        //Act + Assert
+        Assertions.assertThrows(UnknownColorException.class, () -> {
+            service.joinGame(auth.authToken(), gameID, "Red");
+        });
     }
 }
