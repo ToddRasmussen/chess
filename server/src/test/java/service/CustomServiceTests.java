@@ -27,7 +27,6 @@ public class CustomServiceTests {
         Assertions.assertEquals(username, auth.username());
         Assertions.assertNotNull(auth.authToken());
     }
-
     @Test
     public void testRegisterUserAlreadyTakenNegative() {
         //Tests Registering a already taken username
@@ -43,7 +42,6 @@ public class CustomServiceTests {
             service.registerUser(user2);
         });
     }
-
     @Test
     public void testLoginUserPositive() {
         //Tests Simply Logging in
@@ -58,7 +56,6 @@ public class CustomServiceTests {
         Assertions.assertNotNull(auth);
         Assertions.assertEquals(username, auth.username());
     }
-
     @Test
     public void testLoginUserIncorrectPasswordNegative() {
         //Tests Incorrect Password
@@ -73,7 +70,6 @@ public class CustomServiceTests {
             service.loginUser(badLogin);
         });
     }
-
     @Test
     public void testLoginUserUnknownUsernameNegative() {
         //Tests unregistered username
@@ -85,7 +81,6 @@ public class CustomServiceTests {
             service.loginUser(badLogin);
         });
     }
-
     @Test
     public void testLogoutUserPositive() {
         //Tests Loging out User
@@ -102,7 +97,6 @@ public class CustomServiceTests {
             service.logoutUser(auth.authToken());
         });
     }
-
     @Test
     public void testLogoutUserInvalidAuthNegative() {
         //Tests Unknown authToken
@@ -113,7 +107,6 @@ public class CustomServiceTests {
             service.logoutUser("bogus-auth-token-999");
         });
     }
-
     @Test
     public void testListGamesPositive() {
         //Tests Listing Game
@@ -126,7 +119,6 @@ public class CustomServiceTests {
         //Assert
         Assertions.assertNotNull(games);
     }
-
     @Test
     public void testCreateGamePositive() {
         //Tests Creating Game
@@ -140,7 +132,6 @@ public class CustomServiceTests {
         Assertions.assertNotNull(gameID);
         Assertions.assertFalse(gameID.isEmpty());
     }
-
     @Test
     public void testJoinGamePositive() {
         //Tests Joining Game
@@ -154,7 +145,6 @@ public class CustomServiceTests {
             service.joinGame(auth.authToken(), gameID, "Black");
         });
     }
-
     @Test
     public void testJoinGameTeamAlreadyTakenNegative() {
         //Tests Attempting to join team when already taken
@@ -173,7 +163,6 @@ public class CustomServiceTests {
             service.joinGame(auth2.authToken(), gameID, "White");
         });
     }
-
     @Test
     public void testJoinGameInvalidColorNegative() {
         //Tests Attempting to join team that does not exist

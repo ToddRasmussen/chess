@@ -34,10 +34,6 @@ public class ChessPiece {
         ROOK,
         PAWN;
 
-        public boolean canPromote() {
-            return this == PAWN;
-        }
-
     }
 
     private Collection<PieceType> getPromotionOptions() {
@@ -142,15 +138,13 @@ public class ChessPiece {
         while (true) {
             ChessPosition newPosition = myPosition.add(vector.multiply(scalar));
         
-            if (!newPosition.isInBounds()) {
-                break;
-            }
+            if (!newPosition.isInBounds()) {break;}
 
             if (!board.isFilled(newPosition, color)) {
                 collection.add(new ChessMove(myPosition, newPosition, null));
             }
 
-            if (board.isFilled(newPosition)) break;
+            if (board.isFilled(newPosition)) {break;}
 
             scalar++;
         }
@@ -220,8 +214,6 @@ public class ChessPiece {
             }
         }
 
-        // TODO: Special Move Rule (En Passant)
-
         return collection;
     }
 
@@ -242,7 +234,6 @@ public class ChessPiece {
                 }
             }
         }
-        // TODO: Castling
         return collection;
     }
 

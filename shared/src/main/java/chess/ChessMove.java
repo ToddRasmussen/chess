@@ -48,13 +48,6 @@ public class ChessMove {
         return endPosition;
     }
 
-    public ChessVector getVector() {
-        return new ChessVector(
-            getEndPosition().getRow() - getStartPosition().getRow(),
-            getEndPosition().getColumn() - getStartPosition().getColumn()
-        );
-    }
-
 
     public boolean isInBounds() {
         return endPosition.isInBounds();

@@ -3,7 +3,6 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
@@ -94,7 +93,7 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> legalMoves = new ArrayList<>();
-        if (piece == null) return legalMoves;
+        if (piece == null) {return legalMoves;}
 
         Collection<ChessMove> candidateMoves = piece.pieceMoves(board, startPosition);
 
@@ -124,10 +123,10 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (board.getPiece(move.getStartPosition()) == null) throw new InvalidMoveException("No piece at starting position");
+        if (board.getPiece(move.getStartPosition()) == null) {throw new InvalidMoveException("No piece at starting position");}
         TeamColor color = board.getPiece(move.getStartPosition()).getTeamColor();
-        if (color != currentTeam) throw new InvalidMoveException("Incorrect Team");
-        if (!validMoves(move.getStartPosition()).contains(move)) throw new InvalidMoveException("Invalid Move");
+        if (color != currentTeam) {throw new InvalidMoveException("Incorrect Team");}
+        if (!validMoves(move.getStartPosition()).contains(move)) {throw new InvalidMoveException("Invalid Move");}
 
         ChessPiece piece = board.removePiece(move.getStartPosition());
 
@@ -226,23 +225,6 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
-    }
-
-    public ChessMove getLastMove() {
-        return moveHistory.peekLast();
-    }
-
-    public ChessMove getLastMove(ChessGame.TeamColor team) {
-        Iterator<ChessMove> iterator = moveHistory.descendingIterator();
-
-        boolean lastMoveWasWhite = (moveHistory.size() % 2 != 0);
-        boolean lastMoveIsRequestedTeam = (team == ChessGame.TeamColor.WHITE) == lastMoveWasWhite;
-
-        if (!lastMoveIsRequestedTeam && iterator.hasNext()) {
-            iterator.next();
-        }
-
-        return iterator.hasNext() ? iterator.next() : null;
     }
 
 

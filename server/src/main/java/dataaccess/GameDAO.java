@@ -28,17 +28,6 @@ public class GameDAO {
         return games.get(gameID);
     }
 
-    public boolean isGame(String gameID) {
-        return (getGame(gameID) != null);
-    }
-
-    public String getPlayer(String gameID, String playerColor) {
-        if (playerColor.equals("White")) {
-            return getGame(gameID).getWhiteUsername();
-        } else {
-            return getGame(gameID).getBlackUsername();
-        }
-    }
 
     public void joinGame(String gameID, String playerColor, String username) throws ColorAlreadyTakenException, UnknownColorException {
         GameData game = getGame(gameID);

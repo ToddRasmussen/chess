@@ -98,21 +98,6 @@ public class ChessBoard {
     }
 
     /**
-     * Gets the team's king
-     * 
-     * @param teamColor The team of the king
-     * @return the king
-     */
-    public ChessPiece getKing(ChessGame.TeamColor teamColor) {
-        for (ChessPiece piece : board.values()) {
-            if (piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
-                return piece;
-            }
-        }
-        throw new RuntimeException("King not found");
-    }
-
-    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
@@ -186,14 +171,5 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Objects.hash(board);
-    }
-    /**
-     * gets the piece that would be captured by the given move
-     * 
-     * @param move The move that is being tested
-     * @return the piece that would be captured
-     */
-    public ChessPiece getCaptured(ChessMove move) {
-        return getPiece(move.getEndPosition());
     }
 }
