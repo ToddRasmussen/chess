@@ -1,9 +1,12 @@
 package service;
 
+import java.util.Collection;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 
 public class CustomServiceTests {
@@ -112,6 +115,14 @@ public class CustomServiceTests {
     @Test
     public void testListGamesPositive() {
         //Tests Listing Game
+        //Arrange
+        Service service = new Service();
+        UserData user = new UserData("player1", "password123", "p1@email.com");
+        AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
+        //Act
+        Collection<GameData> games = Assertions.assertDoesNotThrow(() -> service.listGames(auth.authToken()));
+        //Assert
+        Assertions.assertNotNull(games);
     }
 
     @Test
