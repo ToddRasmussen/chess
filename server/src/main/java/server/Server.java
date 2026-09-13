@@ -2,7 +2,15 @@ package server;
 
 
 import java.util.Map;
+
+import dataaccess.ColorAlreadyTakenException;
+
 import java.util.Collection;
+
+import service.AlreadyTakenException;
+import service.DoesNotExistException;
+import service.IncorrectPasswordException;
+import service.InvalidAuthorizationException;
 import service.Service;
 import model.UserData;
 import model.GameData;
@@ -27,7 +35,6 @@ public class Server {
         javalin.post("/game", this::createGame);
         javalin.put("/game", this::joinGame);
 
-
         service = new Service();
     }
 
@@ -41,13 +48,14 @@ public class Server {
     }
 
 
-    private void sendErrorMessage(Exception e, int code) {
+    private void sendErrorMessage(Context ctx, Exception e, int code) {
         ctx.status(code).json(Map.of("message", "error: " + e.getMessage()));
     }
 
-    private void sendSuccess(Object obj) {
-        ctx.status(200).json(Map.of(obj));
+    private void sendSuccess(Context ctx, Object obj) {
+        ctx.json(obj);
     }
+
 
     private String getAuth(Context ctx) {
         return ctx.header("authToken");
@@ -58,7 +66,7 @@ public class Server {
     }
 
     private void clearApplication(Context ctx) {
-        //TODO
+        service.reset();
     }
 
 
@@ -132,12 +140,12 @@ public class Server {
             Map<String, Object> body = ctx.bodyAsClass(Map.class);
             String playerColor = (String) body.get("playerColor");
             String gameID = (String) body.get("gameID");
-            service.joinGame(authToken, playerColor, gameID);
+            service.joinGame(authToken, gameID, playerColor);
             sendSuccess(null);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(e, 401);
         } catch (ColorAlreadyTakenException e) {
-            sendErrorMessage(e, 403)
+            sendErrorMessage(e, 403);
         } catch (Exception e){
             sendErrorMessage(e, 500);
         }

@@ -1,5 +1,8 @@
 package service;
 
+import java.util.Collection;
+
+import dataaccess.ColorAlreadyTakenException;
 import dataaccess.AuthDAO;
 import dataaccess.UserDAO;
 import dataaccess.GameDAO;
@@ -60,13 +63,20 @@ public class Service {
 
     public String createGame(String authToken, String gameName) throws InvalidAuthorizationException {
         checkAuth(authToken);
-        return gameData.createGame();
+        return gameData.createGame(gameName);
     }
 
     public void joinGame(String authToken, String gameID, String playerColor) throws InvalidAuthorizationException, ColorAlreadyTakenException {
         checkAuth(authToken);
         String username = authData.getUser(authToken);
-        joinGame(gameID, playerColor, username);
+        gameData.joinGame(gameID, playerColor, username);
     }
 
+
+
+    public void reset() {
+        authData.reset();
+        userData.reset();
+        gameData.reset();
+    }
 }

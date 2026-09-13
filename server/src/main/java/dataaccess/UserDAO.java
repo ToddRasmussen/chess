@@ -12,7 +12,7 @@ public class UserDAO {
     }
 
     public void createUser(UserData user) {
-        users.put(user.username,user);
+        users.put(user.username(),user);
     }
 
     public UserData getUser(String username) {
@@ -38,5 +38,10 @@ public class UserDAO {
 
     public boolean validatePassword(UserData user) {
         return validatePassword(user.username(), user.password());
+    }
+
+
+    public void reset() {
+        this.users = new HashMap<>();
     }
 }

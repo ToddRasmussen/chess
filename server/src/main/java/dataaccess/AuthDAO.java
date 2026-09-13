@@ -44,4 +44,8 @@ public class AuthDAO {
         deleteAuth(auth.authToken());
     }
 
+
+    public void reset() {
+        this.sessions = new HashMap<>();
+    }
 }

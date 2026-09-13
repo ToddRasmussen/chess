@@ -1,6 +1,9 @@
 package dataaccess;
 
 import java.util.UUID;
+
+import chess.ChessGame;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collection;
@@ -19,7 +22,7 @@ public class GameDAO {
     }
 
     public Collection<GameData> listGames() {
-        return games;
+        return games.values();
     }
 
     public GameData getGame(String gameID) {
@@ -31,24 +34,24 @@ public class GameDAO {
     }
 
     public String getPlayer(String gameID, String playerColor) {
-        if (playerColor == "White") {
-            return getGame(gameID).whiteUsername();
+        if (playerColor.equals("White")) {
+            return getGame(gameID).getWhiteUsername();
         } else {
-            return getGame(gameID).blackUsername();
+            return getGame(gameID).getBlackUsername();
         }
     }
 
     public void joinGame(String gameID, String playerColor, String username) throws ColorAlreadyTakenException {
         GameData game = getGame(gameID);
-        if (playerColor == "White") {
-            if (game.whiteUsername().isEmpty()) {
-                game.whiteUsername = username;
+        if (playerColor.equals("White")) {
+            if (game.getWhiteUsername() == null || game.getWhiteUsername().isEmpty()) {
+                game.setWhiteUsername(username);
             } else {
                 throw new ColorAlreadyTakenException("White is already taken");
             }
-        } else if (playerColor == "Black") {
-            if (game.blackUsername.isEmpty()) {
-                game.blackUsername = username;
+        } else if (playerColor.equals("Black")) {
+            if (game.getWhiteUsername() == null || game.getBlackUsername().isEmpty()) {
+                game.setBlackUsername(username);
             } else {
                 throw new ColorAlreadyTakenException("Black is already taken");
             }
@@ -64,9 +67,14 @@ public class GameDAO {
     }
 
     public String createGame(String gameName) {
-        GameData newGame = new GameData( "", "", gameName, new ChessGame());
+        GameData newGame = new GameData(gameName, new ChessGame());
         String gameID = addGame(newGame);
         return gameID;
+    }
+
+
+    public void reset() {
+        this.games = new HashMap<>();
     }
 
 }
