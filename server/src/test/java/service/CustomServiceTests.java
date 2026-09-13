@@ -84,11 +84,29 @@ public class CustomServiceTests {
     @Test
     public void testLogoutUserPositive() {
         //Tests Loging out User
+        //Arrange
+        Service service = new Service();
+        UserData user = new UserData("player1", "password123", "p1@email.com");
+        AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
+        //Act
+        Assertions.assertDoesNotThrow(() -> {
+            service.logoutUser(auth.authToken());
+        });
+        //Assert
+        Assertions.assertThrows(InvalidAuthorizationException.class, () -> {
+            service.logoutUser(auth.authToken());
+        });
     }
 
     @Test
     public void testLogoutUserInvalidAuthNegative() {
         //Tests Unknown authToken
+        //Arrange
+        Service service = new Service();
+        //Act + Assert
+        Assertions.assertThrows(InvalidAuthorizationException.class, () -> {
+            service.logoutUser("bogus-auth-token-999");
+        });
     }
 
     @Test
