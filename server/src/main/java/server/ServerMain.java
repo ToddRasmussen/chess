@@ -2,7 +2,7 @@ package server;
 
 public class ServerMain {
     public static void main(String[] args) {
-        var port = 9000; //TODO Revert to 8080 (Conflicts with my OpenWebUI I Host)
+        var port = 8080;
         Server server = new Server();
         server.run(port);
 

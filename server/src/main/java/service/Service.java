@@ -24,9 +24,6 @@ public class Service {
         gameData = new GameDAO();
     }
 
-    private record Message(String message) {}
-
-
     public AuthData registerUser(UserData user)  throws AlreadyTakenException {
         if (userData.isUser(user)) {
             throw new AlreadyTakenException("Username Already Taken");
