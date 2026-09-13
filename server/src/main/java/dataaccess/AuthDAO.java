@@ -20,7 +20,7 @@ public class AuthDAO {
 
     public AuthData createAuth(UserData user) {
         AuthData auth = new AuthData(generateToken(), user.username());
-        sessions.put(auth.authToken(), auth.user());
+        sessions.put(auth.authToken(), auth.username());
         return auth;
     }
 
@@ -33,7 +33,7 @@ public class AuthDAO {
     }
 
     public boolean validAuth(AuthData auth) {
-        return validAuth(auth.authToken);
+        return validAuth(auth.authToken());
     }
 
     public void deleteAuth(String authToken) {
