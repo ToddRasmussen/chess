@@ -128,6 +128,15 @@ public class CustomServiceTests {
     @Test
     public void testCreateGamePositive() {
         //Tests Creating Game
+        //Arrange
+        Service service = new Service();
+        UserData user = new UserData("player1", "password123", "p1@email.com");
+        AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
+        //Act
+        String gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
+        //Assert
+        Assertions.assertNotNull(gameID);
+        Assertions.assertFalse(gameID.isEmpty());
     }
 
     @Test
