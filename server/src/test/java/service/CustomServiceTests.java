@@ -1,17 +1,42 @@
 package service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import model.AuthData;
+import model.UserData;
 
 public class CustomServiceTests {
 
     @Test
     public void testRegisterUserPositive() {
         //Tests Simply Registering a perfectly Valid User
+        //Arrange
+        Service service = new Service();
+        String username = "player1";
+        UserData user = new UserData(username, "password123", "p1@email.com");
+        //Act
+        AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
+        //Assert
+        Assertions.assertNotNull(auth);
+        Assertions.assertEquals(username, auth.username());
+        Assertions.assertNotNull(auth.authToken());
     }
 
     @Test
     public void testRegisterUserAlreadyTakenNegative() {
         //Tests Registering a already taken username
+        //Arrange
+        Service service = new Service();
+        String username = "player1";
+        UserData user1 = new UserData(username, "password123", "p1@email.com");
+        UserData user2 = new UserData(username, "differentPass", "p2@email.com");
+        //Act
+        Assertions.assertDoesNotThrow(() -> service.registerUser(user1));
+        //Assert
+        Assertions.assertThrows(AlreadyTakenException.class, () -> {
+            service.registerUser(user2);
+        });
     }
 
     @Test
