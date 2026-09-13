@@ -42,16 +42,43 @@ public class CustomServiceTests {
     @Test
     public void testLoginUserPositive() {
         //Tests Simply Logging in
+        //Arrange
+        Service service = new Service();
+        String username = "player1";
+        UserData user = new UserData(username, "password123", "p1@email.com");
+        Assertions.assertDoesNotThrow(() -> service.registerUser(user));
+        //Act
+        AuthData auth = Assertions.assertDoesNotThrow(() -> service.loginUser(user));
+        //Assert
+        Assertions.assertNotNull(auth);
+        Assertions.assertEquals(username, auth.username());
     }
 
     @Test
     public void testLoginUserIncorrectPasswordNegative() {
         //Tests Incorrect Password
+        //Arrange
+        Service service = new Service();
+        String username = "player1";
+        UserData user = new UserData(username, "password123", "p1@email.com");
+        Assertions.assertDoesNotThrow(() -> service.registerUser(user));
+        UserData badLogin = new UserData(username, "wrongPassword", null);
+        //Act + Assert
+        Assertions.assertThrows(IncorrectPasswordException.class, () -> {
+            service.loginUser(badLogin);
+        });
     }
 
     @Test
     public void testLoginUserUnknownUsernameNegative() {
         //Tests unregistered username
+        //Arrange
+        Service service = new Service();
+        UserData badLogin = new UserData("fakeUser", "password123", null);
+        //Act + Assert
+        Assertions.assertThrows(DoesNotExistException.class, () -> {
+            service.loginUser(badLogin);
+        });
     }
 
     @Test
