@@ -51,6 +51,8 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>server/src/main/java</sourceDirectory>
+        <testSourceDirectory>server/src/test/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -65,7 +67,6 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>server/src/main/java</source>
                                 <source>shared/src/main/java</source>
                             </sources>
                         </configuration>
@@ -78,12 +79,20 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>server/src/test/java</source>
                                 <source>shared/src/test/java</source>
                             </sources>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
