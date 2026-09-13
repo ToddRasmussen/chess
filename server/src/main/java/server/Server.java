@@ -46,7 +46,7 @@ public class Server {
 
 
     private void sendErrorMessage(Context ctx, Exception e, int code) {
-        ctx.status(code).json(Map.of("message", "error: " + e.getMessage()));
+        ctx.status(code).json(Map.of("message", "Error: " + e.getMessage()));
     }
 
     private void sendSuccess(Context ctx, Object obj) {
@@ -55,7 +55,7 @@ public class Server {
 
 
     private String getAuth(Context ctx) {
-        return ctx.header("authToken");
+        return ctx.header("authorization");
     }
 
     private UserData getUser(Context ctx) {
@@ -64,6 +64,7 @@ public class Server {
 
     private void clearApplication(Context ctx) {
         service.reset();
+        sendSuccess(ctx, null);
     }
 
 
