@@ -4,11 +4,14 @@ import java.util.Collection;
 import java.util.Map;
 import com.google.gson.Gson;
 import dataaccess.ColorAlreadyTakenException;
+import dataaccess.DataAccessException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import dataaccess.UnknownColorException;
 import service.AlreadyTakenException;
 import service.BadRequestException;
 import service.DoesNotExistException;
@@ -150,12 +153,18 @@ public class Server {
         try {
             String authToken = getAuth(ctx);
             Map<?, ?> body = serializer.fromJson(ctx.body(), Map.class);
-            String playerColor = (body != null) ? (String) body.get("playerColor") : null;
-            int gameID = (body != null) ? (int) body.get("gameID") : 0;
-
+            String playerColor = null;
+            int gameID = 0;
+            if (body != null) {
+                playerColor = (String) body.get("playerColor");
+                Object raw = body.get("gameID");
+                if (raw != null) {
+                    gameID = (int) (double) raw;
+                }
+            }
             service.joinGame(authToken, gameID, playerColor);
             sendSuccess(ctx, null);
-        } catch (BadRequestException e) {
+        } catch (BadRequestException | UnknownColorException | DataAccessException e) {
             sendErrorMessage(ctx, e, 400);
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(ctx, e, 401);

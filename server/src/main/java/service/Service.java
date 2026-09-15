@@ -1,11 +1,8 @@
 package service;
 
 import java.util.Collection;
-import dataaccess.AuthDAO;
-import dataaccess.ColorAlreadyTakenException;
-import dataaccess.GameDAO;
-import dataaccess.UnknownColorException;
-import dataaccess.UserDAO;
+
+import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -71,7 +68,7 @@ public class Service {
     }
 
     public void joinGame(String authToken, int gameID, String playerColor)
-            throws InvalidAuthorizationException, ColorAlreadyTakenException, UnknownColorException, BadRequestException {
+            throws InvalidAuthorizationException, ColorAlreadyTakenException, UnknownColorException, BadRequestException, DataAccessException {
         checkAuth(authToken);
         String username = authData.getUser(authToken);
         gameData.joinGame(gameID, playerColor, username);

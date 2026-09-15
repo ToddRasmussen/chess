@@ -31,19 +31,19 @@ public class GameDAO {
     }
 
 
-    public void joinGame(int gameID, String playerColor, String username) throws ColorAlreadyTakenException, UnknownColorException {
+    public void joinGame(int gameID, String playerColor, String username) throws ColorAlreadyTakenException, UnknownColorException, DataAccessException {
         GameData game = getGame(gameID);
         if (game == null) {
-            return;
+            throw new DataAccessException("No Game with given ID");
         }
 
-        if (playerColor.equals("WHITE")) {
+        if ("WHITE".equals(playerColor)) {
             if (game.getWhiteUsername() == null || game.getWhiteUsername().isEmpty()) {
                 game.setWhiteUsername(username);
             } else {
                 throw new ColorAlreadyTakenException("White is already taken");
             }
-        } else if (playerColor.equals("BLACK")) {
+        } else if ("BLACK".equals(playerColor)) {
             if (game.getBlackUsername() == null || game.getBlackUsername().isEmpty()) {
                 game.setBlackUsername(username);
             } else {
