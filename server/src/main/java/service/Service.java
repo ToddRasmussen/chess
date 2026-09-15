@@ -1,7 +1,6 @@
 package service;
 
 import java.util.Collection;
-
 import dataaccess.AuthDAO;
 import dataaccess.ColorAlreadyTakenException;
 import dataaccess.GameDAO;
@@ -10,7 +9,6 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-
 
 public class Service {
 
@@ -24,7 +22,10 @@ public class Service {
         gameData = new GameDAO();
     }
 
-    public AuthData registerUser(UserData user)  throws AlreadyTakenException {
+    public AuthData registerUser(UserData user) throws AlreadyTakenException, BadRequestException {
+        if (user == null || user.username() == null || user.password() == null || user.email() == null) {
+            throw new BadRequestException("Bad Request");
+        }
         if (userData.isUser(user)) {
             throw new AlreadyTakenException("Username Already Taken");
         }
@@ -32,11 +33,13 @@ public class Service {
         return authData.createAuth(user);
     }
 
-    public AuthData loginUser(UserData user) throws DoesNotExistException, IncorrectPasswordException {
+    public AuthData loginUser(UserData user) throws DoesNotExistException, IncorrectPasswordException, BadRequestException {
+        if (user == null || user.username() == null || user.password() == null) {
+            throw new BadRequestException("Bad Request");
+        }
         if (!userData.isUser(user)) {
             throw new DoesNotExistException("Unknown Username");
         }
-
         if (!userData.validatePassword(user)) {
             throw new IncorrectPasswordException("Incorrect Password");
         }
@@ -45,7 +48,7 @@ public class Service {
 
     private void checkAuth(String authToken) throws InvalidAuthorizationException {
         if (!authData.validAuth(authToken)) {
-            throw new InvalidAuthorizationException("Error: Unauthorized");
+            throw new InvalidAuthorizationException("Unauthorized");
         }
     }
 
@@ -59,20 +62,20 @@ public class Service {
         return gameData.listGames();
     }
 
-    public String createGame(String authToken, String gameName) throws InvalidAuthorizationException {
+    public int createGame(String authToken, String gameName) throws InvalidAuthorizationException, BadRequestException {
         checkAuth(authToken);
+        if (gameName == null || gameName.isEmpty()) {
+            throw new BadRequestException("Error: bad request");
+        }
         return gameData.createGame(gameName);
     }
 
-    public void joinGame(String authToken, String gameID, String playerColor)
-        throws InvalidAuthorizationException, ColorAlreadyTakenException, UnknownColorException
-    {
+    public void joinGame(String authToken, int gameID, String playerColor)
+            throws InvalidAuthorizationException, ColorAlreadyTakenException, UnknownColorException, BadRequestException {
         checkAuth(authToken);
         String username = authData.getUser(authToken);
         gameData.joinGame(gameID, playerColor, username);
     }
-
-
 
     public void reset() {
         authData.reset();

@@ -127,10 +127,9 @@ public class CustomServiceTests {
         UserData user = new UserData("player1", "password123", "p1@email.com");
         AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
         //Act
-        String gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
+        int gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
         //Assert
-        Assertions.assertNotNull(gameID);
-        Assertions.assertFalse(gameID.isEmpty());
+        Assertions.assertFalse(gameID == 0);
     }
     @Test
     public void testJoinGamePositive() {
@@ -139,10 +138,10 @@ public class CustomServiceTests {
         Service service = new Service();
         UserData user = new UserData("player1", "password123", "p1@email.com");
         AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
-        String gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
+        int gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
         //Act + Assert
         Assertions.assertDoesNotThrow(() -> {
-            service.joinGame(auth.authToken(), gameID, "Black");
+            service.joinGame(auth.authToken(), gameID, "BLACK");
         });
     }
     @Test
@@ -154,13 +153,13 @@ public class CustomServiceTests {
         UserData user2 = new UserData("player2", "password123", "p2@email.com");
         AuthData auth1 = Assertions.assertDoesNotThrow(() -> service.registerUser(user1));
         AuthData auth2 = Assertions.assertDoesNotThrow(() -> service.registerUser(user2));
-        String gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth1.authToken(), "Epic Chess Game"));
+        int gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth1.authToken(), "Epic Chess Game"));
         // Player 1 claims White
-        Assertions.assertDoesNotThrow(() -> service.joinGame(auth1.authToken(), gameID, "White"));
+        Assertions.assertDoesNotThrow(() -> service.joinGame(auth1.authToken(), gameID, "WHITE"));
         //Act + Assert
         // Player 2 tries to claim White and should throw a ColorAlreadyTakenException since Player 1 already claimed White
         Assertions.assertThrows(ColorAlreadyTakenException.class, () -> {
-            service.joinGame(auth2.authToken(), gameID, "White");
+            service.joinGame(auth2.authToken(), gameID, "WHITE");
         });
     }
     @Test
@@ -170,7 +169,7 @@ public class CustomServiceTests {
         Service service = new Service();
         UserData user = new UserData("player1", "password123", "p1@email.com");
         AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
-        String gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
+        int gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
         //Act + Assert
         Assertions.assertThrows(UnknownColorException.class, () -> {
             service.joinGame(auth.authToken(), gameID, "Red");

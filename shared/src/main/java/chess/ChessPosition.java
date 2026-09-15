@@ -78,4 +78,11 @@ public class ChessPosition {
     public int hashCode() {
         return Objects.hash(getRow(), getColumn());
     }
+
+    @Override
+    public String toString() {
+        char colChar = (char) ('a' + col - 1);
+        return "" + colChar + row;
+    }
+
 }

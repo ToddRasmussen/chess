@@ -46,6 +46,10 @@ public class ChessBoard {
         return piece;
     }
 
+    public Map<ChessPosition, ChessPiece> getBoard() {
+        return board;
+    }
+
     /**
      * Gets a chess piece on the chessboard
      *
@@ -171,5 +175,10 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Objects.hash(board);
+    }
+
+    @Override 
+    public String toString() {
+        return board.toString();
     }
 }

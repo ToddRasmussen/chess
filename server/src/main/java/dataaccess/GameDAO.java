@@ -10,10 +10,12 @@ import model.GameData;
 
 public class GameDAO {
 
-    private Map<String, GameData> games;
+    private Map<Integer, GameData> games;
+    private int nextGameID;
 
     public GameDAO() {
         this.games = new HashMap<>();
+        nextGameID = 1;
     }
 
     private String generateID() {
@@ -24,21 +26,25 @@ public class GameDAO {
         return games.values();
     }
 
-    public GameData getGame(String gameID) {
+    public GameData getGame(int gameID) {
         return games.get(gameID);
     }
 
 
-    public void joinGame(String gameID, String playerColor, String username) throws ColorAlreadyTakenException, UnknownColorException {
+    public void joinGame(int gameID, String playerColor, String username) throws ColorAlreadyTakenException, UnknownColorException {
         GameData game = getGame(gameID);
-        if (playerColor.equals("White")) {
+        if (game == null) {
+            return;
+        }
+
+        if (playerColor.equals("WHITE")) {
             if (game.getWhiteUsername() == null || game.getWhiteUsername().isEmpty()) {
                 game.setWhiteUsername(username);
             } else {
                 throw new ColorAlreadyTakenException("White is already taken");
             }
-        } else if (playerColor.equals("Black")) {
-            if (game.getWhiteUsername() == null || game.getBlackUsername().isEmpty()) {
+        } else if (playerColor.equals("BLACK")) {
+            if (game.getBlackUsername() == null || game.getBlackUsername().isEmpty()) {
                 game.setBlackUsername(username);
             } else {
                 throw new ColorAlreadyTakenException("Black is already taken");
@@ -48,21 +54,14 @@ public class GameDAO {
         }
     }
 
-    public String addGame(GameData game) {
-        String gameID = generateID();
-        games.put(gameID, game);
+    public int createGame(String gameName) {
+        int gameID = nextGameID++;
+        GameData newGame = new GameData(gameID, gameName, new ChessGame());
+        games.put(gameID, newGame);
         return gameID;
     }
-
-    public String createGame(String gameName) {
-        GameData newGame = new GameData(gameName, new ChessGame());
-        String gameID = addGame(newGame);
-        return gameID;
-    }
-
 
     public void reset() {
         this.games = new HashMap<>();
     }
-
 }
