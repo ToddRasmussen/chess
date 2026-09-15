@@ -18,10 +18,6 @@ public class GameDAO {
         nextGameID = 1;
     }
 
-    private String generateID() {
-        return UUID.randomUUID().toString();
-    }
-
     public Collection<GameData> listGames() {
         return games.values();
     }
@@ -31,7 +27,9 @@ public class GameDAO {
     }
 
 
-    public void joinGame(int gameID, String playerColor, String username) throws ColorAlreadyTakenException, UnknownColorException, DataAccessException {
+    public void joinGame(int gameID, String playerColor, String username)
+        throws ColorAlreadyTakenException, UnknownColorException, DataAccessException
+    {
         GameData game = getGame(gameID);
         if (game == null) {
             throw new DataAccessException("No Game with given ID");
