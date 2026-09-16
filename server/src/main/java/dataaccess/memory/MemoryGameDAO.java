@@ -1,11 +1,13 @@
-package dataaccess;
+package dataaccess.memory;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import chess.ChessGame;
+import dataaccess.ColorAlreadyTakenException;
+import dataaccess.DataAccessException;
+import dataaccess.UnknownColorException;
 import dataaccess.interfaces.GameDAO;
 import model.GameData;
 

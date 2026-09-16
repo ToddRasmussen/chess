@@ -4,6 +4,9 @@ import java.util.Collection;
 
 import dataaccess.*;
 import dataaccess.interfaces.*;
+import dataaccess.memory.MemoryAuthDAO;
+import dataaccess.memory.MemoryGameDAO;
+import dataaccess.memory.MemoryUserDAO;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
