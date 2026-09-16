@@ -3,14 +3,15 @@ package dataaccess;
 import java.util.UUID;
 import model.AuthData;
 import model.UserData;
+import dataaccess.interfaces.AuthDAO;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuthDAO {
+public class MemoryAuthDAO implements AuthDAO {
 
     private Map<String, String> sessions;
 
-    public AuthDAO() {
+    public MemoryAuthDAO() {
         this.sessions = new HashMap<>();
     }
 

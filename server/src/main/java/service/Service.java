@@ -3,6 +3,7 @@ package service;
 import java.util.Collection;
 
 import dataaccess.*;
+import dataaccess.interfaces.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -14,16 +15,16 @@ public class Service {
     private GameDAO gameData;
 
     public Service() {
-        authData = new AuthDAO();
-        userData = new UserDAO();
-        gameData = new GameDAO();
+        authData = new MemoryAuthDAO();
+        userData = new MemoryUserDAO();
+        gameData = new MemoryGameDAO();
     }
 
     public AuthData registerUser(UserData user) throws AlreadyTakenException, BadRequestException {
         if (user == null || user.username() == null || user.password() == null || user.email() == null) {
             throw new BadRequestException("Bad Request");
         }
-        if (userData.isUser(user)) {
+        if (userData.isUser(user.username())) {
             throw new AlreadyTakenException("Username Already Taken");
         }
         userData.createUser(user);
@@ -34,10 +35,10 @@ public class Service {
         if (user == null || user.username() == null || user.password() == null) {
             throw new BadRequestException("Bad Request");
         }
-        if (!userData.isUser(user)) {
+        if (!userData.isUser(user.username())) {
             throw new DoesNotExistException("Unknown Username");
         }
-        if (!userData.validatePassword(user)) {
+        if (!userData.validatePassword(user.username(), user.password())) {
             throw new IncorrectPasswordException("Incorrect Password");
         }
         return authData.createAuth(user);

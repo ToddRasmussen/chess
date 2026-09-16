@@ -3,11 +3,12 @@ package dataaccess;
 import java.util.HashMap;
 import java.util.Map;
 import model.UserData;
+import dataaccess.interfaces.UserDAO;
 
-public class UserDAO {
+public class MemoryUserDAO implements UserDAO {
     private Map<String, UserData> users;
 
-    public UserDAO() {
+    public MemoryUserDAO() {
         this.users = new HashMap<>();
     }
 

@@ -6,14 +6,15 @@ import java.util.Map;
 import java.util.UUID;
 
 import chess.ChessGame;
+import dataaccess.interfaces.GameDAO;
 import model.GameData;
 
-public class GameDAO {
+public class MemoryGameDAO implements GameDAO {
 
     private Map<Integer, GameData> games;
     private int nextGameID;
 
-    public GameDAO() {
+    public MemoryGameDAO() {
         this.games = new HashMap<>();
         nextGameID = 1;
     }
