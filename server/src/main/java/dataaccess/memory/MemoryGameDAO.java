@@ -55,11 +55,26 @@ public class MemoryGameDAO implements GameDAO {
         }
     }
 
+    public void forceJoinGame(int gameID, String playerColor, String username) throws UnknownColorException {
+        GameData game = getGame(gameID);
+        if ("WHITE".equals(playerColor)) {
+            game.setWhiteUsername(username);
+        } else if ("BLACK".equals(playerColor)) {
+            game.setBlackUsername(username);
+        } else {
+            throw new UnknownColorException("Unknown Color");
+        }
+    }
+
     public int createGame(String gameName) {
         int gameID = nextGameID++;
         GameData newGame = new GameData(gameID, gameName, new ChessGame());
-        games.put(gameID, newGame);
+        addGame(newGame);
         return gameID;
+    }
+
+    public void addGame(GameData game) {
+        games.put(game.getGameID(), game);
     }
 
     public void reset() {

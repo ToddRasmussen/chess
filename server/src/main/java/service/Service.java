@@ -5,7 +5,7 @@ import java.util.Collection;
 import dataaccess.*;
 import dataaccess.interfaces.*;
 import dataaccess.database.DatabaseAuthDAO;
-import dataaccess.memory.MemoryGameDAO;
+import dataaccess.database.DatabaseGameDAO;
 import dataaccess.database.DatabaseUserDAO;
 import model.AuthData;
 import model.GameData;
@@ -20,7 +20,7 @@ public class Service {
     public Service() {
         authData = new DatabaseAuthDAO();
         userData = new DatabaseUserDAO();
-        gameData = new MemoryGameDAO();
+        gameData = new DatabaseGameDAO();
     }
 
     public AuthData registerUser(UserData user) throws Exception {

@@ -1,17 +1,14 @@
 package chess;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Iterable<Map.Entry<ChessPosition, ChessPiece>>{
     
     //DATA
     private Map<ChessPosition, ChessPiece> board;
@@ -180,5 +177,15 @@ public class ChessBoard {
     @Override 
     public String toString() {
         return board.toString();
+    }
+
+    @Override
+    public Iterator<Map.Entry<ChessPosition, ChessPiece>> iterator() {
+        return board.entrySet().iterator();
+    }
+
+    @Override
+    public Spliterator<Map.Entry<ChessPosition, ChessPiece>> spliterator() {
+        return board.entrySet().spliterator();
     }
 }

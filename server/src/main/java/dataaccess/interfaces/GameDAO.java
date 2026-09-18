@@ -8,13 +8,17 @@ import dataaccess.DataAccessException;
 
 public interface GameDAO {
 
-    public Collection<GameData> listGames() throws Exception ;
+    public Collection<GameData> listGames() throws Exception;
 
-    public GameData getGame(int gameID) throws Exception ;
+    public GameData getGame(int gameID) throws Exception;
 
-    public void joinGame(int gameID, String playerColor, String username) throws Exception ;
+    public void joinGame(int gameID, String playerColor, String username) throws Exception;
 
-    public int createGame(String gameName) throws Exception ;
+    public void forceJoinGame(int gameID, String playerColor, String username) throws Exception;
 
-    public void reset() throws Exception ;
+    public int createGame(String gameName) throws Exception;
+
+    public void addGame(GameData game) throws Exception;
+
+    public void reset() throws Exception;
 }
