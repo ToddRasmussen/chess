@@ -26,7 +26,7 @@ public class CustomServiceTests {
     public void testRegisterUserPositive() {
         //Tests Simply Registering a perfectly Valid User
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         String username = "player1";
         UserData user = new UserData(username, "password123", "p1@email.com");
         //Act
@@ -40,7 +40,7 @@ public class CustomServiceTests {
     public void testRegisterUserAlreadyTakenNegative() {
         //Tests Registering a already taken username
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         String username = "player1";
         UserData user1 = new UserData(username, "password123", "p1@email.com");
         UserData user2 = new UserData(username, "differentPass", "p2@email.com");
@@ -55,7 +55,7 @@ public class CustomServiceTests {
     public void testLoginUserPositive() {
         //Tests Simply Logging in
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         String username = "player1";
         UserData user = new UserData(username, "password123", "p1@email.com");
         Assertions.assertDoesNotThrow(() -> service.registerUser(user));
@@ -69,7 +69,7 @@ public class CustomServiceTests {
     public void testLoginUserIncorrectPasswordNegative() {
         //Tests Incorrect Password
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         String username = "player1";
         UserData user = new UserData(username, "password123", "p1@email.com");
         Assertions.assertDoesNotThrow(() -> service.registerUser(user));
@@ -83,7 +83,7 @@ public class CustomServiceTests {
     public void testLoginUserUnknownUsernameNegative() {
         //Tests unregistered username
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         UserData badLogin = new UserData("fakeUser", "password123", null);
         //Act + Assert
         Assertions.assertThrows(DoesNotExistException.class, () -> {
@@ -94,7 +94,7 @@ public class CustomServiceTests {
     public void testLogoutUserPositive() {
         //Tests Loging out User
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         UserData user = new UserData("player1", "password123", "p1@email.com");
         AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
         //Act
@@ -110,7 +110,7 @@ public class CustomServiceTests {
     public void testLogoutUserInvalidAuthNegative() {
         //Tests Unknown authToken
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         //Act + Assert
         Assertions.assertThrows(InvalidAuthorizationException.class, () -> {
             service.logoutUser("bogus-auth-token-999");
@@ -120,7 +120,7 @@ public class CustomServiceTests {
     public void testListGamesPositive() {
         //Tests Listing Game
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         UserData user = new UserData("player1", "password123", "p1@email.com");
         AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
         //Act
@@ -132,7 +132,7 @@ public class CustomServiceTests {
     public void testCreateGamePositive() {
         //Tests Creating Game
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         UserData user = new UserData("player1", "password123", "p1@email.com");
         AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
         //Act
@@ -144,7 +144,7 @@ public class CustomServiceTests {
     public void testJoinGamePositive() {
         //Tests Joining Game
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         UserData user = new UserData("player1", "password123", "p1@email.com");
         AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
         int gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));
@@ -157,7 +157,7 @@ public class CustomServiceTests {
     public void testJoinGameTeamAlreadyTakenNegative() {
         //Tests Attempting to join team when already taken
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         UserData user1 = new UserData("player1", "password123", "p1@email.com");
         UserData user2 = new UserData("player2", "password123", "p2@email.com");
         AuthData auth1 = Assertions.assertDoesNotThrow(() -> service.registerUser(user1));
@@ -175,7 +175,7 @@ public class CustomServiceTests {
     public void testJoinGameInvalidColorNegative() {
         //Tests Attempting to join team that does not exist
         //Arrange
-        Service service = new Service();
+        Service service = Assertions.assertDoesNotThrow(() -> new Service());
         UserData user = new UserData("player1", "password123", "p1@email.com");
         AuthData auth = Assertions.assertDoesNotThrow(() -> service.registerUser(user));
         int gameID = Assertions.assertDoesNotThrow(() -> service.createGame(auth.authToken(), "Epic Chess Game"));

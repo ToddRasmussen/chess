@@ -10,9 +10,21 @@ public class DatabaseUserDAO implements UserDAO {
     private final UserDAO cache;
     private final String table;
 
-    public DatabaseUserDAO() {
+    public DatabaseUserDAO() throws Exception{
         cache = new MemoryUserDAO();
-        table = "users";
+        table = "chess.users";
+        String sql = """
+                CREATE TABLE IF NOT EXISTS chess.users (
+                    username VARCHAR(100) NOT NULL PRIMARY KEY,
+                    hashed_password VARCHAR(100) NOT NULL,
+                    email VARCHAR(100) NOT NULL
+                );
+                """;
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement(sql)) {
+                statement.executeUpdate();
+            }
+        }
     }
 
     private String getHash(String password) {

@@ -22,10 +22,36 @@ public class DatabaseGameDAO implements GameDAO {
     private final String board_table;
     private int nextGameID;
     //Look into Column index (so it puts in buckets) (if need for faster)
-    public DatabaseGameDAO() {
+    public DatabaseGameDAO() throws Exception {
         cache = new MemoryGameDAO();
         table = "chess.games";
-        board_table = "boards";
+        board_table = "chess.boards";
+        String games_sql = """
+                CREATE TABLE IF NOT EXISTS chess.games (
+                    gameID INTEGER NOT NULL PRIMARY KEY,
+                    gameName VARCHAR(100) NOT NULL,
+                    whiteUsername VARCHAR(100) NULL,
+                    blackUsername VARCHAR(100) NULL
+                );
+                """;
+        String boards_sql = """
+                CREATE TABLE IF NOT EXISTS chess.boards (
+                    gameID INTEGER NOT NULL,
+                    piece_row INTEGER NOT NULL,
+                    piece_col INTEGER NOT NULL,
+                    piece_type ENUM('PAWN', 'ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING') NOT NULL,
+                    piece_color ENUM('WHITE', 'BLACK') NOT NULL,
+                    PRIMARY KEY (gameID, piece_row, piece_col)
+                );
+                """;
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement(games_sql)) {
+                statement.executeUpdate();
+            }
+            try (var statement = conn.prepareStatement(boards_sql)) {
+                statement.executeUpdate();
+            }
+        }
         String sql = "SELECT gameID FROM " + table + " ORDER gameID asc LIMIT 1;";
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(sql)) {

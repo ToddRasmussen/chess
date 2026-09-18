@@ -12,9 +12,20 @@ public class DatabaseAuthDAO implements AuthDAO {
     private final AuthDAO cache;
     private final String table;
 
-    public DatabaseAuthDAO() {
+    public DatabaseAuthDAO() throws Exception {
         cache = new MemoryAuthDAO();
-        table = "sessions";
+        table = "chess.sessions";
+        String sql = """
+                CREATE TABLE IF NOT EXISTS chess.sessions (
+                      authToken VARCHAR(100) NOT NULL PRIMARY KEY,
+                      username VARCHAR(100) NOT NULL
+                  );
+              """;
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement(sql)) {
+                statement.executeUpdate();
+            }
+        }
     }
 
     private String generateToken() {

@@ -17,7 +17,7 @@ public class Service {
     private final UserDAO userData;
     private final GameDAO gameData;
 
-    public Service() {
+    public Service() throws Exception {
         authData = new DatabaseAuthDAO();
         userData = new DatabaseUserDAO();
         gameData = new DatabaseGameDAO();
