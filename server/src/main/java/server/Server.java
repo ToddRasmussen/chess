@@ -27,7 +27,11 @@ public class Server {
     private Service service;
 
     public Server() {
-        service = new Service();
+        try {
+            service = new Service();
+        } catch (Exception e) {
+
+        }
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.delete("/db", this::clearApplication);
