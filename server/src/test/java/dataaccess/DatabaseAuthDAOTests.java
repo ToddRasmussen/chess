@@ -10,7 +10,7 @@ public class DatabaseAuthDAOTests {
         try {
             new DatabaseAuthDAO().reset();
         } catch (Exception e) {
-
+            
         }
     }
 }
