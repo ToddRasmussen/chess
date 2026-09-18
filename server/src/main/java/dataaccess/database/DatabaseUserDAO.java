@@ -12,7 +12,7 @@ public class DatabaseUserDAO implements UserDAO {
 
     public DatabaseUserDAO() {
         cache = new MemoryUserDAO();
-        table = "chess.users";
+        table = "users";
     }
 
     private String getHash(String password) {

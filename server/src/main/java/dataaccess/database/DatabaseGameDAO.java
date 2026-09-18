@@ -25,7 +25,7 @@ public class DatabaseGameDAO implements GameDAO {
     public DatabaseGameDAO() {
         cache = new MemoryGameDAO();
         table = "chess.games";
-        board_table = "chess.boards";
+        board_table = "boards";
         String sql = "SELECT gameID FROM " + table + " ORDER gameID asc LIMIT 1;";
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(sql)) {

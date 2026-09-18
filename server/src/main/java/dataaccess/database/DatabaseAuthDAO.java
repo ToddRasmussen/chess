@@ -14,7 +14,7 @@ public class DatabaseAuthDAO implements AuthDAO {
 
     public DatabaseAuthDAO() {
         cache = new MemoryAuthDAO();
-        table = "chess.sessions";
+        table = "sessions";
     }
 
     private String generateToken() {
