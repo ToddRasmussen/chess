@@ -85,4 +85,8 @@ public class DatabaseAuthDAO implements AuthDAO {
         cache.reset();
     }
 
+    public void resetCache() throws Exception {
+        cache.reset();
+    }
+
 }

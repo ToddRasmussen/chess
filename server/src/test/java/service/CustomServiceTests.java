@@ -3,6 +3,7 @@ package service;
 import java.util.Collection;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import dataaccess.ColorAlreadyTakenException;
@@ -13,6 +14,14 @@ import model.UserData;
 
 public class CustomServiceTests {
 
+    @BeforeEach
+    public void setUp() {
+        try {
+            new Service().reset();
+        } catch (Exception e) {
+
+        }
+    }
     @Test
     public void testRegisterUserPositive() {
         //Tests Simply Registering a perfectly Valid User

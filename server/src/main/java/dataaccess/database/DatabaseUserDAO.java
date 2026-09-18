@@ -3,6 +3,7 @@ package dataaccess.database;
 import dataaccess.interfaces.UserDAO;
 import dataaccess.memory.MemoryUserDAO;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class DatabaseUserDAO implements UserDAO {
 
@@ -15,20 +16,22 @@ public class DatabaseUserDAO implements UserDAO {
     }
 
     private String getHash(String password) {
-        return password;
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public void createUser(UserData user)  throws Exception {
+    public void createUser(UserData user) throws Exception {
+        String hashedPassword = getHash(user.password());
         String sql = "INSERT INTO " + table + " (username, hashed_password, email) VALUES (?,?,?);";
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(sql)) {
                 statement.setString(1, user.username());
-                statement.setString(2, getHash(user.password()));
+                statement.setString(2, hashedPassword);
                 statement.setString(3, user.email());
                 statement.executeUpdate();
             }
         }
-        cache.createUser(user);
+        UserData cachedUser = new UserData(user.username(), hashedPassword, user.email());
+        cache.createUser(cachedUser);
     }
 
     public UserData getUser(String username)  throws Exception {
@@ -58,13 +61,12 @@ public class DatabaseUserDAO implements UserDAO {
         return getUser(username) != null;
     }
 
-    public boolean validatePassword(String username, String password)  throws Exception {
+    public boolean validatePassword(String username, String password) throws Exception {
         UserData user = getUser(username);
         if (user == null || user.password() == null || password == null) {
             return false;
         }
-        String hashed_password = getHash(password);
-        return user.password().equals(hashed_password);
+        return BCrypt.checkpw(password, user.password());
     }
 
     public void reset()  throws Exception {
@@ -74,6 +76,10 @@ public class DatabaseUserDAO implements UserDAO {
                 statement.executeUpdate();
             }
         }
+        cache.reset();
+    }
+
+    public void resetCache() throws Exception {
         cache.reset();
     }
 }

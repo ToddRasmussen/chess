@@ -21,7 +21,7 @@ public class DatabaseGameDAO implements GameDAO {
     private final String table;
     private final String board_table;
     private int nextGameID;
-
+    //Look into Column index (so it puts in buckets) (if need for faster)
     public DatabaseGameDAO() {
         cache = new MemoryGameDAO();
         table = "chess.games";
@@ -188,6 +188,10 @@ public class DatabaseGameDAO implements GameDAO {
                 statement.executeUpdate();
             }
         }
+        cache.reset();
+    }
+
+    public void resetCache() throws Exception {
         cache.reset();
     }
 }
