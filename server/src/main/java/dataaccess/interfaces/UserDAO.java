@@ -8,8 +8,6 @@ public interface UserDAO {
 
     public UserData getUser(String username);
 
-    public void clear();
-
     public boolean isUser(String username);
 
     public boolean validatePassword(String username, String password);

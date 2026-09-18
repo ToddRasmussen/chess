@@ -7,6 +7,8 @@ public interface AuthDAO {
 
     public AuthData createAuth(UserData user);
 
+    public void addAuth(AuthData auth);
+
     public String getUser(String authToken);
 
     public boolean validAuth(String authToken);
