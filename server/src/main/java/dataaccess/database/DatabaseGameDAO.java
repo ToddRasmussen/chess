@@ -24,10 +24,10 @@ public class DatabaseGameDAO implements GameDAO {
     //Look into Column index (so it puts in buckets) (if need for faster)
     public DatabaseGameDAO() throws Exception {
         cache = new MemoryGameDAO();
-        table = "chess.games";
-        board_table = "chess.boards";
+        table = "games";
+        board_table = "boards";
         String games_sql = """
-                CREATE TABLE IF NOT EXISTS chess.games (
+                CREATE TABLE IF NOT EXISTS games (
                     gameID INTEGER NOT NULL PRIMARY KEY,
                     gameName VARCHAR(100) NOT NULL,
                     whiteUsername VARCHAR(100) NULL,
@@ -35,7 +35,7 @@ public class DatabaseGameDAO implements GameDAO {
                 );
                 """;
         String boards_sql = """
-                CREATE TABLE IF NOT EXISTS chess.boards (
+                CREATE TABLE IF NOT EXISTS boards (
                     gameID INTEGER NOT NULL,
                     piece_row INTEGER NOT NULL,
                     piece_col INTEGER NOT NULL,

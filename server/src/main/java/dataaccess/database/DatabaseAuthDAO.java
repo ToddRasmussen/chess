@@ -14,9 +14,9 @@ public class DatabaseAuthDAO implements AuthDAO {
 
     public DatabaseAuthDAO() throws Exception {
         cache = new MemoryAuthDAO();
-        table = "chess.sessions";
+        table = "sessions";
         String sql = """
-                CREATE TABLE IF NOT EXISTS chess.sessions (
+                CREATE TABLE IF NOT EXISTS sessions (
                       authToken VARCHAR(100) NOT NULL PRIMARY KEY,
                       username VARCHAR(100) NOT NULL
                   );
