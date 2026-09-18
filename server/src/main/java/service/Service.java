@@ -6,7 +6,7 @@ import dataaccess.*;
 import dataaccess.interfaces.*;
 import dataaccess.database.DatabaseAuthDAO;
 import dataaccess.memory.MemoryGameDAO;
-import dataaccess.memory.MemoryUserDAO;
+import dataaccess.database.DatabaseUserDAO;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -19,7 +19,7 @@ public class Service {
 
     public Service() {
         authData = new DatabaseAuthDAO();
-        userData = new MemoryUserDAO();
+        userData = new DatabaseUserDAO();
         gameData = new MemoryGameDAO();
     }
 
