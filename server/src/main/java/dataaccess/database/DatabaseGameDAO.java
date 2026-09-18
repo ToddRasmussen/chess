@@ -15,11 +15,11 @@ public class DatabaseGameDAO implements GameDAO {
     }
 
     public Collection<GameData> listGames() {
-
+        return null;
     }
 
     public GameData getGame(int gameID) {
-
+        return null;
     }
 
     public void joinGame(int gameID, String playerColor, String username)
@@ -28,7 +28,7 @@ public class DatabaseGameDAO implements GameDAO {
     }
 
     public int createGame(String gameName) {
-
+        return 0;
     }
 
     public void reset() {

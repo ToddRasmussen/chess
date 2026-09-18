@@ -4,13 +4,13 @@ import model.UserData;
 
 public interface UserDAO {
 
-    public void createUser(UserData user);
+    public void createUser(UserData user) throws Exception ;
 
-    public UserData getUser(String username);
+    public UserData getUser(String username) throws Exception ;
 
-    public boolean isUser(String username);
+    public boolean isUser(String username) throws Exception ;
 
-    public boolean validatePassword(String username, String password);
+    public boolean validatePassword(String username, String password) throws Exception ;
 
-    public void reset();
+    public void reset() throws Exception ;
 }
