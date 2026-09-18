@@ -1,5 +1,6 @@
 package server;
 
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Map;
 import com.google.gson.Gson;
@@ -26,12 +27,7 @@ public class Server {
     private Service service;
 
     public Server() {
-        try {
-            service = new Service();
-        } catch (Exception e) {
-
-        }
-
+        service = new Service();
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.delete("/db", this::clearApplication);

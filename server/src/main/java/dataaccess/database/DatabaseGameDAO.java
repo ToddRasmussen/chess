@@ -26,6 +26,7 @@ public class DatabaseGameDAO implements GameDAO {
         cache = new MemoryGameDAO();
         table = "games";
         board_table = "boards";
+        DatabaseManager.createDatabase();
         String games_sql = """
                 CREATE TABLE IF NOT EXISTS games (
                     gameID INTEGER NOT NULL PRIMARY KEY,

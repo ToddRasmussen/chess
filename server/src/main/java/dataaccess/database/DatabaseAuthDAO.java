@@ -5,6 +5,7 @@ import dataaccess.memory.MemoryAuthDAO;
 import model.AuthData;
 import model.UserData;
 
+import javax.xml.crypto.Data;
 import java.util.UUID;
 
 public class DatabaseAuthDAO implements AuthDAO {
@@ -15,6 +16,7 @@ public class DatabaseAuthDAO implements AuthDAO {
     public DatabaseAuthDAO() throws Exception {
         cache = new MemoryAuthDAO();
         table = "sessions";
+        DatabaseManager.createDatabase();
         String sql = """
                 CREATE TABLE IF NOT EXISTS sessions (
                       authToken VARCHAR(100) NOT NULL PRIMARY KEY,

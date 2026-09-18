@@ -13,6 +13,7 @@ public class DatabaseUserDAO implements UserDAO {
     public DatabaseUserDAO() throws Exception{
         cache = new MemoryUserDAO();
         table = "users";
+        DatabaseManager.createDatabase();
         String sql = """
                 CREATE TABLE IF NOT EXISTS users (
                     username VARCHAR(100) NOT NULL PRIMARY KEY,
