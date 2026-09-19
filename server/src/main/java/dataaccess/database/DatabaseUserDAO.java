@@ -84,6 +84,7 @@ public class DatabaseUserDAO implements UserDAO {
 
     public void reset()  throws Exception {
         String sql = "TRUNCATE " + table + ";";
+
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(sql)) {
                 statement.executeUpdate();

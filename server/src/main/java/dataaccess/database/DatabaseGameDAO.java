@@ -19,13 +19,13 @@ public class DatabaseGameDAO implements GameDAO {
 
     private final GameDAO cache;
     private final String table;
-    private final String board_table;
+    private final String boardTable;
     private int nextGameID;
     //Look into Column index (so it puts in buckets) (if need for faster)
     public DatabaseGameDAO() throws Exception {
         cache = new MemoryGameDAO();
         table = "games";
-        board_table = "boards";
+        boardTable = "boards";
         DatabaseManager.createDatabase();
         String games_sql = """
                 CREATE TABLE IF NOT EXISTS games (
@@ -92,7 +92,7 @@ public class DatabaseGameDAO implements GameDAO {
             return cache_result;
         }
         String main_sql = "SELECT gameName, whiteUsername, blackUsername FROM " + table + " WHERE gameID = ? LIMIT 1;";
-        String table_sql = "SELECT piece_row, piece_col, piece_type, piece_color FROM " + board_table + " WHERE gameID = ?;";
+        String table_sql = "SELECT piece_row, piece_col, piece_type, piece_color FROM " + boardTable + " WHERE gameID = ?;";
         try (var conn = DatabaseManager.getConnection()) {
             ChessBoard board = new ChessBoard();
             try (var statement = conn.prepareStatement(table_sql)) {
@@ -171,7 +171,7 @@ public class DatabaseGameDAO implements GameDAO {
     public void addGame(GameData game) throws Exception {
 
         String sql = "INSERT INTO " + table + " (gameID, gameName, whiteUsername, blackUsername) VALUES (?, ?, ?, ?);";
-        String board_sql = " INSERT INTO " + board_table + " (gameID, piece_row, piece_col, piece_type, piece_color) VALUES (?, ?, ?, ?, ?);";
+        String board_sql = " INSERT INTO " + boardTable + " (gameID, piece_row, piece_col, piece_type, piece_color) VALUES (?, ?, ?, ?, ?);";
         try (var conn = DatabaseManager.getConnection()) {
             conn.setAutoCommit(false); // We need to ensure it ONLY commits it if EVERY sql command is a success
             try {
@@ -209,7 +209,7 @@ public class DatabaseGameDAO implements GameDAO {
                 statement.executeUpdate();
             }
         }
-        String board_sql = "TRUNCATE " + board_table + ";";
+        String board_sql = "TRUNCATE " + boardTable + ";";
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(board_sql)) {
                 statement.executeUpdate();
