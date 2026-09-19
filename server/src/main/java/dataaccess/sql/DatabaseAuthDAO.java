@@ -1,11 +1,10 @@
-package dataaccess.database;
+package dataaccess.sql;
 
 import dataaccess.interfaces.AuthDAO;
 import dataaccess.memory.MemoryAuthDAO;
 import model.AuthData;
 import model.UserData;
 
-import javax.xml.crypto.Data;
 import java.util.UUID;
 
 public class DatabaseAuthDAO implements AuthDAO {

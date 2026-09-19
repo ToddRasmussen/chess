@@ -1,7 +1,7 @@
 package dataaccess;
 
-import dataaccess.database.DatabaseAuthDAO;
-import dataaccess.database.DatabaseGameDAO;
+import dataaccess.sql.DatabaseAuthDAO;
+import dataaccess.sql.DatabaseGameDAO;
 import dataaccess.interfaces.GameDAO;
 import model.GameData;
 import org.junit.jupiter.api.Assertions;

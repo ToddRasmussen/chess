@@ -2,11 +2,10 @@ package dataaccess;
 
 import model.AuthData;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import dataaccess.interfaces.AuthDAO;
-import dataaccess.database.DatabaseAuthDAO;
+import dataaccess.sql.DatabaseAuthDAO;
 import org.junit.jupiter.api.Test;
 
 public class DatabaseAuthDAOTests {

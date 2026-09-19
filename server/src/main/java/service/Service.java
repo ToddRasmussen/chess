@@ -2,11 +2,10 @@ package service;
 
 import java.util.Collection;
 
-import dataaccess.*;
 import dataaccess.interfaces.*;
-import dataaccess.database.DatabaseAuthDAO;
-import dataaccess.database.DatabaseGameDAO;
-import dataaccess.database.DatabaseUserDAO;
+import dataaccess.sql.DatabaseAuthDAO;
+import dataaccess.sql.DatabaseGameDAO;
+import dataaccess.sql.DatabaseUserDAO;
 import model.AuthData;
 import model.GameData;
 import model.UserData;

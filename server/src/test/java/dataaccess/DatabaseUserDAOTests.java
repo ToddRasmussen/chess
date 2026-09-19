@@ -1,6 +1,6 @@
 package dataaccess;
 
-import dataaccess.database.DatabaseUserDAO;
+import dataaccess.sql.DatabaseUserDAO;
 import dataaccess.interfaces.UserDAO;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;

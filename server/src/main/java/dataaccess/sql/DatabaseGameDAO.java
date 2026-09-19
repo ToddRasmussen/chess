@@ -1,4 +1,4 @@
-package dataaccess.database;
+package dataaccess.sql;
 
 import chess.ChessBoard;
 import chess.ChessGame;
@@ -9,10 +9,8 @@ import dataaccess.DataAccessException;
 import dataaccess.UnknownColorException;
 import dataaccess.interfaces.GameDAO;
 import dataaccess.memory.MemoryGameDAO;
-import model.AuthData;
 import model.GameData;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 
 public class DatabaseGameDAO implements GameDAO {

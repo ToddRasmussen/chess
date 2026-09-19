@@ -1,4 +1,4 @@
-package dataaccess.database;
+package dataaccess.sql;
 
 /**
  * Indicates there was an error connecting to the database more of a generic error
