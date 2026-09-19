@@ -217,8 +217,4 @@ public class DatabaseGameDAO implements GameDAO {
         }
         cache.reset();
     }
-
-    public void resetCache() throws Exception {
-        cache.reset();
-    }
 }

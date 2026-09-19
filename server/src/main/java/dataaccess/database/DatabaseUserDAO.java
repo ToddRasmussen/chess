@@ -83,17 +83,12 @@ public class DatabaseUserDAO implements UserDAO {
     }
 
     public void reset()  throws Exception {
-        String sql = "TRUNCATE " + table + ";";
-
         try (var conn = DatabaseManager.getConnection()) {
+            String sql = "TRUNCATE " + table + ";";
             try (var statement = conn.prepareStatement(sql)) {
                 statement.executeUpdate();
             }
         }
-        cache.reset();
-    }
-
-    public void resetCache() throws Exception {
         cache.reset();
     }
 }
