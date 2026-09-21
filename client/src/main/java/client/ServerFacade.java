@@ -36,9 +36,7 @@ public class ServerFacade {
         builder.header("Authorization", auth.authToken());
     }
 
-    public AuthData register(UserData user) throws Exception {
-        HttpRequest.Builder builder = HttpRequest.newBuilder();
-        builder.uri(userEndpoint);
+    private AuthData authenticate(UserData user, HttpRequest.Builder builder )  throws Exception {
         builder.POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(user)));
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200 && response.statusCode() != 201) {
@@ -48,14 +46,23 @@ public class ServerFacade {
         return authorization;
     }
 
-    public AuthData login(UserData user) {
 
+    public AuthData register(UserData user) throws Exception {
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.uri(userEndpoint);
+        return authenticate(user, builder);
+    }
 
-
-        return authorization;
+    public AuthData login(UserData user) throws Exception {
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.uri(sessionEndpoint);
+        return authenticate(user, builder);
     }
 
     public void logout(AuthData auth) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.uri(sessionEndpoint);
+        addAuthorization(auth, builder);
 
     }
 
