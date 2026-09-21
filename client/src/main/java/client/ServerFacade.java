@@ -9,8 +9,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -90,16 +88,27 @@ public class ServerFacade {
         return games(authorization);
     }
 
-    public int newGame(AuthData auth, String gameName) {
+    private record newGameRequest(String gameName) {}
 
+    public int newGame(AuthData auth, String gameName) throws Exception {
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.uri(gameEndpoint);
+        addAuthorization(auth, builder);
+        String json = new Gson().toJson(new newGameRequest(gameName));
+        builder.POST(HttpRequest.BodyPublishers.ofString(json));
+        HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        handleStatusCode(response.statusCode());
+        return new Gson().fromJson(response.body(), Integer.class);
     }
 
-    public int newGame(String gameName) {
+    public int newGame(String gameName) throws Exception {
         return newGame(authorization, gameName);
     }
 
-    public void joinGame(AuthData auth, int gameID, String playerColor) {
+    private record joinGameRequest(int gameID, String playerColor) {}
 
+    public void joinGame(AuthData auth, int gameID, String playerColor) {
+        
     }
 
     public void joinGame(int gameID, String playerColor) {
