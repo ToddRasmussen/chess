@@ -22,7 +22,7 @@ public class ServerFacade {
     private final HttpClient client;
 
     public ServerFacade(Integer port) {
-        String baseURL = "https://localhost:" + port.toString() + "/";
+        String baseURL = "http://localhost:" + port.toString() + "/";
         databaseEndpoint = URI.create(baseURL + "db");
         userEndpoint = URI.create(baseURL + "user");
         sessionEndpoint = URI.create(baseURL + "session");
@@ -31,7 +31,10 @@ public class ServerFacade {
         authorization = null;
     }
 
-    private void addAuthorization(AuthData auth, HttpRequest.Builder builder) {
+    private void addAuthorization(AuthData auth, HttpRequest.Builder builder) throws Exception {
+        if (auth == null || auth.authToken() == null) {
+            throw new Exception("No Authorization Given");
+        }
         builder.header("Authorization", auth.authToken());
     }
 
@@ -48,6 +51,7 @@ public class ServerFacade {
 
     private AuthData authenticate(UserData user, HttpRequest.Builder builder ) throws Exception {
         builder.POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(user)));
+        builder.header("Content-Type", "application/json");
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
         authorization = new Gson().fromJson(response.body(), AuthData.class);
@@ -69,7 +73,9 @@ public class ServerFacade {
 
     public void logout(AuthData auth) throws Exception {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.header("Content-Type", "application/json");
         builder.uri(sessionEndpoint);
+        builder.DELETE();
         addAuthorization(auth, builder);
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
@@ -88,30 +94,33 @@ public class ServerFacade {
         return games(authorization);
     }
 
-    private record newGameRequest(String gameName) {}
+    private record NewGameRequest(String gameName) {}
+    private record NewGameResponse(int gameID) {}
 
     public int newGame(AuthData auth, String gameName) throws Exception {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.header("Content-Type", "application/json");
         builder.uri(gameEndpoint);
         addAuthorization(auth, builder);
-        String json = new Gson().toJson(new newGameRequest(gameName));
+        String json = new Gson().toJson(new NewGameRequest(gameName));
         builder.POST(HttpRequest.BodyPublishers.ofString(json));
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
-        return new Gson().fromJson(response.body(), Integer.class);
+        return new Gson().fromJson(response.body(), NewGameResponse.class).gameID();
     }
 
     public int newGame(String gameName) throws Exception {
         return newGame(authorization, gameName);
     }
 
-    private record joinGameRequest(int gameID, String playerColor) {}
+    private record JoinGameRequest(int gameID, String playerColor) {}
 
     public void joinGame(AuthData auth, int gameID, String playerColor) throws Exception {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.header("Content-Type", "application/json");
         builder.uri(gameEndpoint);
         addAuthorization(auth, builder);
-        String json = new Gson().toJson(new joinGameRequest(gameID, playerColor));
+        String json = new Gson().toJson(new JoinGameRequest(gameID, playerColor));
         builder.PUT(HttpRequest.BodyPublishers.ofString(json));
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
@@ -123,6 +132,7 @@ public class ServerFacade {
 
     public void reset() throws Exception {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.header("Content-Type", "application/json");
         builder.uri(databaseEndpoint);
         builder.DELETE();
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
