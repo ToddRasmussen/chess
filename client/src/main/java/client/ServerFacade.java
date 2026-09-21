@@ -16,12 +16,12 @@ import com.google.gson.Gson;
 
 public class ServerFacade {
 
-    private URI databaseEndpoint;
-    private URI userEndpoint;
-    private URI sessionEndpoint;
-    private URI gameEndpoint;
+    private final URI databaseEndpoint;
+    private final URI userEndpoint;
+    private final URI sessionEndpoint;
+    private final URI gameEndpoint;
     private AuthData authorization;
-    private HttpClient client;
+    private final HttpClient client;
 
     public ServerFacade(Integer port) {
         String baseURL = "https://localhost:" + port.toString() + "/";
@@ -30,18 +30,28 @@ public class ServerFacade {
         sessionEndpoint = URI.create(baseURL + "session");
         gameEndpoint = URI.create(baseURL + "game");
         client = HttpClient.newHttpClient();
+        authorization = null;
     }
 
     private void addAuthorization(AuthData auth, HttpRequest.Builder builder) {
         builder.header("Authorization", auth.authToken());
     }
 
-    private AuthData authenticate(UserData user, HttpRequest.Builder builder )  throws Exception {
+    private void handleStatusCode(int statusCode) throws Exception {
+        switch (statusCode) {
+            case 200: return;
+            case 400: throw new Exception("Bad Request");
+            case 401: throw new Exception("Unauthorized");
+            case 403: throw new Exception("Already Taken");
+            default: throw new Exception("Server Error");
+        }
+    }
+
+
+    private AuthData authenticate(UserData user, HttpRequest.Builder builder ) throws Exception {
         builder.POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(user)));
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() != 200 && response.statusCode() != 201) {
-            throw new RuntimeException("Server gave error code: " + response.statusCode() + " with body: " + response.body());
-        }
+        handleStatusCode(response.statusCode());
         authorization = new Gson().fromJson(response.body(), AuthData.class);
         return authorization;
     }
@@ -59,15 +69,17 @@ public class ServerFacade {
         return authenticate(user, builder);
     }
 
-    public void logout(AuthData auth) {
+    public void logout(AuthData auth) throws Exception {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.uri(sessionEndpoint);
         addAuthorization(auth, builder);
-
+        HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        handleStatusCode(response.statusCode());
     }
 
-    public void logout() {
+    public void logout() throws Exception {
         logout(authorization);
+        authorization = null;
     }
 
     public Collection<GameData> games(AuthData auth) {
