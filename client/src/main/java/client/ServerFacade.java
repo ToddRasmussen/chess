@@ -107,16 +107,26 @@ public class ServerFacade {
 
     private record joinGameRequest(int gameID, String playerColor) {}
 
-    public void joinGame(AuthData auth, int gameID, String playerColor) {
-        
+    public void joinGame(AuthData auth, int gameID, String playerColor) throws Exception {
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.uri(gameEndpoint);
+        addAuthorization(auth, builder);
+        String json = new Gson().toJson(new joinGameRequest(gameID, playerColor));
+        builder.PUT(HttpRequest.BodyPublishers.ofString(json));
+        HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        handleStatusCode(response.statusCode());
     }
 
-    public void joinGame(int gameID, String playerColor) {
+    public void joinGame(int gameID, String playerColor) throws Exception {
         joinGame(authorization,gameID,playerColor);
     }
 
-    public void reset() {
-
+    public void reset() throws Exception {
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.uri(databaseEndpoint);
+        builder.DELETE();
+        HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        handleStatusCode(response.statusCode());
     }
 
 }
