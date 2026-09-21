@@ -23,8 +23,8 @@ public class ServerFacade {
     private AuthData authorization;
     private HttpClient client;
 
-    public ServerFacade() {
-        String baseURL = "https://localhost:8080/";
+    public ServerFacade(Integer port) {
+        String baseURL = "https://localhost:" + port.toString() + "/";
         databaseEndpoint = URI.create(baseURL + "db");
         userEndpoint = URI.create(baseURL + "user");
         sessionEndpoint = URI.create(baseURL + "session");
@@ -32,8 +32,19 @@ public class ServerFacade {
         client = HttpClient.newHttpClient();
     }
 
-    public AuthData register(UserData user) throws Exception {
+    private void addAuthorization(AuthData auth, HttpRequest.Builder builder) {
+        builder.header("Authorization", auth.authToken());
+    }
 
+    public AuthData register(UserData user) throws Exception {
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.uri(userEndpoint);
+        builder.POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(user)));
+        HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200 && response.statusCode() != 201) {
+            throw new RuntimeException("Server gave error code: " + response.statusCode() + " with body: " + response.body());
+        }
+        authorization = new Gson().fromJson(response.body(), AuthData.class);
         return authorization;
     }
 
