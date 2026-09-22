@@ -1,5 +1,9 @@
 package client;
 
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -9,6 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import com.google.gson.Gson;
 
@@ -86,11 +91,36 @@ public class ServerFacade {
         authorization = null;
     }
 
-    public Collection<GameData> games(AuthData auth) {
-
+    public Collection<GameData> games(AuthData auth) throws Exception {
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+        builder.header("Content-Type", "application/json");
+        builder.uri(gameEndpoint);
+        addAuthorization(auth, builder);
+        builder.GET();
+        HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        handleStatusCode(response.statusCode());
+        Collection<GameData> games = new LinkedList<>();
+        // for each game
+        {
+            // build board
+            ChessBoard board = new ChessBoard();
+            // for each piece
+            {
+                ChessGame.TeamColor pieceColor = ChessGame.TeamColor.valueOf(colorStr);
+                ChessPiece.PieceType type = ChessPiece.PieceType.valueOf(typeStr);
+                ChessPiece piece = new ChessPiece(pieceColor, type);
+                ChessPosition position = new ChessPosition(Integer.valueOf(rowStr), Integer.valueOf(colStr));
+                board.addPiece(position, piece);
+            }
+            ChessGame game = new ChessGame();
+            game.setBoard(board);
+            GameData gameData = new GameData(gameID, gameName, game);
+            games.add(gameData);
+        }
+        return games;
     }
 
-    public Collection<GameData> games() {
+    public Collection<GameData> games() throws Exception {
         return games(authorization);
     }
 
