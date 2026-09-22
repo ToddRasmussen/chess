@@ -14,6 +14,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -25,6 +27,7 @@ public class ServerFacade {
     private final URI gameEndpoint;
     private AuthData authorization;
     private final HttpClient client;
+    private final Gson serializer;
 
     public ServerFacade(Integer port) {
         String baseURL = "http://localhost:" + port.toString() + "/";
@@ -34,6 +37,7 @@ public class ServerFacade {
         gameEndpoint = URI.create(baseURL + "game");
         client = HttpClient.newHttpClient();
         authorization = null;
+        serializer = new Gson();
     }
 
     private void addAuthorization(AuthData auth, HttpRequest.Builder builder) throws Exception {
@@ -55,11 +59,11 @@ public class ServerFacade {
 
 
     private AuthData authenticate(UserData user, HttpRequest.Builder builder ) throws Exception {
-        builder.POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(user)));
+        builder.POST(HttpRequest.BodyPublishers.ofString(serializer.toJson(user)));
         builder.header("Content-Type", "application/json");
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
-        authorization = new Gson().fromJson(response.body(), AuthData.class);
+        authorization = serializer.fromJson(response.body(), AuthData.class);
         return authorization;
     }
 
@@ -99,10 +103,12 @@ public class ServerFacade {
         builder.GET();
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
-        Collection<GameData> games = new LinkedList<>();
+        Collection<GameData> listGames = new LinkedList<>();
         // for each game
-        {
-            // build board
+        Map<?, ?> body = serializer.fromJson(response.body(), Map.class);
+        List<?> games = serializer.fromJson(body.get("games"), List.class);
+        for (Object gameStr : games){
+            Map<?, ?> rawGame = serializer.fromJson(gameStr, Map.class);
             ChessBoard board = new ChessBoard();
             // for each piece
             {
@@ -114,10 +120,10 @@ public class ServerFacade {
             }
             ChessGame game = new ChessGame();
             game.setBoard(board);
-            GameData gameData = new GameData(gameID, gameName, game);
-            games.add(gameData);
+            GameData gameData = new GameData(rawGame.get("GameID"), rawGame.get("gameName"), game);
+            listGames.add(gameData);
         }
-        return games;
+        return listGames;
     }
 
     public Collection<GameData> games() throws Exception {
@@ -132,11 +138,11 @@ public class ServerFacade {
         builder.header("Content-Type", "application/json");
         builder.uri(gameEndpoint);
         addAuthorization(auth, builder);
-        String json = new Gson().toJson(new NewGameRequest(gameName));
+        String json = serializer.toJson(new NewGameRequest(gameName));
         builder.POST(HttpRequest.BodyPublishers.ofString(json));
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
-        return new Gson().fromJson(response.body(), NewGameResponse.class).gameID();
+        return serializer.fromJson(response.body(), NewGameResponse.class).gameID();
     }
 
     public int newGame(String gameName) throws Exception {
@@ -150,7 +156,7 @@ public class ServerFacade {
         builder.header("Content-Type", "application/json");
         builder.uri(gameEndpoint);
         addAuthorization(auth, builder);
-        String json = new Gson().toJson(new JoinGameRequest(gameID, playerColor));
+        String json = serializer.toJson(new JoinGameRequest(gameID, playerColor));
         builder.PUT(HttpRequest.BodyPublishers.ofString(json));
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
