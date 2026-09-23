@@ -104,6 +104,7 @@ public class ServerFacade {
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
         Collection<GameData> listGames = new LinkedList<>();
+        //TODO: Finish
         // for each game
         Map<?, ?> body = serializer.fromJson(response.body(), Map.class);
         List<?> games = serializer.fromJson(body.get("games"), List.class);
