@@ -1,5 +1,6 @@
 package client;
 
+import model.AuthData;
 import model.UserData;
 
 import java.util.HashMap;
@@ -27,9 +28,15 @@ public class Client {
 
     private void loop() {
         while (!state.equals(ClientState.OFF)) {
-            switch (state) {
-                case ClientState.PRELOGIN: prelogin();
-                case ClientState.POSTLOGIN: postlogin();
+            try {
+                switch (state) {
+                    case ClientState.PRELOGIN:
+                        prelogin();
+                    case ClientState.POSTLOGIN:
+                        postlogin();
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -39,21 +46,24 @@ public class Client {
         return scanner.nextLine().split("\\s+");
     }
 
-    private void prelogin() {
+    private void prelogin() throws Exception {
         String[] input = getInput();
         switch (input[0]) {
             case "help": displayHelp();
-            case "quit": quit();
-            case "login": loginUser(input[1], input[2]);
+            case "quit": state = ClientState.OFF;
+            case "login": server.login(new UserData(input[1], input[2], ""));
             case "register": registerUser();
         }
     }
 
-    private void postlogin() {
+    private void postlogin() throws Exception {
         String[] input = getInput();
         switch (input[0]) {
             case "help": displayHelp();
-            case "quit": quit();
+            case "quit": {
+                logoutUser();
+                state = ClientState.OFF;
+            }
             case "logout": logoutUser();
             case "create": createGame();
             case "list": listGames();
@@ -66,7 +76,7 @@ public class Client {
         Map<String, String> commands = new HashMap<>();
         switch (state) {
             case ClientState.PRELOGIN -> {
-                commands.put("register <USERNAME> <PASSWORD> <EMAIL>","to create an account");
+                commands.put("register <USERNAME> <PASSWORD> <EMAIL>", "to create an account");
                 commands.put("login <USERNAME> <PASSWORD>", "to play chess");
             }
             case ClientState.POSTLOGIN -> {
@@ -83,21 +93,6 @@ public class Client {
         for (Map.Entry<String, String> entry : commands.entrySet()) {
             String line = "\u001b[46]"+entry.getKey() + "\u001b[49]" + " - " + entry.getValue();
             System.out.println(line);
-        }
-    }
-    private void quit() {
-        if (state.equals(ClientState.POSTLOGIN)) {
-            logoutUser();
-        }
-        state = ClientState.OFF;
-    }
-
-    private void loginUser(String username, String password) {
-        try {
-            server.login(new UserData(username, password, ""));
-
-        } catch Exception {
-
         }
     }
 }

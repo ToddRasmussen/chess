@@ -4,10 +4,15 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import client.exceptions.AlreadyTakenException;
+import client.exceptions.BadRequestException;
+import client.exceptions.ServerException;
+import client.exceptions.UnauthorizedException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -47,18 +52,19 @@ public class ServerFacade {
         builder.header("Authorization", auth.authToken());
     }
 
-    private void handleStatusCode(int statusCode) throws Exception {
+    private void handleStatusCode(int statusCode) throws BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         switch (statusCode) {
             case 200: return;
-            case 400: throw new Exception("Bad Request");
-            case 401: throw new Exception("Unauthorized");
-            case 403: throw new Exception("Already Taken");
-            default: throw new Exception("Server Error");
+            case 400: throw new BadRequestException("Bad Request");
+            case 401: throw new UnauthorizedException("Unauthorized");
+            case 403: throw new AlreadyTakenException("Already Taken");
+            default: throw new ServerException("Server Error");
         }
     }
 
 
-    private AuthData authenticate(UserData user, HttpRequest.Builder builder ) throws Exception {
+    private AuthData authenticate(UserData user, HttpRequest.Builder builder )
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         builder.POST(HttpRequest.BodyPublishers.ofString(serializer.toJson(user)));
         builder.header("Content-Type", "application/json");
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
@@ -68,13 +74,15 @@ public class ServerFacade {
     }
 
 
-    public AuthData register(UserData user) throws Exception {
+    public AuthData register(UserData user)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.uri(userEndpoint);
         return authenticate(user, builder);
     }
 
-    public AuthData login(UserData user) throws Exception {
+    public AuthData login(UserData user)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException  {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.uri(sessionEndpoint);
         return authenticate(user, builder);
