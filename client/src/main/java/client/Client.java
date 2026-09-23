@@ -1,5 +1,7 @@
 package client;
 
+import model.UserData;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -33,36 +35,32 @@ public class Client {
     }
 
 
-    private String getInput() {
-        return scanner.nextLine();
+    private String[] getInput() {
+        return scanner.nextLine().split("\\s+");
     }
 
     private void prelogin() {
-        String input = getInput();
-        switch (input) {
+        String[] input = getInput();
+        switch (input[0]) {
             case "help": displayHelp();
-            case "quit": state = ClientState.OFF;
-            case "login": loginUser();
+            case "quit": quit();
+            case "login": loginUser(input[1], input[2]);
             case "register": registerUser();
         }
     }
 
     private void postlogin() {
-        String input = getInput();
-        switch (input) {
+        String[] input = getInput();
+        switch (input[0]) {
             case "help": displayHelp();
+            case "quit": quit();
             case "logout": logoutUser();
             case "create": createGame();
             case "list": listGames();
             case "join": joinGame();
             case "observe": observeGame();
-            case "quit": {
-                logoutUser();
-                state = ClientState.OFF;
-            }
         }
     }
-
 
     private void displayHelp() {
         Map<String, String> commands = new HashMap<>();
@@ -85,6 +83,21 @@ public class Client {
         for (Map.Entry<String, String> entry : commands.entrySet()) {
             String line = "\u001b[46]"+entry.getKey() + "\u001b[49]" + " - " + entry.getValue();
             System.out.println(line);
+        }
+    }
+    private void quit() {
+        if (state.equals(ClientState.POSTLOGIN)) {
+            logoutUser();
+        }
+        state = ClientState.OFF;
+    }
+
+    private void loginUser(String username, String password) {
+        try {
+            server.login(new UserData(username, password, ""));
+
+        } catch Exception {
+
         }
     }
 }

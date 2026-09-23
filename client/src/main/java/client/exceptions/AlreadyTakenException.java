@@ -1,0 +1,13 @@
+package client.exceptions;
+
+/**
+ * Indicates given a bad request
+ */
+public class AlreadyTakenException extends Exception{
+    public AlreadyTakenException(String message) {
+        super(message);
+    }
+    public AlreadyTakenException(String message, Throwable ex) {
+        super(message, ex);
+    }
+}
