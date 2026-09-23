@@ -68,11 +68,23 @@ public class Client {
         Map<String, String> commands = new HashMap<>();
         switch (state) {
             case ClientState.PRELOGIN -> {
-
+                commands.put("register <USERNAME> <PASSWORD> <EMAIL>","to create an account");
+                commands.put("login <USERNAME> <PASSWORD>", "to play chess");
             }
             case ClientState.POSTLOGIN -> {
-                
+                commands.put("create <NAME>", "a game");
+                commands.put("list", "games");
+                commands.put("join <ID> [WHITE|BLACK]", "a game");
+                commands.put("observe <ID>", "a game");
+                commands.put("logout", "when you are done");
             }
+        }
+        commands.put("quit", "playing chess");
+        commands.put("help","with possible commands");
+
+        for (Map.Entry<String, String> entry : commands.entrySet()) {
+            String line = "\u001b[46]"+entry.getKey() + "\u001b[49]" + " - " + entry.getValue();
+            System.out.println(line);
         }
     }
 }
