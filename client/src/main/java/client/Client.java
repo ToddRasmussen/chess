@@ -1,13 +1,10 @@
 package client;
 
 import chess.ChessGame;
-import client.exceptions.InputException;
 import client.exceptions.UnauthorizedException;
 import model.UserData;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Client {
@@ -56,10 +53,10 @@ public class Client {
         String[] input = getInput();
         switch (input[0].toLowerCase()) {
             case ("help") -> {
-                displayHelp("register <USERNAME> <PASSWORD> <EMAIL>","to create an account");
-                displayHelp("login <USERNAME> <PASSWORD>", "to play chess");
-                displayHelp("quit", "playing chess");
                 displayHelp("help","with possible commands");
+                displayHelp("quit", "playing chess");
+                displayHelp("login <USERNAME> <PASSWORD>", "to play chess");
+                displayHelp("register <USERNAME> <PASSWORD> <EMAIL>","to create an account");
             }
             case ("quit") -> state = ClientState.OFF;
             case ("login") -> {
@@ -88,14 +85,55 @@ public class Client {
                 try {
                     server.register(new UserData(input[1], input[2], input[3]));
                 } catch (UnauthorizedException e) {
-                    System.out.println("Unable to Login, Incorrect Username or Password");
+                    System.out.println("Unable to Login Username or Email in Use");
+                } catch (InterruptedException | IOException e) {
+                    System.out.println("Unable to Reach Server");
+                } catch (Exception e) {
+                    System.out.println("Unknown Server Error");
                 }
             }
         }
     }
 
     private void postlogin() {
-
+        System.out.print("[LOGGED IN] >>> ");
+        String[] input = getInput();
+        switch (input[0].toLowerCase()) {
+            case ("help") -> {
+                displayHelp("help","with possible commands");
+                displayHelp("quit [-f]", "playing chess");
+                displayHelp("logout", "when you are done");
+                displayHelp("create <NAME>", "a game");
+                displayHelp("list", "games");
+                displayHelp("join <ID> [WHITE|BLACK]", "a game");
+                displayHelp("observe <ID>", "a game");
+            }
+            case ("quit") -> {
+                try {
+                    server.logout();
+                } catch (java.io.IOException | InterruptedException e) {
+                    if (input.length < 2 || !"-f".equals(input[1])) {
+                        System.out.println("Unable to Reach Server");
+                        return;
+                    }
+                } catch (Exception e) {
+                    if (input.length < 2 || !"-f".equals(input[1])) {
+                        System.out.println("Unknown Server Error");
+                        return;
+                    }
+                }
+                state = ClientState.OFF;
+            }
+            case ("logout") -> {
+                try {
+                    server.logout();
+                } catch (java.io.IOException | InterruptedException e) {
+                    System.out.println("Unable to Reach Server");
+                } catch (Exception e) {
+                    System.out.println("Unknown Server Error");
+                }
+            }
+        }
     }
 
     private void blackTeam() {
@@ -109,6 +147,16 @@ public class Client {
     private void observer() {
 
     }
+
+
+
+
+
+
+
+
+
+
 
     private void displayHelp(String command, String information) {
         String line = "\u001b[46]"+ command + "\u001b[49]" + " - " + information;

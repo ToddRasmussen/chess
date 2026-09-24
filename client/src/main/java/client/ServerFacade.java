@@ -63,7 +63,7 @@ public class ServerFacade {
     }
 
 
-    private AuthData authenticate(UserData user, HttpRequest.Builder builder )
+    private AuthData authenticate(UserData user, HttpRequest.Builder builder)
             throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         builder.POST(HttpRequest.BodyPublishers.ofString(serializer.toJson(user)));
         builder.header("Content-Type", "application/json");
