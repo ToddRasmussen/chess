@@ -103,6 +103,8 @@ public class ServerFacade {
         authorization = null;
     }
 
+    private record GamesListResponse (Collection<GameData> games) {}
+
     public Collection<GameData> games(AuthData auth) throws Exception {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.header("Content-Type", "application/json");
@@ -111,28 +113,8 @@ public class ServerFacade {
         builder.GET();
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
-        Collection<GameData> listGames = new LinkedList<>();
-        //TODO: Finish
-        // for each game
-        Map<?, ?> body = serializer.fromJson(response.body(), Map.class);
-        List<?> games = serializer.fromJson(body.get("games"), List.class);
-        for (Object gameStr : games){
-            Map<?, ?> rawGame = serializer.fromJson(gameStr, Map.class);
-            ChessBoard board = new ChessBoard();
-            // for each piece
-            {
-                ChessGame.TeamColor pieceColor = ChessGame.TeamColor.valueOf(colorStr);
-                ChessPiece.PieceType type = ChessPiece.PieceType.valueOf(typeStr);
-                ChessPiece piece = new ChessPiece(pieceColor, type);
-                ChessPosition position = new ChessPosition(Integer.valueOf(rowStr), Integer.valueOf(colStr));
-                board.addPiece(position, piece);
-            }
-            ChessGame game = new ChessGame();
-            game.setBoard(board);
-            GameData gameData = new GameData(rawGame.get("GameID"), rawGame.get("gameName"), game);
-            listGames.add(gameData);
-        }
-        return listGames;
+        GamesListResponse result = serializer.fromJson(response.body(), GamesListResponse.class);
+        return (result != null && result.games() != null) ? result.games() : new LinkedList<>();
     }
 
     public Collection<GameData> games() throws Exception {
