@@ -1,7 +1,5 @@
 package client;
 
-import client.Interfaces.CommandLine;
-
 import java.util.Scanner;
 
 public class Client {
@@ -15,24 +13,20 @@ public class Client {
         System.out.flush();
         System.out.println("Welcome to Chess. Type Help to get started.");
         server = new ServerFacade(8080);
-        commands = createCommands();
+        commands = new CommandLine();
         attachedGameID = null;
         while (!commands.getState().equals(State.OFF)) {
             loop();
         }
     }
 
-    private CommandLine createCommands() {
-        CommandLine commands = new CommandLine();
-
-
-        return commands;
+    private String[] getInput() {
+        String line = scanner.nextLine().trim();
+        return line.isEmpty() ? new String[0] : line.split("\\s+");
     }
-
 
     private void loop() {
         System.out.print("[" + commands.getState().toString() + "] >>> ");
-
-
+        commands.process(getInput());
     }
 }

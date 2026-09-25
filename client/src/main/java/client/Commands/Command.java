@@ -1,5 +1,6 @@
-package client;
+package client.Commands;
 
+import client.State;
 import client.exceptions.InputException;
 
 public class Command {

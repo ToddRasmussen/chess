@@ -1,36 +1,30 @@
-package client.Interfaces;
+package client;
 
-import client.Command;
-import client.State;
+import client.Commands.Command;
 import client.exceptions.InputException;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class CommandLine {
     private State state;
-    private Collection<Command> preLogin;
-    private Collection<Command> postLogin;
-    private Collection<Command> blackTeam;
-    private Collection<Command> whiteTeam;
-    private Collection<Command> observer;
+    private Map<State, Collection<Command>> commands;
     public CommandLine() {
-        preLogin = new LinkedList<>();
-        postLogin = new LinkedList<>();
-        blackTeam = new LinkedList<>();
-        whiteTeam = new LinkedList<>();
-        observer = new LinkedList<>();
+        commands = new HashMap<>();
         state = State.PRELOGIN;
     }
 
-    private Collection<Command> getCommands() {
-        return switch (state) {
-            case State.POSTLOGIN -> postLogin;
-            case State.BLACKTEAM -> blackTeam;
-            case State.WHITETEAM -> whiteTeam;
-            case State.OBSERVER -> observer;
-            default -> preLogin;
-        };
+    private Collection<Command> getCommands(State state) {
+        if (!commands.containsKey(state)) {
+            commands.put(state, new LinkedList<>());
+        }
+        return commands.get(state);
+    }
+
+    public void addCommand(Command newCommand, State state) {
+        getCommands(state).add(newCommand);
     }
 
     public State getState() {
@@ -38,17 +32,19 @@ public class CommandLine {
     }
 
     public void displayHelp() {
-        Collection<Command> commands = getCommands();
+        new Command("help", "with chess").displayHelp();
+        Collection<Command> commands = getCommands(state);
         for(Command command : commands) {
             command.displayHelp();
         }
+        new Command("quit", "chess").displayHelp();
     }
 
     public void process(String[] input) {
         if (input.length < 1) {
             return;
         }
-        for (Command command : getCommands()) {
+        for (Command command : getCommands(state)) {
             if (!command.isCommand(input[0])) {
                 continue;
             }
@@ -69,9 +65,11 @@ public class CommandLine {
             }
             return;
         }
-        if ("quit".equals(input[0])) {
+        if ("help".equals(input[0])) {
             displayHelp();
             return;
+        } else if ("quit".equals(input[0])) {
+            state = State.OFF;
         }
         System.out.println("Unknown Command: " + input[0]);
     }
