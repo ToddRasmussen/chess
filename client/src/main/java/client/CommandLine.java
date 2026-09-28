@@ -1,7 +1,6 @@
 package client;
 
 import client.Commands.Command;
-import client.exceptions.InputException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,8 +8,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class CommandLine {
+    // This Focuses on taking an input and processing it
     private State state;
-    private Map<State, Collection<Command>> commands;
+    private final Map<State, Collection<Command>> commands;
     public CommandLine() {
         commands = new HashMap<>();
         state = State.PRELOGIN;
@@ -40,7 +40,7 @@ public class CommandLine {
         new Command("quit", "chess").displayHelp();
     }
 
-    public void process(String[] input) {
+    public void process(String[] input, ServerFacade server) {
         if (input.length < 1) {
             return;
         }
@@ -48,15 +48,13 @@ public class CommandLine {
             if (!command.isCommand(input[0])) {
                 continue;
             }
-            try {
-                command.validateInput(input);
-            } catch (InputException e) {
+            if (!command.validateInput(input)) {
                 System.out.println("Invalid Input");
                 command.displayHelp();
                 return;
             }
             try {
-                State newState = command.run(input);
+                State newState = command.run(input, server);
                 if (newState != null) {
                     state = newState;
                 }
@@ -70,6 +68,7 @@ public class CommandLine {
             return;
         } else if ("quit".equals(input[0])) {
             state = State.OFF;
+            return;
         }
         System.out.println("Unknown Command: " + input[0]);
     }

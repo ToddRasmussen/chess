@@ -1,16 +1,18 @@
 package client.Commands;
 
+import client.ServerFacade;
 import client.State;
-import client.exceptions.InputException;
 
 public class Command {
-    String command;
-    String information;
-    String prefix;
+    // Generic/Dummy for command
+    private String command;
+    private String information;
+    private String prefix;
+
     public Command(String command, String information) {
         this.command = command;
         this.information = information;
-        this.prefix = command.strip().split("\\s+")[0];
+        prefix = command.strip().split("\\s+")[0];
     }
 
     public void displayHelp() {
@@ -18,16 +20,18 @@ public class Command {
         System.out.println(line);
     }
 
+    // is the input this command?
     public boolean isCommand(String input) {
         return prefix.equals(input);
     }
 
-
-    public void validateInput(String[] input) throws InputException {
-        throw new InputException();
+    // is the given input valid?
+    public boolean validateInput(String[] input) {
+        return false;
     }
 
-    public State run(String[] inputs) {
+    // Returned value is 'null' for it does not care or a value if it changes to that state
+    public State run(String[] inputs, ServerFacade server) {
         return null;
     }
 }
