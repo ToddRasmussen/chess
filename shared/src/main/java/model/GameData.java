@@ -53,4 +53,15 @@ public class GameData {
         return game;
     }
 
+
+    public String toString() {
+        String out = gameID + ": " + gameName;
+        if (getWhiteUsername() != null) {
+            out += " " + getWhiteUsername();
+        }
+        if (getBlackUsername() != null) {
+            out += " " + getBlackUsername();
+        }
+        return out;
+    }
 }

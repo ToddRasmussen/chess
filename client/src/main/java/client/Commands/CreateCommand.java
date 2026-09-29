@@ -2,22 +2,24 @@ package client.Commands;
 
 import client.ServerFacade;
 import client.State;
-import model.UserData;
+import model.GameData;
 
-public class LoginCommand extends Command {
+import java.util.Collection;
 
-    public LoginCommand() {
-        super("login <USERNAME> <PASSWORD>", "to play chess");
+public class CreateCommand extends Command {
+
+    public CreateCommand() {
+        super("create <NAME>", "a game");
     }
 
     public boolean validateInput(String[] input) {
-        return input.length == 3;
+        return input.length == 2;
     }
 
     public State run(String[] inputs, ServerFacade server) {
         try {
-            server.login(new UserData(inputs[1], inputs[2], ""));
-            return State.POSTLOGIN;
+            int gameID = server.newGame(inputs[1]);
+            System.out.println(gameID);
         } catch (Exception e) {
             //TODO use specific exceptions
             System.out.println("Exception:" + e);

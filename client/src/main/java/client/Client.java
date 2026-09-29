@@ -1,8 +1,8 @@
 package client;
 
 import java.util.Scanner;
-import client.Commands.LoginCommand;
-import client.Commands.RegisterCommand;
+
+import client.Commands.*;
 
 public class Client {
     // This Focuses on handling the 'large' scope and delegates the actual work
@@ -17,8 +17,15 @@ public class Client {
         server = new ServerFacade(8080);
         commands = new CommandLine();
 
+        //PRELOGIN
         commands.addCommand(new LoginCommand(), State.PRELOGIN);
         commands.addCommand(new RegisterCommand(), State.PRELOGIN);
+        //POSTLOGIN
+        commands.addCommand(new LogoutCommand(), State.POSTLOGIN);
+        commands.addCommand(new CreateCommand(), State.POSTLOGIN);
+        commands.addCommand(new ListCommand(), State.POSTLOGIN);
+        commands.addCommand(new JoinCommand(), State.POSTLOGIN);
+        commands.addCommand(new ObserveCommand(), State.POSTLOGIN);
 
         attachedGameID = null;
         while (!commands.getState().equals(State.OFF)) {

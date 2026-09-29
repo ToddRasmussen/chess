@@ -1,9 +1,5 @@
 package client;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
 import client.exceptions.AlreadyTakenException;
 import client.exceptions.BadRequestException;
 import client.exceptions.ServerException;
@@ -19,8 +15,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import com.google.gson.Gson;
 
