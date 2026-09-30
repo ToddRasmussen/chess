@@ -5,12 +5,18 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import client.Display;
+import client.ServerFacade;
+import client.State;
 import model.GameData;
 
 public class TerminalDisplay implements Display {
 
     public TerminalDisplay() {
 
+    }
+
+    public void display(Integer gameID, ServerFacade server, State state) {
+        
     }
 
     private void printDrawnBoard(String[][] drawnGame) {
@@ -23,13 +29,13 @@ public class TerminalDisplay implements Display {
         }
     }
 
-    public void spectateGame(GameData gameData) {
+    private void spectateGame(GameData gameData) {
         String title = "Spectating White: " + gameData.getWhiteUsername() + " Vs Black: " + gameData.getBlackUsername();
         System.out.println(title);
         printDrawnBoard(drawBoard(gameData.getGame()));
     }
 
-    public void displayGame(GameData gameData, ChessGame.TeamColor team) {
+    private void displayGame(GameData gameData, ChessGame.TeamColor team) {
         boolean isWhite = team == ChessGame.TeamColor.WHITE;
         String opponent =  isWhite ?  gameData.getBlackUsername() : gameData.getWhiteUsername();
         String title = "Playing Against " + opponent + " as " + team.toString();

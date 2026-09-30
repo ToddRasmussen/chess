@@ -5,6 +5,8 @@ import client.State;
 
 public class JoinCommand extends Command {
 
+    private Integer gameID = null;
+
     public JoinCommand() {
         super("join <ID> <WHITE|BLACK>", "a game");
     }
@@ -17,10 +19,16 @@ public class JoinCommand extends Command {
         try {
             server.joinGame(Integer.getInteger(inputs[1]), inputs[2]);
             System.out.println("Joined game: " + inputs[1]);
+            gameID = Integer.getInteger(inputs[1]);
+            return "WHITE".equals(inputs[1]) ? State.WHITETEAM : State.BLACKTEAM;
         } catch (Exception e) {
             //TODO use specific exceptions
             System.out.println("Exception:" + e);
         }
         return null;
+    }
+
+    public Integer getAttachedGameID() {
+        return gameID;
     }
 }

@@ -10,10 +10,12 @@ import java.util.Map;
 public class CommandLine {
     // This Focuses on taking an input and processing it
     private State state;
+    private Integer attachedGameID;
     private final Map<State, Collection<Command>> commands;
     public CommandLine() {
         commands = new HashMap<>();
         state = State.PRELOGIN;
+        attachedGameID = null;
     }
 
     private Collection<Command> getCommands(State state) {
@@ -29,6 +31,10 @@ public class CommandLine {
 
     public State getState() {
         return state;
+    }
+
+    public Integer getAttachedGameID() {
+        return attachedGameID;
     }
 
     public void displayHelp() {
@@ -58,6 +64,7 @@ public class CommandLine {
                 if (newState != null) {
                     state = newState;
                 }
+                attachedGameID = command.getAttachedGameID();
             } catch (Exception e) {
                 System.out.println("Unexpected Error: " + e);
             }

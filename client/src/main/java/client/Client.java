@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import client.Commands.*;
 import client.Displays.TerminalDisplay;
+import model.GameData;
 
 public class Client {
     // This Focuses on handling the 'large' scope and delegates the actual work
@@ -28,6 +29,11 @@ public class Client {
         commands.addCommand(new ListCommand(), State.POSTLOGIN);
         commands.addCommand(new JoinCommand(), State.POSTLOGIN);
         commands.addCommand(new ObserveCommand(), State.POSTLOGIN);
+
+        //GAME
+        commands.addCommand(new ExitCommand(), State.BLACKTEAM);
+        commands.addCommand(new ExitCommand(), State.WHITETEAM);
+        commands.addCommand(new ExitCommand(), State.OBSERVER);
 
         while (!commands.getState().equals(State.OFF)) {
             loop();

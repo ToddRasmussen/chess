@@ -34,4 +34,8 @@ public class Command {
     public State run(String[] inputs, ServerFacade server) {
         return null;
     }
+
+    public Integer getAttachedGameID() {
+        return null;
+    }
 }

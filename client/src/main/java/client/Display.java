@@ -5,6 +5,5 @@ import model.GameData;
 
 public interface Display {
 
-    public void spectateGame(GameData gameData);
-    public void displayGame(GameData gameData, ChessGame.TeamColor team);
+    public void display(Integer gameID, ServerFacade server, State state);
 }

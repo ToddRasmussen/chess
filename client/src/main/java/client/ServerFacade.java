@@ -124,6 +124,22 @@ public class ServerFacade {
         return games(authorization);
     }
 
+
+    public GameData game(Integer gameID, AuthData auth)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
+        for (GameData game : games(auth)) {
+            if (game.getGameID() == gameID) {
+                return game;
+            }
+        }
+        throw new BadRequestException("Invalid GameID");
+    }
+
+    public GameData game(Integer gameID)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
+        return game(gameID, authorization);
+    }
+
     private record NewGameRequest(String gameName) {}
     private record NewGameResponse(int gameID) {}
 
