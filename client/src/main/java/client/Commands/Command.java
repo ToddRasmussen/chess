@@ -16,7 +16,7 @@ public class Command {
     }
 
     public void displayHelp() {
-        String line = "\u001b[46]"+ command + "\u001b[49]" + " - " + information;
+        String line = "\u001b[36m"+ command + "\u001b[39m" + " - " + information;
         System.out.println(line);
     }
 
