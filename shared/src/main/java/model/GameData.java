@@ -57,10 +57,10 @@ public class GameData {
     public String toString() {
         String out = gameID + ": " + gameName;
         if (getWhiteUsername() != null) {
-            out += " " + getWhiteUsername();
+            out += "\n  White: " + getWhiteUsername();
         }
         if (getBlackUsername() != null) {
-            out += " " + getBlackUsername();
+            out += "\n  Black: " + getBlackUsername();
         }
         return out;
     }

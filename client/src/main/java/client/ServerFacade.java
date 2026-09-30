@@ -1,9 +1,11 @@
 package client;
 
+import chess.ChessPosition;
 import client.exceptions.AlreadyTakenException;
 import client.exceptions.BadRequestException;
 import client.exceptions.ServerException;
 import client.exceptions.UnauthorizedException;
+import com.google.gson.GsonBuilder;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -36,7 +38,10 @@ public class ServerFacade {
         gameEndpoint = URI.create(baseURL + "game");
         client = HttpClient.newHttpClient();
         authorization = null;
-        serializer = new Gson();
+        serializer = new GsonBuilder()
+                .enableComplexMapKeySerialization()
+                .registerTypeAdapter(ChessPosition.class, new ChessPositionDeserializer())
+                .create();
     }
 
     private void addAuthorization(AuthData auth, HttpRequest.Builder builder) throws UnauthorizedException {
@@ -110,7 +115,6 @@ public class ServerFacade {
         builder.GET();
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
-        System.out.println(response.body());
         GamesListResponse result = serializer.fromJson(response.body(), GamesListResponse.class);
         return (result != null && result.games() != null) ? result.games() : new LinkedList<>();
     }

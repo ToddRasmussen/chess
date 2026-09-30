@@ -39,7 +39,10 @@ public class Client {
     }
 
     private void loop() {
-        System.out.print("[" + commands.getState().toString() + "] >>> ");
+        State currentState = commands.getState();
+        
+
+        System.out.print("[" + currentState.toString() + "] >>> ");
         commands.process(getInput(), server);
     }
 }
