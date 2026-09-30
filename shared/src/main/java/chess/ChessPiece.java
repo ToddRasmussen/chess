@@ -14,13 +14,16 @@ public class ChessPiece {
 
     //DATA
     private ChessGame.TeamColor pieceColor;
-    private ChessPiece.PieceType type;
-    private int moveCount;
+    private PieceType type;
 
+    /**
+     *
+     * @param pieceColor color of the piece
+     * @param type of piece
+     */
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
-        this.moveCount = 0;
     }
 
     /**
@@ -36,6 +39,10 @@ public class ChessPiece {
 
     }
 
+    /**
+     *
+     * @return list of all possible promotion options
+     */
     private Collection<PieceType> getPromotionOptions() {
         Collection<PieceType> collection = new HashSet<>();
 
@@ -237,18 +244,11 @@ public class ChessPiece {
         return collection;
     }
 
-    public void updateMoved() {
-        moveCount++;
-    }
-
-    public boolean getHasMoved() {
-        return moveCount > 0;
-    }
-
-    public int getMoveCount() {
-        return moveCount;
-    }
-
+    /**
+     *
+     * @param obj   the reference object with which to compare.
+     * @return if the piece is the same as this piece
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChessPiece other) {
@@ -260,6 +260,10 @@ public class ChessPiece {
         return false;
     }
 
+    /**
+     *
+     * @return unique hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(getPieceType(), getTeamColor());

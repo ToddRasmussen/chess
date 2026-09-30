@@ -39,9 +39,9 @@ public class ServerFacade {
         serializer = new Gson();
     }
 
-    private void addAuthorization(AuthData auth, HttpRequest.Builder builder) throws Exception {
+    private void addAuthorization(AuthData auth, HttpRequest.Builder builder) throws UnauthorizedException {
         if (auth == null || auth.authToken() == null) {
-            throw new Exception("No Authorization Given");
+            throw new UnauthorizedException("No Authorization Given");
         }
         builder.header("Authorization", auth.authToken());
     }
@@ -82,7 +82,8 @@ public class ServerFacade {
         return authenticate(user, builder);
     }
 
-    public void logout(AuthData auth) throws Exception {
+    public void logout(AuthData auth)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.header("Content-Type", "application/json");
         builder.uri(sessionEndpoint);
@@ -92,14 +93,16 @@ public class ServerFacade {
         handleStatusCode(response.statusCode());
     }
 
-    public void logout() throws Exception {
+    public void logout()
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         logout(authorization);
         authorization = null;
     }
 
     private record GamesListResponse (Collection<GameData> games) {}
 
-    public Collection<GameData> games(AuthData auth) throws Exception {
+    public Collection<GameData> games(AuthData auth)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.header("Content-Type", "application/json");
         builder.uri(gameEndpoint);
@@ -107,18 +110,21 @@ public class ServerFacade {
         builder.GET();
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
+        System.out.println(response.body());
         GamesListResponse result = serializer.fromJson(response.body(), GamesListResponse.class);
         return (result != null && result.games() != null) ? result.games() : new LinkedList<>();
     }
 
-    public Collection<GameData> games() throws Exception {
+    public Collection<GameData> games()
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         return games(authorization);
     }
 
     private record NewGameRequest(String gameName) {}
     private record NewGameResponse(int gameID) {}
 
-    public int newGame(AuthData auth, String gameName) throws Exception {
+    public int newGame(AuthData auth, String gameName)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.header("Content-Type", "application/json");
         builder.uri(gameEndpoint);
@@ -130,13 +136,15 @@ public class ServerFacade {
         return serializer.fromJson(response.body(), NewGameResponse.class).gameID();
     }
 
-    public int newGame(String gameName) throws Exception {
+    public int newGame(String gameName)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         return newGame(authorization, gameName);
     }
 
     private record JoinGameRequest(int gameID, String playerColor) {}
 
-    public void joinGame(AuthData auth, int gameID, String playerColor) throws Exception {
+    public void joinGame(AuthData auth, int gameID, String playerColor)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.header("Content-Type", "application/json");
         builder.uri(gameEndpoint);
@@ -147,11 +155,13 @@ public class ServerFacade {
         handleStatusCode(response.statusCode());
     }
 
-    public void joinGame(int gameID, String playerColor) throws Exception {
+    public void joinGame(int gameID, String playerColor)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         joinGame(authorization,gameID,playerColor);
     }
 
-    public void reset() throws Exception {
+    public void reset()
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         builder.header("Content-Type", "application/json");
         builder.uri(databaseEndpoint);
@@ -159,5 +169,4 @@ public class ServerFacade {
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
     }
-
 }

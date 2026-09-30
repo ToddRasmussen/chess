@@ -18,7 +18,6 @@ public class ChessGame {
     //DATA
     private ChessBoard board;
     private TeamColor currentTeam;
-    private final Deque<ChessMove> moveHistory = new LinkedList<>();
 
     public ChessGame() {
         board = new ChessBoard();
@@ -135,8 +134,6 @@ public class ChessGame {
         } else {
             board.addPiece(move.getEndPosition(), new ChessPiece(color, move.getPromotionPiece()));
         }
-        piece.updateMoved();
-        moveHistory.add(move);
         swapTeamTurn();
     }
 

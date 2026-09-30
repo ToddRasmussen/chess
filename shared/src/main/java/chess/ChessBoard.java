@@ -21,7 +21,6 @@ public class ChessBoard implements Iterable<Map.Entry<ChessPosition, ChessPiece>
         board = new HashMap<>(original.board);
     }
 
-
     public Set<Map.Entry<ChessPosition, ChessPiece>> entrySet() {
         return this.board.entrySet();
     }

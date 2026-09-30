@@ -129,6 +129,7 @@ public class Server {
         try {
             String authToken = getAuth(ctx);
             Collection<GameData> games = service.listGames(authToken);
+
             sendSuccess(ctx, Map.of("games", games));
         } catch (InvalidAuthorizationException e) {
             sendErrorMessage(ctx, e, 401);

@@ -15,6 +15,12 @@ public class ChessMove {
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;
 
+    /**
+     *
+     * @param startPosition of move
+     * @param endPosition of move
+     * @param promotionPiece of resulting piece (null if no change)
+     */
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
@@ -22,12 +28,25 @@ public class ChessMove {
         this.promotionPiece = promotionPiece;
     }
 
+    /**
+     *
+     * @param startPosition of move
+     * @param vector from start
+     * @param promotionPiece of resulting piece (null if no change)
+     */
     public ChessMove(ChessPosition startPosition, ChessVector vector, ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
         this.endPosition = startPosition.add(vector);
         this.promotionPiece = promotionPiece;
     }
 
+    /**
+     *
+     * @param startPosition of move
+     * @param deltaRow from start
+     * @param deltaCol from start
+     * @param promotionPiece of resulting piece (null if no change)
+     */
     public ChessMove(ChessPosition startPosition, int deltaRow, int deltaCol, ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
         this.endPosition = startPosition.add(deltaRow, deltaCol);
@@ -49,10 +68,6 @@ public class ChessMove {
     }
 
 
-    public boolean isInBounds() {
-        return endPosition.isInBounds();
-    }
-
 
 
     /**
@@ -65,6 +80,11 @@ public class ChessMove {
         return promotionPiece;
     }
 
+    /**
+     *
+     * @param obj   the reference object with which to compare.
+     * @return boolean representing if its the same move
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChessMove other) {
@@ -77,6 +97,10 @@ public class ChessMove {
         return false;
     }
 
+    /**
+     *
+     * @return unique hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(getStartPosition(), getEndPosition(), getPromotionPiece());
