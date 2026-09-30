@@ -3,19 +3,21 @@ package client;
 import java.util.Scanner;
 
 import client.Commands.*;
+import client.Displays.TerminalDisplay;
 
 public class Client {
     // This Focuses on handling the 'large' scope and delegates the actual work
     private ServerFacade server;
     private final Scanner scanner = new Scanner(System.in);
-    private Integer attachedGameID;
     private CommandLine commands;
+    private Display display;
 
     public void run() {
         System.out.flush();
         System.out.println("Welcome to Chess. Type Help to get started.");
         server = new ServerFacade(8080);
         commands = new CommandLine();
+        display = new TerminalDisplay();
 
         //PRELOGIN
         commands.addCommand(new LoginCommand(), State.PRELOGIN);
@@ -27,7 +29,6 @@ public class Client {
         commands.addCommand(new JoinCommand(), State.POSTLOGIN);
         commands.addCommand(new ObserveCommand(), State.POSTLOGIN);
 
-        attachedGameID = null;
         while (!commands.getState().equals(State.OFF)) {
             loop();
         }
@@ -40,7 +41,6 @@ public class Client {
 
     private void loop() {
         State currentState = commands.getState();
-        
 
         System.out.print("[" + currentState.toString() + "] >>> ");
         commands.process(getInput(), server);

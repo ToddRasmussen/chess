@@ -37,6 +37,16 @@ public class ChessPiece {
         ROOK,
         PAWN;
 
+        public char getAbrivation() {
+            return switch (this) {
+                case KING -> 'K';
+                case QUEEN -> 'Q';
+                case BISHOP -> 'B';
+                case KNIGHT -> 'N';
+                case ROOK -> 'R';
+                default -> 'P';
+            };
+        }
     }
 
     /**
