@@ -2,6 +2,9 @@ package client.commands;
 
 import client.ServerFacade;
 import client.State;
+import client.exceptions.AlreadyTakenException;
+
+import java.io.IOException;
 
 public class ResetCommand extends Command {
 
@@ -16,9 +19,10 @@ public class ResetCommand extends Command {
     public State run(String[] inputs, ServerFacade server) {
         try {
             server.reset();
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Server Connection Error");
         } catch (Exception e) {
-            //TODO use specific exceptions
-            System.out.println("Exception:" + e);
+            System.out.println("Unexpected Error:" + e);
         }
         return null;
     }

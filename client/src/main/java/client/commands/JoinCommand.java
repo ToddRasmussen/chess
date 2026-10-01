@@ -2,6 +2,9 @@ package client.commands;
 
 import client.ServerFacade;
 import client.State;
+import client.exceptions.AlreadyTakenException;
+
+import java.io.IOException;
 
 public class JoinCommand extends Command {
 
@@ -21,9 +24,12 @@ public class JoinCommand extends Command {
             System.out.println("Joined game: " + inputs[1]);
             gameID = Integer.parseInt(inputs[1]);
             return "white".equalsIgnoreCase(inputs[2]) ? State.WHITETEAM : State.BLACKTEAM;
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Server Connection Error");
+        } catch (AlreadyTakenException e) {
+            System.out.println("Team " + inputs[2] + " already taken");
         } catch (Exception e) {
-            //TODO use specific exceptions
-            System.out.println("Exception:" + e);
+            System.out.println("Unexpected Error:" + e);
         }
         return null;
     }

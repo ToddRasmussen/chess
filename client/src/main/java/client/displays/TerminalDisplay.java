@@ -9,6 +9,8 @@ import client.ServerFacade;
 import client.State;
 import model.GameData;
 
+import java.io.IOException;
+
 public class TerminalDisplay implements Display {
 
     private Integer width;
@@ -32,8 +34,10 @@ public class TerminalDisplay implements Display {
                 ChessGame.TeamColor team = state == State.WHITETEAM ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
                 displayGame(game, team);
             }
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Server Connection Error");
         } catch (Exception e) {
-            System.out.println("Exception:" + e);
+            System.out.println("Unexpected Error:" + e);
         }
     }
 

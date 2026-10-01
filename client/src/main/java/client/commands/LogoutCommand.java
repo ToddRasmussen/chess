@@ -2,6 +2,9 @@ package client.commands;
 
 import client.ServerFacade;
 import client.State;
+import client.exceptions.AlreadyTakenException;
+
+import java.io.IOException;
 
 public class LogoutCommand extends Command {
 
@@ -17,9 +20,10 @@ public class LogoutCommand extends Command {
         try {
             server.logout();
             return State.PRELOGIN;
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Server Connection Error");
         } catch (Exception e) {
-            //TODO use specific exceptions
-            System.out.println("Exception:" + e);
+            System.out.println("Unexpected Error:" + e);
         }
         return null;
     }

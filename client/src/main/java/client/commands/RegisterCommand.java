@@ -2,7 +2,11 @@ package client.commands;
 
 import client.ServerFacade;
 import client.State;
+import client.exceptions.AlreadyTakenException;
+import client.exceptions.UnauthorizedException;
 import model.UserData;
+
+import java.io.IOException;
 
 public class RegisterCommand extends Command {
 
@@ -18,9 +22,12 @@ public class RegisterCommand extends Command {
         try {
             server.register(new UserData(inputs[1], inputs[2], inputs[3]));
             return State.POSTLOGIN;
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Server Connection Error");
+        } catch (UnauthorizedException e) {
+            System.out.println("Username already Taken");
         } catch (Exception e) {
-            //TODO use specific exceptions
-            System.out.println("Exception:" + e);
+            System.out.println("Unexpected Error:" + e);
         }
         return null;
     }

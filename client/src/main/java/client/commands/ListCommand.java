@@ -2,8 +2,10 @@ package client.commands;
 
 import client.ServerFacade;
 import client.State;
+import client.exceptions.AlreadyTakenException;
 import model.GameData;
 
+import java.io.IOException;
 import java.util.Collection;
 
 public class ListCommand extends Command {
@@ -27,9 +29,10 @@ public class ListCommand extends Command {
             if (!flag) {
                 System.out.println("No Games to List");
             }
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Server Connection Error");
         } catch (Exception e) {
-            //TODO use specific exceptions
-            System.out.println("Exception:" + e);
+            System.out.println("Unexpected Error:" + e);
         }
         return null;
     }

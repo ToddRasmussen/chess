@@ -3,6 +3,8 @@ package client.commands;
 import client.ServerFacade;
 import client.State;
 
+import java.io.IOException;
+
 public class ExitCommand extends Command {
 
     public ExitCommand() {
@@ -17,8 +19,7 @@ public class ExitCommand extends Command {
         try {
             return State.POSTLOGIN;
         } catch (Exception e) {
-            //TODO use specific exceptions
-            System.out.println("Exception:" + e);
+            System.out.println("Unexpected Error:" + e);
         }
         return null;
     }
