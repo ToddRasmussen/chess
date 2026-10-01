@@ -10,12 +10,12 @@ import server.Server;
 public class ServerFacadeTests {
 
     private static Server server;
-    private static int port = 8080;
+    private static int port = 8;
 
     @BeforeAll
     public static void init() {
         server = new Server();
-        var port = server.run(ServerFacadeTests.port);
+        port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
     }
 
