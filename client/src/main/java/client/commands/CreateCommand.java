@@ -1,10 +1,7 @@
-package client.Commands;
+package client.commands;
 
 import client.ServerFacade;
 import client.State;
-import model.GameData;
-
-import java.util.Collection;
 
 public class CreateCommand extends Command {
 

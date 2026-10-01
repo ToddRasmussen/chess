@@ -1,4 +1,4 @@
-package client.Commands;
+package client.commands;
 
 import client.ServerFacade;
 import client.State;
@@ -17,10 +17,10 @@ public class JoinCommand extends Command {
 
     public State run(String[] inputs, ServerFacade server) {
         try {
-            server.joinGame(Integer.getInteger(inputs[1]), inputs[2]);
+            server.joinGame(Integer.parseInt(inputs[1]), inputs[2].toUpperCase());
             System.out.println("Joined game: " + inputs[1]);
-            gameID = Integer.getInteger(inputs[1]);
-            return "WHITE".equals(inputs[1]) ? State.WHITETEAM : State.BLACKTEAM;
+            gameID = Integer.parseInt(inputs[1]);
+            return "white".equalsIgnoreCase(inputs[2]) ? State.WHITETEAM : State.BLACKTEAM;
         } catch (Exception e) {
             //TODO use specific exceptions
             System.out.println("Exception:" + e);

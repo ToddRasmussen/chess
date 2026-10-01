@@ -1,23 +1,22 @@
-package client.Commands;
+package client.commands;
 
 import client.ServerFacade;
 import client.State;
-import model.UserData;
 
-public class LoginCommand extends Command {
+public class LogoutCommand extends Command {
 
-    public LoginCommand() {
-        super("login <USERNAME> <PASSWORD>", "to play chess");
+    public LogoutCommand() {
+        super("logout", "to create an account");
     }
 
     public boolean validateInput(String[] input) {
-        return input.length == 3;
+        return input.length == 1;
     }
 
     public State run(String[] inputs, ServerFacade server) {
         try {
-            server.login(new UserData(inputs[1], inputs[2], ""));
-            return State.POSTLOGIN;
+            server.logout();
+            return State.PRELOGIN;
         } catch (Exception e) {
             //TODO use specific exceptions
             System.out.println("Exception:" + e);

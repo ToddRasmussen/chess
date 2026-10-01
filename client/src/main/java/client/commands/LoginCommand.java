@@ -1,22 +1,22 @@
-package client.Commands;
+package client.commands;
 
 import client.ServerFacade;
 import client.State;
 import model.UserData;
 
-public class RegisterCommand extends Command {
+public class LoginCommand extends Command {
 
-    public RegisterCommand() {
-        super("register <USERNAME> <PASSWORD> <EMAIL>", "to create an account");
+    public LoginCommand() {
+        super("login <USERNAME> <PASSWORD>", "to play chess");
     }
 
     public boolean validateInput(String[] input) {
-        return input.length == 4;
+        return input.length == 3;
     }
 
     public State run(String[] inputs, ServerFacade server) {
         try {
-            server.register(new UserData(inputs[1], inputs[2], inputs[3]));
+            server.login(new UserData(inputs[1], inputs[2], ""));
             return State.POSTLOGIN;
         } catch (Exception e) {
             //TODO use specific exceptions

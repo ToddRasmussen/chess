@@ -2,9 +2,8 @@ package client;
 
 import java.util.Scanner;
 
-import client.Commands.*;
-import client.Displays.TerminalDisplay;
-import model.GameData;
+import client.commands.*;
+import client.displays.TerminalDisplay;
 
 public class Client {
     // This Focuses on handling the 'large' scope and delegates the actual work
@@ -18,11 +17,12 @@ public class Client {
         System.out.println("Welcome to Chess. Type Help to get started.");
         server = new ServerFacade(8080);
         commands = new CommandLine();
-        display = new TerminalDisplay();
+        display = new TerminalDisplay(5);
 
         //PRELOGIN
         commands.addCommand(new LoginCommand(), State.PRELOGIN);
         commands.addCommand(new RegisterCommand(), State.PRELOGIN);
+        commands.addCommand(new ResetCommand(), State.PRELOGIN);
         //POSTLOGIN
         commands.addCommand(new LogoutCommand(), State.POSTLOGIN);
         commands.addCommand(new CreateCommand(), State.POSTLOGIN);
@@ -46,9 +46,8 @@ public class Client {
     }
 
     private void loop() {
-        State currentState = commands.getState();
-
-        System.out.print("[" + currentState.toString() + "] >>> ");
+        display.display(commands.getAttachedGameID(), server, commands.getState());
+        System.out.print("[" + commands.getState().toString() + "] >>> ");
         commands.process(getInput(), server);
     }
 }

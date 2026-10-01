@@ -1,4 +1,4 @@
-package client.Displays;
+package client.displays;
 
 import chess.ChessBoard;
 import chess.ChessGame;
@@ -11,12 +11,30 @@ import model.GameData;
 
 public class TerminalDisplay implements Display {
 
-    public TerminalDisplay() {
+    private Integer width;
+
+    public TerminalDisplay(Integer width) {
+        this.width = width;
 
     }
 
     public void display(Integer gameID, ServerFacade server, State state) {
-        
+        switch (state) {
+            case State.OFF, State.POSTLOGIN, State.PRELOGIN: return;
+        }
+
+        try {
+            GameData game = server.game(gameID);
+
+            if (state == State.OBSERVER) {
+                spectateGame(game);
+            } else {
+                ChessGame.TeamColor team = state == State.WHITETEAM ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+                displayGame(game, team);
+            }
+        } catch (Exception e) {
+            System.out.println("Exception:" + e);
+        }
     }
 
     private void printDrawnBoard(String[][] drawnGame) {
@@ -25,7 +43,7 @@ public class TerminalDisplay implements Display {
             for (String cell : row) {
                 merged.append(cell);
             }
-            System.out.println(merged);
+            System.out.println(merged + "\u001b[39;49m");
         }
     }
 
@@ -38,7 +56,7 @@ public class TerminalDisplay implements Display {
     private void displayGame(GameData gameData, ChessGame.TeamColor team) {
         boolean isWhite = team == ChessGame.TeamColor.WHITE;
         String opponent =  isWhite ?  gameData.getBlackUsername() : gameData.getWhiteUsername();
-        String title = "Playing Against " + opponent + " as " + team.toString();
+        String title = "Playing Against " + opponent;
         System.out.println(title);
         String[][] drawnBoard = drawBoard(gameData.getGame());
         if (team == ChessGame.TeamColor.BLACK) {
@@ -59,28 +77,29 @@ public class TerminalDisplay implements Display {
     }
 
     private String[] columnLabels() {
+        String extend = " ".repeat((width-1)/2);
         String[] out = new String[10];
         for (int i = 0; i<10; i++) {
             out[i] = "\u001b[30;47m";
         }
-        out[0] += " ";
+        out[0] += extend + " " + extend;
         for (int i = 1; i<9; i++) {
-            out[i] += (char) ('a' + i - 1);
+            out[i] += extend + (char) ('a' + i - 1) + extend;
         }
-        out[9] += " ";
-
+        out[9] += extend + " " + extend;
         return out;
     }
 
     private String[][] drawBoard(ChessGame game) {
+        String extend = " ".repeat((width-1)/2);
         String[][] out = new String[10][10];
         ChessBoard board = game.getBoard();
         //[row][col]
         out[0] = columnLabels();
         out[9] = columnLabels();
         for (int i = 1; i < 9; i++) {
-            out[i][0] = "\u001b[30;47m" + (9-i);
-            out[i][9] = "\u001b[30;47m" + (9-i);
+            out[i][0] = "\u001b[30;47m" + extend + (9-i) + extend;
+            out[i][9] = "\u001b[30;47m" + extend + (9-i) + extend;
         }
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
@@ -89,10 +108,12 @@ public class TerminalDisplay implements Display {
                 ChessPiece piece = board.getPiece(position);
                 out[i][j] = "\u001b[" + getBackgroundCode(position);
                 if (piece == null) {
-                    out[i][j] += "m ";
+                    out[i][j] += "m " + extend + extend;
                 } else {
                     out[i][j] += ";" + getForegroundCode(piece.getTeamColor()) + "m";
+                    out[i][j] += extend;
                     out[i][j] += piece.getPieceType().getAbrivation();
+                    out[i][j] += extend;
                 }
             }
         }

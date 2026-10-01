@@ -1,6 +1,6 @@
 package client;
 
-import client.Commands.Command;
+import client.commands.Command;
 
 import java.util.Collection;
 import java.util.HashMap;

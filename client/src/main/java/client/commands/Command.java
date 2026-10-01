@@ -1,4 +1,4 @@
-package client.Commands;
+package client.commands;
 
 import client.ServerFacade;
 import client.State;

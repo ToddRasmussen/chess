@@ -1,13 +1,12 @@
-package client.Commands;
+package client.commands;
 
 import client.ServerFacade;
 import client.State;
-import model.UserData;
 
-public class LogoutCommand extends Command {
+public class ExitCommand extends Command {
 
-    public LogoutCommand() {
-        super("logout", "to create an account");
+    public ExitCommand() {
+        super("exit", "the game");
     }
 
     public boolean validateInput(String[] input) {
@@ -16,8 +15,7 @@ public class LogoutCommand extends Command {
 
     public State run(String[] inputs, ServerFacade server) {
         try {
-            server.logout();
-            return State.PRELOGIN;
+            return State.POSTLOGIN;
         } catch (Exception e) {
             //TODO use specific exceptions
             System.out.println("Exception:" + e);
