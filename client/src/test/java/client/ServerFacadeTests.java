@@ -10,7 +10,7 @@ import server.Server;
 public class ServerFacadeTests {
 
     private static Server server;
-    private static int port = 8;
+    private static int port;
 
     @BeforeAll
     public static void init() {
