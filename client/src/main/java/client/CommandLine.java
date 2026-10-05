@@ -47,7 +47,7 @@ public class CommandLine {
         new Command("quit", "chess").displayHelp();
     }
 
-    public void process(String[] input, ServerFacade server) {
+    public void process(String[] input) {
         if (input.length < 1) {
             return;
         }
@@ -61,7 +61,7 @@ public class CommandLine {
                 return;
             }
             try {
-                State newState = command.run(input, server);
+                State newState = command.run(input);
                 if (newState != null) {
                     state = newState;
                 }

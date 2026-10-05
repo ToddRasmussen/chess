@@ -19,7 +19,7 @@ public class RedrawCommand extends Command {
         return inputs.length == 1;
     }
 
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         display.triggerRedraw();
         return null;
     }

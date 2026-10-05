@@ -8,19 +8,20 @@ import model.UserData;
 import java.io.IOException;
 
 public class RegisterCommand extends Command {
-
+    private final ServerFacade server;
     /**
      * command to register a new account
      */
-    public RegisterCommand() {
+    public RegisterCommand(ServerFacade server) {
         super("register <USERNAME> <PASSWORD> <EMAIL>", "to create an account");
+        this.server = server;
     }
 
     public boolean validateInput(String[] inputs) {
         return inputs.length == 4;
     }
 
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         try {
             server.register(new UserData(inputs[1], inputs[2], inputs[3]));
             return State.POSTLOGIN;
