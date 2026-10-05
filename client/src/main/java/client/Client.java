@@ -28,7 +28,7 @@ public class Client {
         //POSTLOGIN
         commands.addCommand(new LogoutCommand(server), State.POSTLOGIN);
         commands.addCommand(new CreateCommand(server), State.POSTLOGIN);
-        commands.addCommand(new ListCommand(), State.POSTLOGIN);
+        commands.addCommand(new ListCommand(server), State.POSTLOGIN);
         commands.addCommand(new JoinCommand(server), State.POSTLOGIN);
         commands.addCommand(new ObserveCommand(server), State.POSTLOGIN);
 

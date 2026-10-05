@@ -12,7 +12,7 @@ public class ListCommand extends Command {
     /**
      * command to list all active games
      */
-    public ListCommand() {
+    public ListCommand(ServerFacade server) {
         super("list", "games");
         this.server = server;
     }
