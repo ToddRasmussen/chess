@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import client.commands.*;
 import client.displays.TerminalDisplay;
+import client.internal.State;
 
 public class Client {
     // This Focuses on handling the 'large' scope and delegates the actual work

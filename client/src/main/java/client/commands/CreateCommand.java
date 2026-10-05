@@ -1,18 +1,21 @@
 package client.commands;
 
 import client.ServerFacade;
-import client.State;
+import client.internal.State;
 
 import java.io.IOException;
 
 public class CreateCommand extends Command {
 
+    /**
+     * command to create a new game
+     */
     public CreateCommand() {
         super("create <NAME>", "a game");
     }
 
-    public boolean validateInput(String[] input) {
-        return input.length == 2;
+    public boolean validateInput(String[] inputs) {
+        return inputs.length == 2;
     }
 
     public State run(String[] inputs, ServerFacade server) {

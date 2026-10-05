@@ -1,21 +1,23 @@
 package client.commands;
 
 import client.ServerFacade;
-import client.State;
+import client.internal.State;
 import client.exceptions.AlreadyTakenException;
-import client.exceptions.UnauthorizedException;
 import model.UserData;
 
 import java.io.IOException;
 
 public class RegisterCommand extends Command {
 
+    /**
+     * command to register a new account
+     */
     public RegisterCommand() {
         super("register <USERNAME> <PASSWORD> <EMAIL>", "to create an account");
     }
 
-    public boolean validateInput(String[] input) {
-        return input.length == 4;
+    public boolean validateInput(String[] inputs) {
+        return inputs.length == 4;
     }
 
     public State run(String[] inputs, ServerFacade server) {
@@ -24,7 +26,7 @@ public class RegisterCommand extends Command {
             return State.POSTLOGIN;
         } catch (InterruptedException | IOException e) {
             System.out.println("Server Connection Error");
-        } catch (UnauthorizedException e) {
+        } catch (AlreadyTakenException e) {
             System.out.println("Username already Taken");
         } catch (Exception e) {
             System.out.println("Unexpected Error:" + e);

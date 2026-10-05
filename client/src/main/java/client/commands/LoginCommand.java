@@ -1,8 +1,7 @@
 package client.commands;
 
 import client.ServerFacade;
-import client.State;
-import client.exceptions.AlreadyTakenException;
+import client.internal.State;
 import client.exceptions.UnauthorizedException;
 import model.UserData;
 
@@ -10,12 +9,15 @@ import java.io.IOException;
 
 public class LoginCommand extends Command {
 
+    /**
+     * command to log in to an account
+     */
     public LoginCommand() {
         super("login <USERNAME> <PASSWORD>", "to play chess");
     }
 
-    public boolean validateInput(String[] input) {
-        return input.length == 3;
+    public boolean validateInput(String[] inputs) {
+        return inputs.length == 3;
     }
 
     public State run(String[] inputs, ServerFacade server) {

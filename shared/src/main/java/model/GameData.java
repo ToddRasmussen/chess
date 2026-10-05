@@ -56,12 +56,8 @@ public class GameData {
 
     public String toString() {
         String out = gameID + ": " + gameName;
-        if (getWhiteUsername() != null) {
-            out += "\n  White: " + getWhiteUsername();
-        }
-        if (getBlackUsername() != null) {
-            out += "\n  Black: " + getBlackUsername();
-        }
+        out += "\n  White: " + getWhiteUsername();
+        out += "\n  Black: " + getBlackUsername();
         return out;
     }
 }

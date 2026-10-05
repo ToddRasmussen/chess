@@ -6,18 +6,18 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 import client.Display;
 import client.ServerFacade;
-import client.State;
+import client.internal.State;
 import model.GameData;
 
 import java.io.IOException;
 
 public class TerminalDisplay implements Display {
 
-    private Integer width;
+    // extend string to add to beginning and end of each cell in order to extend its size
+    private final String extend;
 
     public TerminalDisplay(Integer width) {
-        this.width = width;
-
+        extend  = " ".repeat((width-1)/2);
     }
 
     public void display(Integer gameID, ServerFacade server, State state) {
@@ -73,7 +73,7 @@ public class TerminalDisplay implements Display {
     private Integer getBackgroundCode(ChessPosition position) {
         int sum = position.getColumn() + position.getRow();
         boolean even = sum%2 == 0;
-        return even ? 40 : 107;
+        return even ? 107 : 40;
     }
 
     private Integer getForegroundCode(ChessGame.TeamColor team) {
@@ -81,7 +81,6 @@ public class TerminalDisplay implements Display {
     }
 
     private String[] columnLabels() {
-        String extend = " ".repeat((width-1)/2);
         String[] out = new String[10];
         for (int i = 0; i<10; i++) {
             out[i] = "\u001b[30;47m";
@@ -95,7 +94,6 @@ public class TerminalDisplay implements Display {
     }
 
     private String[][] drawBoard(ChessGame game) {
-        String extend = " ".repeat((width-1)/2);
         String[][] out = new String[10][10];
         ChessBoard board = game.getBoard();
         //[row][col]

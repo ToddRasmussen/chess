@@ -1,4 +1,4 @@
-package client;
+package client.internal;
 
 import chess.ChessPosition;
 import com.google.gson.*;

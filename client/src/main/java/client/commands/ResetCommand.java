@@ -1,19 +1,21 @@
 package client.commands;
 
 import client.ServerFacade;
-import client.State;
-import client.exceptions.AlreadyTakenException;
+import client.internal.State;
 
 import java.io.IOException;
 
 public class ResetCommand extends Command {
 
+    /**
+     * command to tell server to reset
+     */
     public ResetCommand() {
         super("reset", "the server");
     }
 
-    public boolean validateInput(String[] input) {
-        return input.length == 1;
+    public boolean validateInput(String[] inputs) {
+        return inputs.length == 1;
     }
 
     public State run(String[] inputs, ServerFacade server) {

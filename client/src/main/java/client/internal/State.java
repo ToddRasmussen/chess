@@ -1,4 +1,4 @@
-package client;
+package client.internal;
 
 public enum State {
     PRELOGIN,

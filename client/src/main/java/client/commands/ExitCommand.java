@@ -1,18 +1,19 @@
 package client.commands;
 
 import client.ServerFacade;
-import client.State;
-
-import java.io.IOException;
+import client.internal.State;
 
 public class ExitCommand extends Command {
 
+    /**
+     * Command to exit a active game
+     */
     public ExitCommand() {
         super("exit", "the game");
     }
 
-    public boolean validateInput(String[] input) {
-        return input.length == 1;
+    public boolean validateInput(String[] inputs) {
+        return inputs.length == 1;
     }
 
     public State run(String[] inputs, ServerFacade server) {
