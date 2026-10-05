@@ -278,4 +278,26 @@ public class ChessPiece {
     public int hashCode() {
         return Objects.hash(getPieceType(), getTeamColor());
     }
+
+    @Override
+    public String toString() {
+        if (pieceColor == ChessGame.TeamColor.WHITE) {
+            return switch (type) {
+                case PieceType.KING -> "♔";
+                case PieceType.QUEEN -> "♕";
+                case PieceType.BISHOP -> "♗";
+                case PieceType.KNIGHT -> "♘";
+                case PieceType.ROOK -> "♖";
+                default -> "♙";
+            };
+        }
+        return switch (type) {
+            case PieceType.KING -> "♚";
+            case PieceType.QUEEN -> "♛";
+            case PieceType.BISHOP -> "♝";
+            case PieceType.KNIGHT -> "♞";
+            case PieceType.ROOK -> "♜";
+            default -> "♟";
+        };
+    }
 }
