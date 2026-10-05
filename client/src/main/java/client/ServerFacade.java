@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessMove;
 import chess.ChessPosition;
 import client.exceptions.AlreadyTakenException;
 import client.exceptions.BadRequestException;
@@ -190,4 +191,14 @@ public class ServerFacade {
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
     }
+
+
+    public void makeMove(ChessMove move) {
+
+    }
+
+    public void resign() {
+
+    }
+
 }

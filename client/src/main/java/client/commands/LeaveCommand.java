@@ -3,13 +3,14 @@ package client.commands;
 import client.ServerFacade;
 import client.internal.State;
 
-public class ExitCommand extends Command {
-
+public class LeaveCommand extends Command {
+    State state;
     /**
-     * Command to exit a active game
+     * Command to leave an active game
      */
-    public ExitCommand() {
-        super("exit", "the game");
+    public LeaveCommand(State state) {
+        super("leave", "the game");
+        this.state = state;
     }
 
     public boolean validateInput(String[] inputs) {
@@ -18,6 +19,7 @@ public class ExitCommand extends Command {
 
     public State run(String[] inputs, ServerFacade server) {
         try {
+            //TODO
             return State.POSTLOGIN;
         } catch (Exception e) {
             System.out.println("Unexpected Error:" + e);

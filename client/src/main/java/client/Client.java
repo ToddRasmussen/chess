@@ -2,6 +2,7 @@ package client;
 
 import java.util.Scanner;
 
+import chess.ChessGame;
 import client.commands.*;
 import client.displays.TerminalDisplay;
 import client.internal.State;
@@ -32,9 +33,20 @@ public class Client {
         commands.addCommand(new ObserveCommand(), State.POSTLOGIN);
 
         //GAME
-        commands.addCommand(new ExitCommand(), State.BLACKTEAM);
-        commands.addCommand(new ExitCommand(), State.WHITETEAM);
-        commands.addCommand(new ExitCommand(), State.OBSERVER);
+        commands.addCommand(new LeaveCommand(State.BLACKTEAM), State.BLACKTEAM);
+        commands.addCommand(new MoveCommand(ChessGame.TeamColor.BLACK), State.BLACKTEAM);
+        commands.addCommand(new MovesCommand(ChessGame.TeamColor.BLACK), State.BLACKTEAM);
+        commands.addCommand(new RedrawCommand(), State.BLACKTEAM);
+        commands.addCommand(new ResignCommand(), State.BLACKTEAM);
+
+        commands.addCommand(new LeaveCommand(State.WHITETEAM), State.WHITETEAM);
+        commands.addCommand(new MoveCommand(ChessGame.TeamColor.WHITE), State.WHITETEAM);
+        commands.addCommand(new MovesCommand(ChessGame.TeamColor.WHITE), State.WHITETEAM);
+        commands.addCommand(new RedrawCommand(), State.WHITETEAM);
+        commands.addCommand(new ResignCommand(), State.WHITETEAM);
+
+        commands.addCommand(new LeaveCommand(State.OBSERVER), State.OBSERVER);
+        commands.addCommand(new RedrawCommand(), State.OBSERVER);
 
         while (!commands.getState().equals(State.OFF)) {
             loop();
