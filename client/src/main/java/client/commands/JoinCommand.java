@@ -8,21 +8,22 @@ import client.exceptions.BadRequestException;
 import java.io.IOException;
 
 public class JoinCommand extends Command {
-
+    private final ServerFacade server;
     private Integer gameID = null;
 
     /**
      * command to join a game
      */
-    public JoinCommand() {
+    public JoinCommand(ServerFacade server) {
         super("join <ID> <WHITE|BLACK>", "a game");
+        this.server = server;
     }
 
     public boolean validateInput(String[] inputs) {
         return inputs.length == 3;
     }
 
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         try {
             server.joinGame(Integer.parseInt(inputs[1]), inputs[2].toUpperCase());
             System.out.println("Joined game: " + inputs[1]);

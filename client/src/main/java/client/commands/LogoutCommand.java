@@ -7,18 +7,20 @@ import java.io.IOException;
 
 public class LogoutCommand extends Command {
 
+    private final ServerFacade server;
     /**
      * command to log out of an account
      */
-    public LogoutCommand() {
+    public LogoutCommand(ServerFacade server) {
         super("logout", "to create an account");
+        this.server = server;
     }
 
     public boolean validateInput(String[] inputs) {
         return inputs.length == 1;
     }
 
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         try {
             server.logout();
             return State.PRELOGIN;

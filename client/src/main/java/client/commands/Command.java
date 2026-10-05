@@ -44,10 +44,9 @@ public class Command {
     /**
      *
      * @param inputs from user
-     * @param server interface
      * @return new state or null if no new state
      */
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         return null;
     }
 

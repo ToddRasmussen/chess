@@ -17,7 +17,7 @@ public class LeaveCommand extends Command {
         return inputs.length == 1;
     }
 
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         try {
             //TODO
             return State.POSTLOGIN;

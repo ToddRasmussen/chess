@@ -7,21 +7,22 @@ import client.exceptions.BadRequestException;
 import java.io.IOException;
 
 public class ObserveCommand extends Command {
-
+    private final ServerFacade server;
     private Integer gameID = null;
 
     /**
      * command to observe a game
      */
-    public ObserveCommand() {
+    public ObserveCommand(ServerFacade server) {
         super("observe <ID>", "a game");
+        this.server = server;
     }
 
     public boolean validateInput(String[] inputs) {
         return inputs.length == 2;
     }
 
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         try {
             server.game(Integer.parseInt(inputs[1])); //run to ensure we are looking at a valid game
             gameID = Integer.parseInt(inputs[1]);

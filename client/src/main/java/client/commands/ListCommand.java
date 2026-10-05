@@ -8,19 +8,20 @@ import java.io.IOException;
 import java.util.Collection;
 
 public class ListCommand extends Command {
-
+    private final ServerFacade server;
     /**
      * command to list all active games
      */
     public ListCommand() {
         super("list", "games");
+        this.server = server;
     }
 
     public boolean validateInput(String[] inputs) {
         return inputs.length == 1;
     }
 
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         try {
             Collection<GameData> games = server.games();
             boolean flag = false;

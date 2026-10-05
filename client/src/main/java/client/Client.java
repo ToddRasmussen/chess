@@ -22,28 +22,28 @@ public class Client {
         display = new InlineDisplay(5);
 
         //PRELOGIN
-        commands.addCommand(new LoginCommand(), State.PRELOGIN);
-        commands.addCommand(new RegisterCommand(), State.PRELOGIN);
-        commands.addCommand(new ResetCommand(), State.PRELOGIN);
+        commands.addCommand(new LoginCommand(server), State.PRELOGIN);
+        commands.addCommand(new RegisterCommand(server), State.PRELOGIN);
+        commands.addCommand(new ResetCommand(server), State.PRELOGIN);
         //POSTLOGIN
-        commands.addCommand(new LogoutCommand(), State.POSTLOGIN);
-        commands.addCommand(new CreateCommand(), State.POSTLOGIN);
+        commands.addCommand(new LogoutCommand(server), State.POSTLOGIN);
+        commands.addCommand(new CreateCommand(server), State.POSTLOGIN);
         commands.addCommand(new ListCommand(), State.POSTLOGIN);
-        commands.addCommand(new JoinCommand(), State.POSTLOGIN);
-        commands.addCommand(new ObserveCommand(), State.POSTLOGIN);
+        commands.addCommand(new JoinCommand(server), State.POSTLOGIN);
+        commands.addCommand(new ObserveCommand(server), State.POSTLOGIN);
 
         //GAME
         commands.addCommand(new LeaveCommand(State.BLACKTEAM), State.BLACKTEAM);
         commands.addCommand(new MoveCommand(ChessGame.TeamColor.BLACK, display), State.BLACKTEAM);
         commands.addCommand(new MovesCommand(ChessGame.TeamColor.BLACK,display), State.BLACKTEAM);
         commands.addCommand(new RedrawCommand(display), State.BLACKTEAM);
-        commands.addCommand(new ResignCommand(), State.BLACKTEAM);
+        commands.addCommand(new ResignCommand(server), State.BLACKTEAM);
 
         commands.addCommand(new LeaveCommand(State.WHITETEAM), State.WHITETEAM);
         commands.addCommand(new MoveCommand(ChessGame.TeamColor.WHITE, display), State.WHITETEAM);
         commands.addCommand(new MovesCommand(ChessGame.TeamColor.WHITE, display), State.WHITETEAM);
         commands.addCommand(new RedrawCommand(display), State.WHITETEAM);
-        commands.addCommand(new ResignCommand(), State.WHITETEAM);
+        commands.addCommand(new ResignCommand(server), State.WHITETEAM);
 
         commands.addCommand(new LeaveCommand(State.OBSERVER), State.OBSERVER);
         commands.addCommand(new RedrawCommand(display), State.OBSERVER);
@@ -61,6 +61,6 @@ public class Client {
     private void loop() {
         display.display(commands.getAttachedGameID(), server, commands.getState());
         System.out.print("[" + commands.getState().toString() + "] >>> ");
-        commands.process(getInput(), server);
+        commands.process(getInput());
     }
 }

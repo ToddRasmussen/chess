@@ -21,7 +21,7 @@ public class MovesCommand extends Command {
         return inputs.length == 2;
     }
 
-    public State run(String[] inputs, ServerFacade server) {
+    public State run(String[] inputs) {
         //TODO
         try {
             return null;
