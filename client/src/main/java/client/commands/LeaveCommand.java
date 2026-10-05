@@ -4,7 +4,7 @@ import client.ServerFacade;
 import client.internal.State;
 
 public class LeaveCommand extends Command {
-    State state;
+    private final State state;
     /**
      * Command to leave an active game
      */

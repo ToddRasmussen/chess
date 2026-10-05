@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import chess.ChessGame;
 import client.commands.*;
-import client.displays.TerminalDisplay;
+import client.displays.InlineDisplay;
 import client.internal.State;
 
 public class Client {
@@ -19,7 +19,7 @@ public class Client {
         System.out.println("Welcome to Chess. Type Help to get started.");
         server = new ServerFacade(8080);
         commands = new CommandLine();
-        display = new TerminalDisplay(5);
+        display = new InlineDisplay(5);
 
         //PRELOGIN
         commands.addCommand(new LoginCommand(), State.PRELOGIN);
@@ -34,19 +34,19 @@ public class Client {
 
         //GAME
         commands.addCommand(new LeaveCommand(State.BLACKTEAM), State.BLACKTEAM);
-        commands.addCommand(new MoveCommand(ChessGame.TeamColor.BLACK), State.BLACKTEAM);
-        commands.addCommand(new MovesCommand(ChessGame.TeamColor.BLACK), State.BLACKTEAM);
-        commands.addCommand(new RedrawCommand(), State.BLACKTEAM);
+        commands.addCommand(new MoveCommand(ChessGame.TeamColor.BLACK, display), State.BLACKTEAM);
+        commands.addCommand(new MovesCommand(ChessGame.TeamColor.BLACK,display), State.BLACKTEAM);
+        commands.addCommand(new RedrawCommand(display), State.BLACKTEAM);
         commands.addCommand(new ResignCommand(), State.BLACKTEAM);
 
         commands.addCommand(new LeaveCommand(State.WHITETEAM), State.WHITETEAM);
-        commands.addCommand(new MoveCommand(ChessGame.TeamColor.WHITE), State.WHITETEAM);
-        commands.addCommand(new MovesCommand(ChessGame.TeamColor.WHITE), State.WHITETEAM);
-        commands.addCommand(new RedrawCommand(), State.WHITETEAM);
+        commands.addCommand(new MoveCommand(ChessGame.TeamColor.WHITE, display), State.WHITETEAM);
+        commands.addCommand(new MovesCommand(ChessGame.TeamColor.WHITE, display), State.WHITETEAM);
+        commands.addCommand(new RedrawCommand(display), State.WHITETEAM);
         commands.addCommand(new ResignCommand(), State.WHITETEAM);
 
         commands.addCommand(new LeaveCommand(State.OBSERVER), State.OBSERVER);
-        commands.addCommand(new RedrawCommand(), State.OBSERVER);
+        commands.addCommand(new RedrawCommand(display), State.OBSERVER);
 
         while (!commands.getState().equals(State.OFF)) {
             loop();

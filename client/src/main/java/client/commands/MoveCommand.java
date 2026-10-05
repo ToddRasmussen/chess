@@ -1,17 +1,20 @@
 package client.commands;
 
 import chess.ChessGame;
+import client.Display;
 import client.ServerFacade;
 import client.internal.State;
 
 public class MoveCommand extends Command {
-    ChessGame.TeamColor team;
+    private final ChessGame.TeamColor team;
+    private final Display display;
     /**
      * Command to move a piece on the board
      */
-    public MoveCommand(ChessGame.TeamColor team) {
+    public MoveCommand(ChessGame.TeamColor team, Display display) {
         super("move", "a piece");
         this.team = team;
+        this.display = display;
     }
 
     public boolean validateInput(String[] inputs) {
@@ -21,6 +24,7 @@ public class MoveCommand extends Command {
     public State run(String[] inputs, ServerFacade server) {
         //TODO
         try {
+
             return null;
         } catch (Exception e) {
             System.out.println("Unexpected Error:" + e);

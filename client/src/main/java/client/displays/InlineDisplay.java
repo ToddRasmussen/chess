@@ -11,14 +11,16 @@ import model.GameData;
 
 import java.io.IOException;
 
-public class TerminalDisplay implements Display {
+public class InlineDisplay implements Display {
 
     // extend string to add to beginning and end of each cell in order to extend its size
     private final String extend;
 
-    public TerminalDisplay(Integer width) {
+    public InlineDisplay(Integer width) {
         extend  = " ".repeat((width-1)/2);
     }
+
+    public void triggerRedraw(){}
 
     public void display(Integer gameID, ServerFacade server, State state) {
         switch (state) {
