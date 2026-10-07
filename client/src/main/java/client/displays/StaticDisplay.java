@@ -16,7 +16,6 @@ public class StaticDisplay implements Display {
 
     // extend string to add to beginning and end of each cell in order to extend its size
     private final String extend;
-
     private GameData lastState;
 
     public StaticDisplay(Integer width) {
@@ -49,7 +48,6 @@ public class StaticDisplay implements Display {
         } catch (Exception e) {
             System.out.println("Unexpected Error:" + e);
         }
-
     }
 
     private void spectateGame(GameData gameData) {
