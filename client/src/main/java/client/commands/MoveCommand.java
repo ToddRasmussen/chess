@@ -25,6 +25,7 @@ public class MoveCommand extends Command {
         //TODO
         try {
 
+            display.triggerRedraw();
             return null;
         } catch (Exception e) {
             System.out.println("Unexpected Error:" + e);

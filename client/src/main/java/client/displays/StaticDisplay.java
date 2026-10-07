@@ -10,6 +10,8 @@ import client.internal.State;
 import model.GameData;
 import ui.EscapeSequences;
 
+import java.io.IOException;
+
 public class StaticDisplay implements Display {
 
     // extend string to add to beginning and end of each cell in order to extend its size
@@ -27,13 +29,55 @@ public class StaticDisplay implements Display {
     }
 
     public void display(Integer gameID, ServerFacade server, State state) {
+        switch (state) {
+            case State.OFF, State.POSTLOGIN, State.PRELOGIN: return;
+        }
         if (lastState == null) {
             System.out.println(EscapeSequences.ERASE_SCREEN);
+        }
+        try {
+            GameData game = server.game(gameID);
 
+            if (state == State.OBSERVER) {
+                spectateGame(game);
+            } else {
+                ChessGame.TeamColor team = state == State.WHITETEAM ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+                displayGame(game, team);
+            }
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Server Connection Error");
+        } catch (Exception e) {
+            System.out.println("Unexpected Error:" + e);
         }
 
+    }
 
+    private void spectateGame(GameData gameData) {
+        String title = "Spectating White: " + gameData.getWhiteUsername() + " Vs Black: " + gameData.getBlackUsername();
+        System.out.println(title);
+        printDrawnBoard(drawBoard(gameData.getGame()));
+    }
 
+    private void displayGame(GameData gameData, ChessGame.TeamColor team) {
+        boolean isWhite = team == ChessGame.TeamColor.WHITE;
+        String opponent =  isWhite ?  gameData.getBlackUsername() : gameData.getWhiteUsername();
+        String title = "Playing Against " + opponent;
+        System.out.println(title);
+        String[][] drawnBoard = drawBoard(gameData.getGame());
+        if (team == ChessGame.TeamColor.BLACK) {
+            flipDrawnBoard(drawnBoard);
+        }
+        printDrawnBoard(drawnBoard);
+    }
+
+    private void printDrawnBoard(String[][] drawnGame) {
+        for (String[] row : drawnGame) {
+            StringBuilder merged = new StringBuilder();
+            for (String cell : row) {
+                merged.append(cell);
+            }
+            System.out.println(merged + "\u001b[39;49m");
+        }
     }
 
     private Integer getBackgroundCode(ChessPosition position) {

@@ -24,6 +24,8 @@ public class MovesCommand extends Command {
     public State run(String[] inputs) {
         //TODO
         try {
+
+            display.triggerRedraw();
             return null;
         } catch (Exception e) {
             System.out.println("Unexpected Error:" + e);
