@@ -7,6 +7,7 @@ import io.javalin.websocket.WsMessageContext;
 import org.eclipse.jetty.websocket.api.Session;
 import service.Service;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.List;
@@ -91,12 +92,12 @@ public class WebSocketHandler {
     private void broadcast(Integer gameID, String message) {
         List<Session> sessions = gameSessions.get(gameID);
         if (sessions == null) return;
-
+        String json = serializer.toJson(new ServerMessage(message));
         for (Session session : sessions) {
             try {
-                session.getRemote().sendString(message);
+                session.getRemote().sendString(json);
             } catch (IOException e) {
-                System.err.println("Failed to send message: " + e.getMessage());
+                System.out.println("Failed to send message: " + e.getMessage());
             }
         }
     }
