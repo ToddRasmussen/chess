@@ -64,7 +64,7 @@ public class WebSocketHandler {
     }
 
     private void handleMakeMove(Session session, UserGameCommand command) {
-
+        //TODO
     }
 
     private void handleLeave(Session session, UserGameCommand command) {
@@ -86,7 +86,7 @@ public class WebSocketHandler {
     }
 
     private void handleResign(Session session, UserGameCommand command) {
-
+        //TODO
     }
 
     private void broadcast(Integer gameID, String message) {
