@@ -5,6 +5,7 @@ import io.javalin.websocket.WsCloseContext;
 import io.javalin.websocket.WsConnectContext;
 import io.javalin.websocket.WsMessageContext;
 import org.eclipse.jetty.websocket.api.Session;
+import service.Service;
 import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
@@ -17,6 +18,11 @@ public class WebSocketHandler {
 
     private final Map<Integer, List<Session>> gameSessions = new ConcurrentHashMap<>();
     private final Gson serializer = new Gson();
+    private final Service service;
+
+    public WebSocketHandler(Service service) {
+        this.service = service;
+    }
 
     public void onConnect(WsConnectContext ctx) {
         ctx.enableAutomaticPings();
@@ -57,7 +63,16 @@ public class WebSocketHandler {
         if (sessions != null) {
             sessions.remove(session);
         }
-        broadcast(gameID, "Player has Left the Game");
+        try {
+            String player = service.getPlayer(command.getAuthToken());
+            if (service.getTeam(gameID, player) != null) {
+                broadcast(gameID, "Player " + player + " has Left the Game");
+            } else {
+                broadcast(gameID, "Spectator has Stopped Watching the Game");
+            }
+        } catch (Exception e) {
+            broadcast(gameID, "Someone has Left the Game");
+        }
     }
 
     private void handleResign(Session session, UserGameCommand command) {

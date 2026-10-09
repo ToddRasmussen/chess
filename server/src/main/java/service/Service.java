@@ -2,6 +2,7 @@ package service;
 
 import java.util.Collection;
 
+import chess.ChessGame;
 import dataaccess.interfaces.*;
 import dataaccess.sql.DatabaseAuthDAO;
 import dataaccess.sql.DatabaseGameDAO;
@@ -75,6 +76,23 @@ public class Service {
         String username = authData.getUser(authToken);
         gameData.joinGame(gameID, playerColor, username);
     }
+
+
+    public String getPlayer(String authToken) throws Exception {
+        return authData.getUser(authToken);
+    }
+
+    public ChessGame.TeamColor getTeam(Integer gameID, String player) throws Exception {
+        GameData game = gameData.getGame(gameID);
+        if (game.getBlackUsername().equals(player)) {
+            return ChessGame.TeamColor.BLACK;
+        } else if (game.getWhiteUsername().equals(gameID)) {
+            return ChessGame.TeamColor.WHITE;
+        } else {
+            return null;
+        }
+    }
+
 
     public void reset() throws Exception {
         authData.reset();

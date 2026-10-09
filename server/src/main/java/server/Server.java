@@ -32,7 +32,7 @@ public class Server {
         } catch (Exception e) {
 
         }
-        webSocketHandler = new WebSocketHandler();
+        webSocketHandler = new WebSocketHandler(service);
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.delete("/db", this::clearApplication);
         javalin.post("/user", this::registerUser);
