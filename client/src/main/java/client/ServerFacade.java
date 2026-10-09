@@ -1,5 +1,6 @@
 package client;
 
+import org.eclipse.jetty.websocket.api.Session;
 import chess.ChessMove;
 import chess.ChessPosition;
 import client.exceptions.AlreadyTakenException;
@@ -19,6 +20,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.function.Consumer;
 
 import com.google.gson.Gson;
 
@@ -31,6 +33,10 @@ public class ServerFacade {
     private AuthData authorization;
     private final HttpClient client;
     private final Gson serializer;
+    private Session session;
+    private Consumer<String> notificationCallback;
+    private Consumer<String> errorCallback;
+    private Consumer<Integer> loadGameCallback;
 
     public ServerFacade(Integer port) {
         String baseURL = "http://localhost:" + port.toString() + "/";
@@ -44,6 +50,14 @@ public class ServerFacade {
                 .enableComplexMapKeySerialization()
                 .registerTypeAdapter(ChessPosition.class, new ChessPositionDeserializer())
                 .create();
+        session = null;
+    }
+
+    public ServerFacade(Integer port, Consumer<String> notificationCallback, Consumer<String> errorCallback, Consumer<Integer> loadGameCallback) {
+        this(port);
+        this.notificationCallback = notificationCallback;
+        this.errorCallback = errorCallback;
+        this.loadGameCallback = loadGameCallback;
     }
 
     private void addAuthorization(AuthData auth, HttpRequest.Builder builder) throws UnauthorizedException {
@@ -175,6 +189,9 @@ public class ServerFacade {
         builder.PUT(HttpRequest.BodyPublishers.ofString(json));
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
+        if (session == null) {
+            //TODO: Create Socket
+        }
     }
 
     public void joinGame(int gameID, String playerColor)
@@ -194,11 +211,22 @@ public class ServerFacade {
 
 
     public void makeMove(ChessMove move) {
-
+        if (session == null) {
+            return;
+        }
     }
 
     public void resign() {
+        if (session == null) {
+            return;
+        }
 
+    }
+
+    public void leave() {
+        if (session == null) {
+            return;
+        }
     }
 
 }
