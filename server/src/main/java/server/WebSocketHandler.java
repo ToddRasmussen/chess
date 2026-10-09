@@ -50,7 +50,16 @@ public class WebSocketHandler {
     private void handleConnect(Session session, UserGameCommand command) {
         Integer gameID = command.getGameID();
         gameSessions.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(session);
-
+        try {
+            String player = service.getPlayer(command.getAuthToken());
+            if (service.getTeam(gameID, player) != null) {
+                broadcast(gameID, "Player " + player + " has Joined the Game");
+            } else {
+                broadcast(gameID, "Spectator has Started Watching the Game");
+            }
+        } catch (Exception e) {
+            broadcast(gameID, "Someone has Joined the Game");
+        }
     }
 
     private void handleMakeMove(Session session, UserGameCommand command) {
