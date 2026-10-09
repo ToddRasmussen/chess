@@ -1,9 +1,6 @@
 package server;
 
-import java.io.PrintStream;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
 import dataaccess.ColorAlreadyTakenException;
@@ -11,27 +8,23 @@ import dataaccess.DataAccessException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import io.javalin.websocket.WsCloseContext;
-import io.javalin.websocket.WsConnectContext;
-import io.javalin.websocket.WsMessageContext;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 import dataaccess.UnknownColorException;
-import org.eclipse.jetty.websocket.api.Session;
 import service.AlreadyTakenException;
 import service.BadRequestException;
 import service.DoesNotExistException;
 import service.IncorrectPasswordException;
 import service.InvalidAuthorizationException;
 import service.Service;
-import websocket.commands.UserGameCommand;
 
 public class Server {
 
     private final Javalin javalin;
     private final Gson serializer = new Gson();
     private Service service;
+    private final WebSocketHandler webSocketHandler;
 
     public Server() {
         try {
@@ -39,7 +32,7 @@ public class Server {
         } catch (Exception e) {
 
         }
-
+        webSocketHandler = new WebSocketHandler();
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.delete("/db", this::clearApplication);
         javalin.post("/user", this::registerUser);
@@ -49,9 +42,9 @@ public class Server {
         javalin.post("/game", this::createGame);
         javalin.put("/game", this::joinGame);
         javalin.ws("/ws", ws -> {
-                    ws.onConnect(this::webSocketOpen);
-                    ws.onMessage(this::webSocketMessage);
-                    ws.onClose(this::webSocketClose);
+                    ws.onConnect(webSocketHandler::onConnect);
+                    ws.onMessage(webSocketHandler::onMessage);
+                    ws.onClose(webSocketHandler::onClose);
             });
     }
 
@@ -190,45 +183,6 @@ public class Server {
             sendErrorMessage(ctx, e, 403);
         } catch (Exception e) {
             sendErrorMessage(ctx, e, 500);
-        }
-    }
-
-    private Map<Integer, List<Session>> games;
-
-    private void webSocketOpen(WsConnectContext ctx) {
-        ctx.enableAutomaticPings();
-        System.out.println("WebSocket connected");
-    }
-
-    private void webSocketMessage(WsMessageContext ctx) {
-        UserGameCommand command = serializer.fromJson(ctx.message(), UserGameCommand.class);
-        switch (command.getCommandType()) {
-            case CONNECT -> {
-                Integer gameID = command.getGameID();
-                if (!games.containsKey(gameID)) {
-                    games.put(gameID, new LinkedList<>());
-                }
-                games.get(gameID).add(ctx.session);
-            }
-            case LEAVE -> {
-                Integer gameID = command.getGameID();
-                if (games.containsKey(gameID)) {
-                    games.get(gameID).remove(ctx.session);
-                }
-            }
-            case RESIGN -> {
-
-            }
-            case MAKE_MOVE -> {
-
-            }
-        }
-    }
-
-    private void webSocketClose(WsCloseContext ctx) {
-        System.out.println("WebSocket closed");
-        for (List<Session> game : games.values()) {
-            game.remove(ctx.session);
         }
     }
 }
