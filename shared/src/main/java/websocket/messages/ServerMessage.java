@@ -12,7 +12,7 @@ public class ServerMessage {
     ServerMessageType serverMessageType;
     private String message;
     private Integer gameID;
-    private Object exceptionType;
+    private Exception exception;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -32,8 +32,7 @@ public class ServerMessage {
         this.serverMessageType = ServerMessageType.LOAD_GAME;
     }
     public ServerMessage(Exception e) {
-        this.message = e.getMessage();
-        this.exceptionType = e.getClass();
+        this.exception = e;
     }
 
     public ServerMessageType getServerMessageType() {
@@ -42,6 +41,12 @@ public class ServerMessage {
 
     public String getMessage() {
         return message;
+    }
+    public Integer getGameID() {
+        return gameID;
+    }
+    public Exception getException() {
+        return exception;
     }
 
     @Override

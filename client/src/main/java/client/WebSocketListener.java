@@ -18,12 +18,12 @@ public class WebSocketListener implements Listener {
     private WebSocket webSocket;
     private final Gson serializer;
     private final Consumer<String> notificationCallback;
-    private final Consumer<String> errorCallback;
+    private final Consumer<Exception> errorCallback;
     private final Consumer<Integer> loadGameCallback;
 
     public WebSocketListener(URI endpoint,
                      Consumer<String> notificationCallback,
-                     Consumer<String> errorCallback,
+                     Consumer<Exception> errorCallback,
                      Consumer<Integer> loadGameCallback) {
         this.serializer = new GsonBuilder()
                 .enableComplexMapKeySerialization()
@@ -54,13 +54,13 @@ public class WebSocketListener implements Listener {
             ServerMessage message = serializer.fromJson(data.toString(), ServerMessage.class);
             switch (message.getServerMessageType()) {
                 case LOAD_GAME -> {
-                    loadGameCallback.accept();
+                    loadGameCallback.accept(message.getGameID());
                 }
                 case NOTIFICATION -> {
-                    notificationCallback.accept();
+                    notificationCallback.accept(message.getMessage());
                 }
                 case ERROR -> {
-                    errorCallback.accept();
+                    errorCallback.accept(message.getException());
                 }
             }
         } catch (Exception e) {
