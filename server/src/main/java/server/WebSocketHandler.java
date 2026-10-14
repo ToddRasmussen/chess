@@ -1,5 +1,6 @@
 package server;
 
+import chess.ChessMove;
 import com.google.gson.Gson;
 import io.javalin.websocket.WsCloseContext;
 import io.javalin.websocket.WsConnectContext;
@@ -64,7 +65,18 @@ public class WebSocketHandler {
     }
 
     private void handleMakeMove(Session session, UserGameCommand command) {
-        //TODO
+        Integer gameID = command.getGameID();
+        try {
+            String username = service.getPlayer(command.getAuthToken());
+            ChessMove move = command.getMove();
+            // Validate User is a Player
+            // Get the Team
+            // Validate Move
+            // Apply Move
+            broadcast(gameID, "Player " + username + " has made the move: " + move.toString());
+        } catch (Exception e) {
+            //TODO
+        }
     }
 
     private void handleLeave(Session session, UserGameCommand command) {
@@ -86,7 +98,16 @@ public class WebSocketHandler {
     }
 
     private void handleResign(Session session, UserGameCommand command) {
-        //TODO
+        Integer gameID = command.getGameID();
+        try {
+            String username = service.getPlayer(command.getAuthToken());
+            // Validate User is a Player
+            // Get the Team
+            // Apply to Game
+            broadcast(gameID, "Player " + username + " has Resigned the Game");
+        } catch (Exception e) {
+            //TODO
+        }
     }
 
     private void broadcast(Integer gameID, String message) {
