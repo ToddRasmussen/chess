@@ -37,7 +37,7 @@ public class ServerFacade {
     private final Gson serializer;
     private Session session;
     private Consumer<String> notificationCallback;
-    private Consumer<String> errorCallback;
+    private Consumer<Exception> errorCallback;
     private Consumer<Integer> loadGameCallback;
     private Integer activeGameID;
     private WebSocketListener webSocket;
@@ -61,7 +61,7 @@ public class ServerFacade {
         notificationCallback = null;
     }
 
-    public ServerFacade(Integer port, Consumer<String> notificationCallback, Consumer<String> errorCallback, Consumer<Integer> loadGameCallback) {
+    public ServerFacade(Integer port, Consumer<String> notificationCallback, Consumer<Exception> errorCallback, Consumer<Integer> loadGameCallback) {
         this(port);
         this.notificationCallback = notificationCallback;
         this.errorCallback = errorCallback;
