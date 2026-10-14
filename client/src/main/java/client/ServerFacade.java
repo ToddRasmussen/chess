@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.function.Consumer;
 
 import com.google.gson.Gson;
+import websocket.commands.UserGameCommand;
 
 public class ServerFacade {
 
@@ -30,6 +31,7 @@ public class ServerFacade {
     private final URI userEndpoint;
     private final URI sessionEndpoint;
     private final URI gameEndpoint;
+    private final URI wsEndpoint;
     private AuthData authorization;
     private final HttpClient client;
     private final Gson serializer;
@@ -37,6 +39,8 @@ public class ServerFacade {
     private Consumer<String> notificationCallback;
     private Consumer<String> errorCallback;
     private Consumer<Integer> loadGameCallback;
+    private Integer activeGameID;
+    private WebSocketListener webSocket;
 
     public ServerFacade(Integer port) {
         String baseURL = "http://localhost:" + port.toString() + "/";
@@ -44,6 +48,7 @@ public class ServerFacade {
         userEndpoint = URI.create(baseURL + "user");
         sessionEndpoint = URI.create(baseURL + "session");
         gameEndpoint = URI.create(baseURL + "game");
+        wsEndpoint = URI.create(baseURL + "ws");
         client = HttpClient.newHttpClient();
         authorization = null;
         serializer = new GsonBuilder()
@@ -51,6 +56,9 @@ public class ServerFacade {
                 .registerTypeAdapter(ChessPosition.class, new ChessPositionDeserializer())
                 .create();
         session = null;
+        loadGameCallback = null;
+        errorCallback = null;
+        notificationCallback = null;
     }
 
     public ServerFacade(Integer port, Consumer<String> notificationCallback, Consumer<String> errorCallback, Consumer<Integer> loadGameCallback) {
@@ -189,8 +197,22 @@ public class ServerFacade {
         builder.PUT(HttpRequest.BodyPublishers.ofString(json));
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         handleStatusCode(response.statusCode());
-        if (session == null) {
-            //TODO: Create Socket
+        this.activeGameID = gameID;
+        // Initialize WebSocket connection if not already open
+        if (webSocket == null && loadGameCallback != null) {
+            try {
+                webSocket = new WebSocketListener(
+                        wsEndpoint,
+                        notificationCallback,
+                        errorCallback,
+                        loadGameCallback
+                );
+                // Send initial CONNECT command after connection opening
+                UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, auth.authToken(), gameID);
+                webSocket.sendCommand(connectCommand);
+            } catch (Exception e) {
+                throw new ServerException("Failed to establish WebSocket connection: " + e.getMessage());
+            }
         }
     }
 
@@ -210,23 +232,39 @@ public class ServerFacade {
     }
 
 
+    public void makeMove(AuthData auth, ChessMove move) {
+        if (webSocket != null && activeGameID != null) {
+            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, auth.authToken(), activeGameID);
+            webSocket.sendCommand(command);
+        }
+    }
+
     public void makeMove(ChessMove move) {
-        if (session == null) {
-            return;
+        makeMove(authorization, move);
+    }
+
+    public void resign(AuthData auth) {
+        if (webSocket != null) {
+            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, auth.authToken(), activeGameID);
+            webSocket.sendCommand(command);
         }
     }
 
     public void resign() {
-        if (session == null) {
-            return;
-        }
+        resign(authorization);
+    }
 
+    public void leave(AuthData auth) {
+        if (webSocket != null) {
+            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authorization.authToken(), activeGameID);
+            webSocket.sendCommand(command);
+            webSocket.close();
+            webSocket = null;
+            activeGameID = null;
+        }
     }
 
     public void leave() {
-        if (session == null) {
-            return;
-        }
+        leave(authorization);
     }
-
 }

@@ -10,7 +10,9 @@ import java.util.Objects;
  */
 public class ServerMessage {
     ServerMessageType serverMessageType;
-    String message;
+    private String message;
+    private Integer gameID;
+    private Object exceptionType;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -24,6 +26,14 @@ public class ServerMessage {
     public ServerMessage(String message) {
         this.message = message;
         this.serverMessageType = ServerMessageType.NOTIFICATION;
+    }
+    public ServerMessage(Integer gameID) {
+        this.gameID = gameID;
+        this.serverMessageType = ServerMessageType.LOAD_GAME;
+    }
+    public ServerMessage(Exception e) {
+        this.message = e.getMessage();
+        this.exceptionType = e.getClass();
     }
 
     public ServerMessageType getServerMessageType() {
