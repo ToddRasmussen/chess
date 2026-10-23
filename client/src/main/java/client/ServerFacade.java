@@ -1,6 +1,5 @@
 package client;
 
-import org.eclipse.jetty.websocket.api.Session;
 import chess.ChessMove;
 import chess.ChessPosition;
 import client.exceptions.AlreadyTakenException;
@@ -35,7 +34,6 @@ public class ServerFacade {
     private AuthData authorization;
     private final HttpClient client;
     private final Gson serializer;
-    private Session session;
     private Consumer<String> notificationCallback;
     private Consumer<Exception> errorCallback;
     private Consumer<Integer> loadGameCallback;
@@ -55,7 +53,6 @@ public class ServerFacade {
                 .enableComplexMapKeySerialization()
                 .registerTypeAdapter(ChessPosition.class, new ChessPositionDeserializer())
                 .create();
-        session = null;
         loadGameCallback = null;
         errorCallback = null;
         notificationCallback = null;
