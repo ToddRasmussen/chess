@@ -1,5 +1,6 @@
 package server;
 
+import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import io.javalin.websocket.WsCloseContext;
@@ -51,16 +52,30 @@ public class WebSocketHandler {
 
     private void handleConnect(Session session, UserGameCommand command) {
         Integer gameID = command.getGameID();
-        gameSessions.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(session);
         try {
             String player = service.getPlayer(command.getAuthToken());
+            if (player == null) {
+                sendError(session, "Error: Unauthorized");
+                return;
+            }
+
+            ChessGame game = service.getChessGame(gameID);
+            if (game == null) {
+                sendError(session, "Error: Invalid game ID");
+                return;
+            }
+
+            gameSessions.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(session);
+
+            sendToOne(session, new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, game));
+
             if (service.getTeam(gameID, player) != null) {
-                broadcast(gameID, "Player " + player + " has Joined the Game");
+                broadcast(gameID, session, new ServerMessage("Player " + player + " has Joined the Game"));
             } else {
-                broadcast(gameID, "Spectator has Started Watching the Game");
+                broadcast(gameID, session, new ServerMessage("Spectator has Started Watching the Game"));
             }
         } catch (Exception e) {
-            broadcast(gameID, "Someone has Joined the Game");
+            sendError(session, e.getMessage());
         }
     }
 
@@ -69,13 +84,19 @@ public class WebSocketHandler {
         try {
             String username = service.getPlayer(command.getAuthToken());
             ChessMove move = command.getMove();
-            // Validate User is a Player
-            // Get the Team
-            // Validate Move
-            // Apply Move
-            broadcast(gameID, "Player " + username + " has made the move: " + move.toString());
+
+            ChessGame updatedGame = service.makeMove(command.getAuthToken(), gameID, move);
+
+            broadcastToAll(gameID, new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, updatedGame));
+
+            broadcast(gameID, session, new ServerMessage("Player " + username + " made move: " + move.toString()));
+
+            if (updatedGame.getResults().isFinished()) {
+                broadcastToAll(gameID, new ServerMessage("Game over! Result: " + updatedGame.getResults()));
+            }
+
         } catch (Exception e) {
-            //TODO
+            sendError(session, e.getMessage());
         }
     }
 
@@ -87,13 +108,16 @@ public class WebSocketHandler {
         }
         try {
             String player = service.getPlayer(command.getAuthToken());
+
+            service.leaveGame(command.getAuthToken(), gameID);
+
             if (service.getTeam(gameID, player) != null) {
-                broadcast(gameID, "Player " + player + " has Left the Game");
+                broadcastToAll(gameID, new ServerMessage("Player " + player + " has Left the Game"));
             } else {
-                broadcast(gameID, "Spectator has Stopped Watching the Game");
+                broadcastToAll(gameID, new ServerMessage("Spectator has Stopped Watching the Game"));
             }
         } catch (Exception e) {
-            broadcast(gameID, "Someone has Left the Game");
+
         }
     }
 
@@ -101,25 +125,46 @@ public class WebSocketHandler {
         Integer gameID = command.getGameID();
         try {
             String username = service.getPlayer(command.getAuthToken());
-            // Validate User is a Player
-            // Get the Team
-            // Apply to Game
-            broadcast(gameID, "Player " + username + " has Resigned the Game");
+            ChessGame updatedGame = service.resignGame(command.getAuthToken(), gameID);
+
+            broadcastToAll(gameID, new ServerMessage("Player " + username + " has Resigned the Game. Game Over!"));
         } catch (Exception e) {
-            //TODO
+            sendError(session, e.getMessage());
         }
     }
 
-    private void broadcast(Integer gameID, String message) {
+    private void sendToOne(Session session, ServerMessage msg) {
+        try {
+            session.getRemote().sendString(serializer.toJson(msg));
+        } catch (IOException e) {
+            System.out.println("Failed to send message: " + e.getMessage());
+        }
+    }
+
+    private void sendError(Session session, String errorMsg) {
+        try {
+            ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.ERROR, errorMsg);
+            session.getRemote().sendString(serializer.toJson(msg));
+        } catch (IOException e) {
+            System.out.println("Failed to send error: " + e.getMessage());
+        }
+    }
+
+    private void broadcast(Integer gameID, Session excludeSession, ServerMessage message) {
         List<Session> sessions = gameSessions.get(gameID);
         if (sessions == null) return;
-        String json = serializer.toJson(new ServerMessage(message));
+        String json = serializer.toJson(message);
         for (Session session : sessions) {
+            if (session.equals(excludeSession)) continue;
             try {
                 session.getRemote().sendString(json);
             } catch (IOException e) {
                 System.out.println("Failed to send message: " + e.getMessage());
             }
         }
+    }
+
+    private void broadcastToAll(Integer gameID, ServerMessage message) {
+        broadcast(gameID, null, message);
     }
 }

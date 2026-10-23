@@ -3,6 +3,7 @@ package service;
 import java.util.Collection;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import dataaccess.interfaces.*;
 import dataaccess.sql.DatabaseAuthDAO;
 import dataaccess.sql.DatabaseGameDAO;
@@ -84,15 +85,94 @@ public class Service {
 
     public ChessGame.TeamColor getTeam(Integer gameID, String player) throws Exception {
         GameData game = gameData.getGame(gameID);
-        if (game.getBlackUsername().equals(player)) {
+        if (game.getBlackUsername() != null && game.getBlackUsername().equals(player)) {
             return ChessGame.TeamColor.BLACK;
-        } else if (game.getWhiteUsername().equals(gameID)) {
+        } else if (game.getWhiteUsername() != null && game.getWhiteUsername().equals(player)) {
             return ChessGame.TeamColor.WHITE;
         } else {
             return null;
         }
     }
 
+    public ChessGame makeMove(String authToken, int gameID, ChessMove move) throws Exception {
+        checkAuth(authToken);
+        String username = authData.getUser(authToken);
+        GameData gameDataObj = gameData.getGame(gameID);
+        if (gameDataObj == null) {
+            throw new Exception("Game not found");
+        }
+
+        ChessGame game = gameDataObj.getGame();
+
+        if (game.getResults().isFinished()) {
+            throw new Exception("Game is over");
+        }
+
+        ChessGame.TeamColor team = getTeam(gameID, username);
+        if (team == null || team != game.getTeamTurn()) {
+            throw new Exception("Not your turn or you are a spectator");
+        }
+
+        game.makeMove(move);
+        gameData.updateGame(gameDataObj);
+
+        return game;
+    }
+
+    public ChessGame resignGame(String authToken, int gameID) throws Exception {
+        checkAuth(authToken);
+        String username = authData.getUser(authToken);
+        GameData gameDataObj = gameData.getGame(gameID);
+        if (gameDataObj == null) {
+            throw new Exception("Game not found");
+        }
+
+        ChessGame.TeamColor team = getTeam(gameID, username);
+        if (team == null) {
+            throw new Exception("Spectators cannot resign");
+        }
+
+        ChessGame game = gameDataObj.getGame();
+
+        if (game.getResults().isFinished()) {
+            throw new Exception("Game is already over");
+        }
+
+        game.resign(team);
+        gameData.updateGame(gameDataObj);
+
+        return game;
+    }
+
+    public ChessGame getChessGame(int gameID) throws Exception {
+        GameData game = gameData.getGame(gameID);
+        if (game == null) {
+            throw new Exception("Game not found");
+        }
+        return game.getGame();
+    }
+
+    public void leaveGame(String authToken, int gameID) throws Exception {
+        checkAuth(authToken);
+        String username = authData.getUser(authToken);
+        GameData game = gameData.getGame(gameID);
+        if (game == null) {
+            return;
+        }
+
+        boolean updated = false;
+        if (username.equals(game.getWhiteUsername())) {
+            game.setWhiteUsername(null);
+            updated = true;
+        } else if (username.equals(game.getBlackUsername())) {
+            game.setBlackUsername(null);
+            updated = true;
+        }
+
+        if (updated) {
+            gameData.updateGame(game);
+        }
+    }
 
     public void reset() throws Exception {
         authData.reset();

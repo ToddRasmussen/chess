@@ -20,5 +20,7 @@ public interface GameDAO {
 
     public void addGame(GameData game) throws Exception;
 
+    public void updateGame(GameData game) throws Exception;
+
     public void reset() throws Exception;
 }

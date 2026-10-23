@@ -77,6 +77,10 @@ public class MemoryGameDAO implements GameDAO {
         games.put(game.getGameID(), game);
     }
 
+    public void updateGame(GameData game) {
+        games.put(game.getGameID(), game);
+    }
+
     public void reset() {
         this.games = new HashMap<>();
     }

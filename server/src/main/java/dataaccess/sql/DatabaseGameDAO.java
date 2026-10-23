@@ -19,7 +19,7 @@ public class DatabaseGameDAO implements GameDAO {
     private final String table;
     private final String boardTable;
     private int nextGameID;
-    //Look into Column index (so it puts in buckets) (if need for faster)
+    //Look into Column index (so it puts in buckets)
     public DatabaseGameDAO() throws Exception {
         cache = new MemoryGameDAO();
         table = "games";
@@ -198,6 +198,50 @@ public class DatabaseGameDAO implements GameDAO {
             }
         }
         cache.addGame(game);
+    }
+
+    public void updateGame(GameData game) throws Exception {
+        if (game == null) {
+            throw new DataAccessException("Game cannot be null");
+        }
+
+        String updateGameSql = "UPDATE " + table + " SET gameName = ?, whiteUsername = ?, blackUsername = ? WHERE gameID = ?;";
+        String deleteBoardSql = "DELETE FROM " + boardTable + " WHERE gameID = ?;";
+        String insertBoardSql = "INSERT INTO " + boardTable + " (gameID, piece_row, piece_col, piece_type, piece_color) VALUES (?, ?, ?, ?, ?);";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                try (var statement = conn.prepareStatement(updateGameSql)) {
+                    statement.setString(1, game.getGameName());
+                    statement.setString(2, game.getWhiteUsername());
+                    statement.setString(3, game.getBlackUsername());
+                    statement.setInt(4, game.getGameID());
+                    statement.executeUpdate();
+                }
+                try (var statement = conn.prepareStatement(deleteBoardSql)) {
+                    statement.setInt(1, game.getGameID());
+                    statement.executeUpdate();
+                }
+                for (Map.Entry<ChessPosition, ChessPiece> entry : game.getGame().getBoard()) {
+                    ChessPosition position = entry.getKey();
+                    ChessPiece piece = entry.getValue();
+                    try (var statement = conn.prepareStatement(insertBoardSql)) {
+                        statement.setInt(1, game.getGameID());
+                        statement.setInt(2, position.getRow());
+                        statement.setInt(3, position.getColumn());
+                        statement.setString(4, piece.getPieceType().name());
+                        statement.setString(5, piece.getTeamColor().name());
+                        statement.executeUpdate();
+                    }
+                }
+                conn.commit();
+            } catch (Exception e) {
+                conn.rollback();
+                throw new DataAccessException("Failed to update game: " + e.getMessage());
+            }
+        }
+        cache.updateGame(game);
     }
 
     public void reset() throws Exception {

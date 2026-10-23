@@ -2,8 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,11 +16,71 @@ public class ChessGame {
     //DATA
     private ChessBoard board;
     private TeamColor currentTeam;
+    private ChessResults results;
 
     public ChessGame() {
         board = new ChessBoard();
         board.resetBoard();
         currentTeam = TeamColor.WHITE;
+        results = ChessResults.IN_PROGRESS;
+    }
+
+    public enum ChessResults {
+        WHITE_WIN,
+        BLACK_WIN,
+        DRAW,
+        IN_PROGRESS;
+
+        public TeamColor getWinner() {
+            if (this == WHITE_WIN) {
+                return TeamColor.WHITE;
+            } else if (this == BLACK_WIN) {
+                return TeamColor.BLACK;
+            } else {
+                return null;
+            }
+        }
+        public TeamColor getLoser() {
+            if (this == WHITE_WIN) {
+                return TeamColor.BLACK;
+            } else if (this == BLACK_WIN) {
+                return TeamColor.WHITE;
+            } else {
+                return null;
+            }
+        }
+
+        public boolean isFinished() {
+            return this != IN_PROGRESS;
+        }
+    }
+
+    public ChessResults getResults() {
+        if (results == ChessResults.IN_PROGRESS) {
+            if (isInCheckmate(currentTeam)) {
+                results = switch (currentTeam) {
+                    case BLACK -> ChessResults.WHITE_WIN;
+                    case WHITE -> ChessResults.BLACK_WIN;
+                };
+            } else if (isInStalemate(currentTeam)) {
+                results = ChessResults.DRAW;
+            }
+        }
+        return results;
+    }
+
+    public void resign(TeamColor team) {
+        if (results == ChessResults.IN_PROGRESS) {
+            if (team == TeamColor.WHITE) {
+                results = ChessResults.BLACK_WIN;
+            } else {
+                results = ChessResults.WHITE_WIN;
+            }
+        } else if (results == ChessResults.BLACK_WIN && team == TeamColor.BLACK) {
+            results = ChessResults.DRAW;
+        } else if (results == ChessResults.WHITE_WIN && team == TeamColor.WHITE) {
+            results = ChessResults.DRAW;
+        }
     }
 
     /**

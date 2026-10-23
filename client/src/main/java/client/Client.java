@@ -32,20 +32,22 @@ public class Client {
         commands.addCommand(new JoinCommand(server), State.POSTLOGIN);
         commands.addCommand(new ObserveCommand(server), State.POSTLOGIN);
 
-        //GAME
-        commands.addCommand(new LeaveCommand(State.BLACKTEAM), State.BLACKTEAM);
-        commands.addCommand(new MoveCommand(ChessGame.TeamColor.BLACK, display), State.BLACKTEAM);
-        commands.addCommand(new MovesCommand(ChessGame.TeamColor.BLACK,display), State.BLACKTEAM);
+        // GAME - BLACK
+        commands.addCommand(new LeaveCommand(server, State.BLACKTEAM), State.BLACKTEAM);
+        commands.addCommand(new MoveCommand(ChessGame.TeamColor.BLACK, display, server), State.BLACKTEAM);
+        commands.addCommand(new MovesCommand(ChessGame.TeamColor.BLACK, display, server), State.BLACKTEAM);
         commands.addCommand(new RedrawCommand(display), State.BLACKTEAM);
         commands.addCommand(new ResignCommand(server), State.BLACKTEAM);
 
-        commands.addCommand(new LeaveCommand(State.WHITETEAM), State.WHITETEAM);
-        commands.addCommand(new MoveCommand(ChessGame.TeamColor.WHITE, display), State.WHITETEAM);
-        commands.addCommand(new MovesCommand(ChessGame.TeamColor.WHITE, display), State.WHITETEAM);
+        // GAME - WHITE
+        commands.addCommand(new LeaveCommand(server, State.WHITETEAM), State.WHITETEAM);
+        commands.addCommand(new MoveCommand(ChessGame.TeamColor.WHITE, display, server), State.WHITETEAM);
+        commands.addCommand(new MovesCommand(ChessGame.TeamColor.WHITE, display, server), State.WHITETEAM);
         commands.addCommand(new RedrawCommand(display), State.WHITETEAM);
         commands.addCommand(new ResignCommand(server), State.WHITETEAM);
 
-        commands.addCommand(new LeaveCommand(State.OBSERVER), State.OBSERVER);
+        // GAME - OBSERVER
+        commands.addCommand(new LeaveCommand(server, State.OBSERVER), State.OBSERVER);
         commands.addCommand(new RedrawCommand(display), State.OBSERVER);
 
         while (!commands.getState().equals(State.OFF)) {

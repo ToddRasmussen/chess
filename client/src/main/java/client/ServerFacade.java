@@ -234,7 +234,7 @@ public class ServerFacade {
 
     public void makeMove(AuthData auth, ChessMove move) {
         if (webSocket != null && activeGameID != null) {
-            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, auth.authToken(), activeGameID);
+            UserGameCommand command = new UserGameCommand(move, auth.authToken(), activeGameID);
             webSocket.sendCommand(command);
         }
     }
@@ -252,6 +252,11 @@ public class ServerFacade {
 
     public void resign() {
         resign(authorization);
+    }
+
+
+    public Integer getActiveGameID() {
+        return activeGameID;
     }
 
     public void leave(AuthData auth) {
