@@ -161,6 +161,16 @@ public class ServerFacade {
         return game(gameID, authorization);
     }
 
+    public GameData game(AuthData auth)
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
+        return game(activeGameID, auth);
+    }
+
+    public GameData game()
+            throws InterruptedException, IOException, BadRequestException, UnauthorizedException, AlreadyTakenException, ServerException {
+        return game(authorization);
+    }
+
     private record NewGameRequest(String gameName) {}
     private record NewGameResponse(int gameID) {}
 

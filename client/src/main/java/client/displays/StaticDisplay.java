@@ -27,7 +27,7 @@ public class StaticDisplay implements Display {
         lastState = null;
     }
 
-    public void display(Integer gameID, ServerFacade server, State state) {
+    public void display(ServerFacade server, State state) {
         switch (state) {
             case State.OFF, State.POSTLOGIN, State.PRELOGIN: return;
         }
@@ -35,7 +35,7 @@ public class StaticDisplay implements Display {
             System.out.println(EscapeSequences.ERASE_SCREEN);
         }
         try {
-            GameData game = server.game(gameID);
+            GameData game = server.game();
 
             if (state == State.OBSERVER) {
                 spectateGame(game);

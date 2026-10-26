@@ -6,5 +6,5 @@ public interface Display {
 
     void triggerRedraw();
 
-    void display(Integer gameID, ServerFacade server, State state);
+    void display(ServerFacade server, State state);
 }

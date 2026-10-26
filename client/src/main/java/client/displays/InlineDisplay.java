@@ -22,13 +22,13 @@ public class InlineDisplay implements Display {
 
     public void triggerRedraw(){}
 
-    public void display(Integer gameID, ServerFacade server, State state) {
+    public void display(ServerFacade server, State state) {
         switch (state) {
             case State.OFF, State.POSTLOGIN, State.PRELOGIN: return;
         }
 
         try {
-            GameData game = server.game(gameID);
+            GameData game = server.game();
 
             if (state == State.OBSERVER) {
                 spectateGame(game);

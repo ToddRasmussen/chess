@@ -61,7 +61,7 @@ public class Client {
     }
 
     private void loop() {
-        display.display(commands.getAttachedGameID(), server, commands.getState());
+        display.display(server, commands.getState());
         System.out.print("[" + commands.getState().toString() + "] >>> ");
         commands.process(getInput());
     }
