@@ -8,6 +8,7 @@ import client.ServerFacade;
 import client.internal.State;
 import model.GameData;
 
+import java.io.PrintStream;
 import java.util.Collection;
 
 public class MovesCommand extends Command {
@@ -29,17 +30,17 @@ public class MovesCommand extends Command {
         return inputs.length == 2;
     }
 
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         try {
             ChessPosition pos = parsePosition(inputs[1]);
             if (pos == null) {
-                System.out.println("Invalid position.");
+                out.println("Invalid position.");
                 return null;
             }
 
             Integer gameID = server.getActiveGameID();
             if (gameID == null) {
-                System.out.println("No active game found.");
+                out.println("No active game found.");
                 return null;
             }
 
@@ -47,19 +48,19 @@ public class MovesCommand extends Command {
             Collection<ChessMove> validMoves = gameData.getGame().validMoves(pos);
 
             if (validMoves.isEmpty()) {
-                System.out.println("No valid moves available for piece at " + inputs[1]);
+                out.println("No valid moves available for piece at " + inputs[1]);
             } else {
-                System.out.print("Valid moves: ");
+                out.print("Valid moves: ");
                 StringBuilder sb = new StringBuilder();
                 for (ChessMove move : validMoves) {
                     sb.append(move.getEndPosition().toString()).append(" ");
                 }
-                System.out.println(sb.toString().trim());
+                out.println(sb.toString().trim());
             }
 
             display.triggerRedraw();
         } catch (Exception e) {
-            System.out.println("Unexpected Error: " + e.getMessage());
+            out.println("Unexpected Error: " + e.getMessage());
         }
         return null;
     }

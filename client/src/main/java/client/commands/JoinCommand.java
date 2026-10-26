@@ -6,6 +6,7 @@ import client.exceptions.AlreadyTakenException;
 import client.exceptions.BadRequestException;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class JoinCommand extends Command {
     private final ServerFacade server;
@@ -23,20 +24,20 @@ public class JoinCommand extends Command {
         return inputs.length == 3;
     }
 
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         try {
             server.joinGame(Integer.parseInt(inputs[1]), inputs[2].toUpperCase());
-            System.out.println("Joined game: " + inputs[1]);
+            out.println("Joined game: " + inputs[1]);
             gameID = Integer.parseInt(inputs[1]);
             return "white".equalsIgnoreCase(inputs[2]) ? State.WHITETEAM : State.BLACKTEAM;
         } catch (InterruptedException | IOException e) {
-            System.out.println("Server Connection Error");
+            out.println("Server Connection Error");
         } catch (AlreadyTakenException e) {
-            System.out.println("Team " + inputs[2] + " already taken");
+            out.println("Team " + inputs[2] + " already taken");
         } catch (BadRequestException | NumberFormatException e) {
-                System.out.println("Invalid GameID");
+                out.println("Invalid GameID");
         } catch (Exception e) {
-            System.out.println("Unexpected Error:" + e);
+            out.println("Unexpected Error:" + e);
         }
         return null;
     }

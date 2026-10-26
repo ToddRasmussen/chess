@@ -4,6 +4,8 @@ import client.Display;
 import client.ServerFacade;
 import client.internal.State;
 
+import java.io.PrintStream;
+
 public class RedrawCommand extends Command {
 
     private final Display display;
@@ -19,7 +21,7 @@ public class RedrawCommand extends Command {
         return inputs.length == 1;
     }
 
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         display.triggerRedraw();
         return null;
     }

@@ -3,6 +3,8 @@ package client.commands;
 import client.ServerFacade;
 import client.internal.State;
 
+import java.io.PrintStream;
+
 public class LeaveCommand extends Command {
     private final ServerFacade server;
     private final State state;
@@ -20,13 +22,13 @@ public class LeaveCommand extends Command {
         return inputs.length == 1;
     }
 
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         try {
             server.leave();
-            System.out.println("Successfully left the game.");
+            out.println("Successfully left the game.");
             return State.POSTLOGIN;
         } catch (Exception e) {
-            System.out.println("Unexpected Error: " + e.getMessage());
+            out.println("Unexpected Error: " + e.getMessage());
         }
         return null;
     }

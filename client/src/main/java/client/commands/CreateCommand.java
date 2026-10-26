@@ -4,6 +4,7 @@ import client.ServerFacade;
 import client.internal.State;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class CreateCommand extends Command {
     private final ServerFacade server;
@@ -19,12 +20,12 @@ public class CreateCommand extends Command {
         return inputs.length == 2;
     }
 
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         try {
             int gameID = server.newGame(inputs[1]);
-            System.out.println(gameID);
+            out.println(gameID);
         } catch (InterruptedException | IOException e) {
-            System.out.println("Server Connection Error");
+            out.println("Server Connection Error");
         } catch (Exception e) {
             System.out.println("Unexpected Error:" + e);
         }

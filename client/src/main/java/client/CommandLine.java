@@ -3,6 +3,7 @@ package client;
 import client.commands.Command;
 import client.internal.State;
 
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,16 +33,16 @@ public class CommandLine {
         return state;
     }
 
-    public void displayHelp() {
-        new Command("help", "with chess").displayHelp();
+    public void displayHelp(PrintStream out) {
+        new Command("help", "with chess").displayHelp(out);
         Collection<Command> commands = getCommands(state);
         for(Command command : commands) {
-            command.displayHelp();
+            command.displayHelp(out);
         }
-        new Command("quit", "chess").displayHelp();
+        new Command("quit", "chess").displayHelp(out);
     }
 
-    public void process(String[] input) {
+    public void process(String[] input, PrintStream out) {
         if (input.length < 1) {
             return;
         }
@@ -50,27 +51,27 @@ public class CommandLine {
                 continue;
             }
             if (!command.validateInput(input)) {
-                System.out.println("Invalid Input");
-                command.displayHelp();
+                out.println("Invalid Input");
+                command.displayHelp(out);
                 return;
             }
             try {
-                State newState = command.run(input);
+                State newState = command.run(input, out);
                 if (newState != null) {
                     state = newState;
                 }
             } catch (Exception e) {
-                System.out.println("Unexpected Error: " + e);
+                out.println("Unexpected Error: " + e);
             }
             return;
         }
         if ("help".equals(input[0])) {
-            displayHelp();
+            displayHelp(out);
             return;
         } else if ("quit".equals(input[0])) {
             state = State.OFF;
             return;
         }
-        System.out.println("Unknown Command: " + input[0]);
+        out.println("Unknown Command: " + input[0]);
     }
 }

@@ -3,6 +3,8 @@ package client.commands;
 import client.ServerFacade;
 import client.internal.State;
 
+import java.io.PrintStream;
+
 public class ResignCommand extends Command {
     private final ServerFacade server;
     /**
@@ -17,11 +19,11 @@ public class ResignCommand extends Command {
         return inputs.length == 1;
     }
 
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         try {
             server.resign();
         } catch (Exception e) {
-            System.out.println("Unexpected Error:" + e);
+            out.println("Unexpected Error:" + e);
         }
         return null;
     }

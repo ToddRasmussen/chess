@@ -9,6 +9,8 @@ import client.ServerFacade;
 import client.internal.State;
 import model.GameData;
 
+import java.io.PrintStream;
+
 public class MoveCommand extends Command {
     private final ChessGame.TeamColor team;
     private final Display display;
@@ -65,7 +67,7 @@ public class MoveCommand extends Command {
         }
     }
 
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         try {
             ChessPosition start = parsePosition(inputs[1]);
             ChessPosition end = parsePosition(inputs[2]);
@@ -79,7 +81,7 @@ public class MoveCommand extends Command {
             server.makeMove(move);
             display.triggerRedraw();
         } catch (Exception e) {
-            System.out.println("Unexpected Error: " + e.getMessage());
+            out.println("Unexpected Error: " + e.getMessage());
         }
         return null;
     }

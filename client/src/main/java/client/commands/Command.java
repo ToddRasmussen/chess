@@ -1,7 +1,8 @@
 package client.commands;
 
-import client.ServerFacade;
 import client.internal.State;
+
+import java.io.PrintStream;
 
 public class Command {
     // Generic/Dummy Command (should be inherited from)
@@ -18,9 +19,9 @@ public class Command {
     /**
      * Displays help message of command
      */
-    public void displayHelp() {
+    public void displayHelp(PrintStream out) {
         String line = "\u001b[36m"+ command + "\u001b[39m" + " - " + information;
-        System.out.println(line);
+        out.println(line);
     }
 
     /**
@@ -44,9 +45,10 @@ public class Command {
     /**
      *
      * @param inputs from user
+     * @param out stream output
      * @return new state or null if no new state
      */
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         return null;
     }
 

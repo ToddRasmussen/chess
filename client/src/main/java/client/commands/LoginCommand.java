@@ -6,6 +6,7 @@ import client.exceptions.UnauthorizedException;
 import model.UserData;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class LoginCommand extends Command {
     private final ServerFacade server;
@@ -21,16 +22,16 @@ public class LoginCommand extends Command {
         return inputs.length == 3;
     }
 
-    public State run(String[] inputs) {
+    public State run(String[] inputs, PrintStream out) {
         try {
             server.login(new UserData(inputs[1], inputs[2], ""));
             return State.POSTLOGIN;
         } catch (InterruptedException | IOException e) {
-            System.out.println("Server Connection Error");
+            out.println("Server Connection Error");
         } catch (UnauthorizedException e) {
-            System.out.println("Incorrect Username or Password");
+            out.println("Incorrect Username or Password");
         } catch (Exception e) {
-            System.out.println("Unexpected Error:" + e);
+            out.println("Unexpected Error:" + e);
         }
         return null;
     }

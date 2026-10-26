@@ -63,6 +63,6 @@ public class Client {
     private void loop() {
         display.display(server, commands.getState());
         System.out.print("[" + commands.getState().toString() + "] >>> ");
-        commands.process(getInput());
+        commands.process(getInput(), System.out);
     }
 }
