@@ -1,5 +1,6 @@
-package client;
+package client.displays;
 
+import client.internal.ServerFacade;
 import client.internal.State;
 
 public interface Display {

@@ -1,6 +1,6 @@
 package client.commands;
 
-import client.ServerFacade;
+import client.internal.ServerFacade;
 import client.internal.State;
 import client.exceptions.AlreadyTakenException;
 import client.exceptions.BadRequestException;

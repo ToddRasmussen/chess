@@ -1,4 +1,4 @@
-package client;
+package client.internal;
 
 import chess.ChessMove;
 import chess.ChessPosition;
@@ -6,7 +6,6 @@ import client.exceptions.AlreadyTakenException;
 import client.exceptions.BadRequestException;
 import client.exceptions.ServerException;
 import client.exceptions.UnauthorizedException;
-import client.internal.ChessPositionDeserializer;
 import com.google.gson.GsonBuilder;
 import model.AuthData;
 import model.GameData;

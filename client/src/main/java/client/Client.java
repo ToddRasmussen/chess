@@ -4,7 +4,9 @@ import java.util.Scanner;
 
 import chess.ChessGame;
 import client.commands.*;
+import client.displays.Display;
 import client.displays.InlineDisplay;
+import client.internal.ServerFacade;
 import client.internal.State;
 
 public class Client {
@@ -60,9 +62,10 @@ public class Client {
         return line.isEmpty() ? new String[0] : line.split("\\s+");
     }
 
+
     private void loop() {
         display.display(server, commands.getState());
-        System.out.print("[" + commands.getState().toString() + "] >>> ");
+        System.out.print(commands.prefix());
         commands.process(getInput(), System.out);
     }
 }

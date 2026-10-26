@@ -1,7 +1,6 @@
 package client.commands;
 
-import client.Display;
-import client.ServerFacade;
+import client.displays.Display;
 import client.internal.State;
 
 import java.io.PrintStream;

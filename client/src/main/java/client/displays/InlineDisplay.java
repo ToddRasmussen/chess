@@ -4,8 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import client.Display;
-import client.ServerFacade;
+import client.internal.ServerFacade;
 import client.internal.State;
 import model.GameData;
 

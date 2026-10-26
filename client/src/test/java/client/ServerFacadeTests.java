@@ -1,6 +1,7 @@
 package client;
 
 import client.exceptions.AlreadyTakenException;
+import client.internal.ServerFacade;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;

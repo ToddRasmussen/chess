@@ -3,8 +3,8 @@ package client.commands;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
-import client.Display;
-import client.ServerFacade;
+import client.displays.Display;
+import client.internal.ServerFacade;
 import client.internal.State;
 import model.GameData;
 

@@ -1,7 +1,6 @@
-package client;
+package client.internal;
 
 import chess.ChessPosition;
-import client.internal.ChessPositionDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import websocket.messages.ServerMessage;
