@@ -30,12 +30,20 @@ public class ChessPiece {
      * The various different chess piece options
      */
     public enum PieceType {
-        KING,
-        QUEEN,
-        BISHOP,
-        KNIGHT,
-        ROOK,
-        PAWN;
+        KING('♔', '♚'),
+        QUEEN('♕', '♛'),
+        BISHOP('♗', '♝'),
+        KNIGHT('♘', '♞'),
+        ROOK('♖', '♜'),
+        PAWN('♙', '♟');
+
+        private final char whiteChar;
+        private final char blackChar;
+
+        PieceType(char whiteChar, char blackChar) {
+            this.whiteChar = whiteChar;
+            this.blackChar = blackChar;
+        }
 
         public char getAbrivation() {
             return switch (this) {
@@ -46,6 +54,9 @@ public class ChessPiece {
                 case ROOK -> 'R';
                 default -> 'P';
             };
+        }
+        public char getChar(ChessGame.TeamColor teamColor) {
+            return teamColor == ChessGame.TeamColor.WHITE ? whiteChar : blackChar;
         }
     }
 

@@ -11,7 +11,7 @@ import ui.EscapeSequences;
 
 import java.io.IOException;
 
-public class StaticDisplay implements Display {
+public class StaticDisplay {
 
     // extend string to add to beginning and end of each cell in order to extend its size
     private final String extend;

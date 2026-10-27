@@ -16,13 +16,13 @@ public class CreateCommand extends Command {
         this.server = server;
     }
 
-    public boolean validateInput(String[] inputs) {
-        return inputs.length == 2;
+    public boolean validateInput(String[] input) {
+        return input.length == 2;
     }
 
-    public State run(String[] inputs, PrintStream out) {
+    public State run(String[] input, PrintStream out) {
         try {
-            int gameID = server.newGame(inputs[1]);
+            int gameID = server.newGame(input[1]);
             out.println(gameID);
         } catch (InterruptedException | IOException e) {
             out.println("Server Connection Error");

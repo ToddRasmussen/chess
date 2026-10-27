@@ -15,11 +15,11 @@ public class ResignCommand extends Command {
         this.server = server;
     }
 
-    public boolean validateInput(String[] inputs) {
-        return inputs.length == 1;
+    public boolean validateInput(String[] input) {
+        return input.length == 1;
     }
 
-    public State run(String[] inputs, PrintStream out) {
+    public State run(String[] input, PrintStream out) {
         try {
             server.resign();
         } catch (Exception e) {

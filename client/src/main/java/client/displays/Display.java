@@ -1,11 +1,21 @@
 package client.displays;
 
-import client.internal.ServerFacade;
+import chess.ChessPosition;
 import client.internal.State;
+import model.GameData;
+
+import java.io.PrintStream;
 
 public interface Display {
 
-    void triggerRedraw();
+    void updateGame(GameData game);
+    void clear();
+    void highlight(ChessPosition position);
 
-    void display(ServerFacade server, State state);
+    PrintStream getPrintStream();
+    String[] getInput();
+
+    void init();
+    void tick(State state);
+    void close();
 }

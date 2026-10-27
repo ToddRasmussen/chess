@@ -26,14 +26,14 @@ public class MoveCommand extends Command {
         this.server = server;
     }
 
-    public boolean validateInput(String[] inputs) {
-        if (inputs.length != 3 && inputs.length != 4) {
+    public boolean validateInput(String[] input) {
+        if (input.length != 3 && input.length != 4) {
             return false;
         }
 
         try {
-            ChessPosition start = parsePosition(inputs[1]);
-            ChessPosition end = parsePosition(inputs[2]);
+            ChessPosition start = parsePosition(input[1]);
+            ChessPosition end = parsePosition(input[2]);
             if (start == null || end == null) {
                 return false;
             }
@@ -46,7 +46,7 @@ public class MoveCommand extends Command {
             GameData gameData = server.game(gameID);
             ChessPiece piece = gameData.getGame().getBoard().getPiece(start);
 
-            if (piece == null || piece.getTeamColor() != team) {
+            if (piece == null || piece.getTeamColor() != team || gameData.getGame().getTeamTurn() != team) {
                 return false;
             }
 
@@ -56,7 +56,7 @@ public class MoveCommand extends Command {
 
             boolean isPromotionMove = isPawn && isPromotionRow;
 
-            if (inputs.length == 4) {
+            if (input.length == 4) {
                 return isPromotionMove;
             } else {
                 return !isPromotionMove;
@@ -67,19 +67,19 @@ public class MoveCommand extends Command {
         }
     }
 
-    public State run(String[] inputs, PrintStream out) {
+    public State run(String[] input, PrintStream out) {
         try {
-            ChessPosition start = parsePosition(inputs[1]);
-            ChessPosition end = parsePosition(inputs[2]);
+            ChessPosition start = parsePosition(input[1]);
+            ChessPosition end = parsePosition(input[2]);
 
             ChessPiece.PieceType promotionPiece = null;
-            if (inputs.length == 4) {
-                promotionPiece = parsePromotion(inputs[3]);
+            if (input.length == 4) {
+                promotionPiece = parsePromotion(input[3]);
             }
 
             ChessMove move = new ChessMove(start, end, promotionPiece);
             server.makeMove(move);
-            display.triggerRedraw();
+            display.updateGame(server.game());
         } catch (Exception e) {
             out.println("Unexpected Error: " + e.getMessage());
         }

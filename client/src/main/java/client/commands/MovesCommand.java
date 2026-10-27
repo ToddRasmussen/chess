@@ -13,26 +13,26 @@ import java.util.Collection;
 
 public class MovesCommand extends Command {
     private final ChessGame.TeamColor team;
-    private final Display display;
     private final ServerFacade server;
+    private final Display display;
 
     /**
      * Command to display valid moves of a piece
      */
-    public MovesCommand(ChessGame.TeamColor team, Display display, ServerFacade server) {
+    public MovesCommand(ChessGame.TeamColor team, ServerFacade server, Display display) {
         super("moves <POSITION>", "list valid moves for piece at position");
         this.team = team;
-        this.display = display;
         this.server = server;
+        this.display = display;
     }
 
-    public boolean validateInput(String[] inputs) {
-        return inputs.length == 2;
+    public boolean validateInput(String[] input) {
+        return input.length == 2;
     }
 
-    public State run(String[] inputs, PrintStream out) {
+    public State run(String[] input, PrintStream out) {
         try {
-            ChessPosition pos = parsePosition(inputs[1]);
+            ChessPosition pos = parsePosition(input[1]);
             if (pos == null) {
                 out.println("Invalid position.");
                 return null;
@@ -48,17 +48,18 @@ public class MovesCommand extends Command {
             Collection<ChessMove> validMoves = gameData.getGame().validMoves(pos);
 
             if (validMoves.isEmpty()) {
-                out.println("No valid moves available for piece at " + inputs[1]);
+                out.println("No valid moves available for piece at " + input[1]);
             } else {
                 out.print("Valid moves: ");
+                display.highlight(validMoves.iterator().next().getStartPosition());
                 StringBuilder sb = new StringBuilder();
                 for (ChessMove move : validMoves) {
                     sb.append(move.getEndPosition().toString()).append(" ");
+                    display.highlight(move.getEndPosition());
                 }
                 out.println(sb.toString().trim());
             }
 
-            display.triggerRedraw();
         } catch (Exception e) {
             out.println("Unexpected Error: " + e.getMessage());
         }

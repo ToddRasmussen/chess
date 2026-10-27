@@ -1,5 +1,6 @@
 package client.commands;
 
+import client.displays.Display;
 import client.internal.ServerFacade;
 import client.internal.State;
 import client.exceptions.BadRequestException;
@@ -9,36 +10,33 @@ import java.io.PrintStream;
 
 public class ObserveCommand extends Command {
     private final ServerFacade server;
-    private Integer gameID = null;
+    private final Display display;
 
     /**
      * command to observe a game
      */
-    public ObserveCommand(ServerFacade server) {
+    public ObserveCommand(ServerFacade server, Display display) {
         super("observe <ID>", "a game");
         this.server = server;
+        this.display = display;
     }
 
-    public boolean validateInput(String[] inputs) {
-        return inputs.length == 2;
+    public boolean validateInput(String[] input) {
+        return input.length == 2;
     }
 
-    public State run(String[] inputs, PrintStream out) {
+    public State run(String[] input, PrintStream out) {
         try {
-            server.game(Integer.parseInt(inputs[1])); //run to ensure we are looking at a valid game
-            gameID = Integer.parseInt(inputs[1]);
+            int gameID = Integer.parseInt(input[1]);
+            display.updateGame(server.game(gameID));
             return State.OBSERVER;
         } catch (InterruptedException | IOException e) {
             out.println("Server Connection Error");
         } catch (BadRequestException | NumberFormatException e) {
-            out.println("Invalid gameID: " + inputs[1]);
+            out.println("Invalid gameID: " + input[1]);
         } catch (Exception e) {
             out.println("Unexpected Error:" + e);
         }
         return null;
-    }
-
-    public Integer getAttachedGameID() {
-        return gameID;
     }
 }

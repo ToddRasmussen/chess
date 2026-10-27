@@ -10,7 +10,7 @@ import model.GameData;
 
 import java.io.IOException;
 
-public class InlineDisplay implements Display {
+public class InlineDisplay {
 
     // extend string to add to beginning and end of each cell in order to extend its size
     private final String extend;

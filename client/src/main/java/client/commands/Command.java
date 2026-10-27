@@ -6,9 +6,9 @@ import java.io.PrintStream;
 
 public class Command {
     // Generic/Dummy Command (should be inherited from)
-    private String command;
-    private String information;
-    private String prefix;
+    private final String command;
+    private final String information;
+    private final String prefix;
 
     public Command(String command, String information) {
         this.command = command;
@@ -35,28 +35,20 @@ public class Command {
 
     /**
      *
-     * @param inputs from user
+     * @param input from user
      * @return is the array a valid input
      */
-    public boolean validateInput(String[] inputs) {
+    public boolean validateInput(String[] input) {
         return false;
     }
 
     /**
      *
-     * @param inputs from user
+     * @param input from user
      * @param out stream output
      * @return new state or null if no new state
      */
-    public State run(String[] inputs, PrintStream out) {
-        return null;
-    }
-
-    /**
-     *
-     * @return attached gameID
-     */
-    public Integer getAttachedGameID() {
+    public State run(String[] input, PrintStream out) {
         return null;
     }
 }
