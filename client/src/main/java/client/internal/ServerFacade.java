@@ -40,28 +40,42 @@ public class ServerFacade {
     private WebSocketListener webSocket;
 
     public ServerFacade(Integer port) {
-        String baseURL = "http://localhost:" + port.toString() + "/";
-        databaseEndpoint = URI.create(baseURL + "db");
-        userEndpoint = URI.create(baseURL + "user");
-        sessionEndpoint = URI.create(baseURL + "session");
-        gameEndpoint = URI.create(baseURL + "game");
-        wsEndpoint = URI.create(baseURL + "ws");
+        String baseURL = "://localhost:" + port.toString() + "/";
+        databaseEndpoint = URI.create("http" + baseURL + "db");
+        userEndpoint = URI.create("http" + baseURL + "user");
+        sessionEndpoint = URI.create("http" + baseURL + "session");
+        gameEndpoint = URI.create("http" + baseURL + "game");
+        wsEndpoint = URI.create("ws" + baseURL + "ws");
         client = HttpClient.newHttpClient();
         authorization = null;
         serializer = new GsonBuilder()
                 .enableComplexMapKeySerialization()
                 .registerTypeAdapter(ChessPosition.class, new ChessPositionDeserializer())
                 .create();
-        loadGameCallback = null;
-        errorCallback = null;
-        notificationCallback = null;
+        loadGameCallback = (Integer)->{};
+        errorCallback = (Exception)->{};
+        notificationCallback = (String)->{};
     }
 
-    public ServerFacade(Integer port, Consumer<String> notificationCallback, Consumer<Exception> errorCallback, Consumer<Integer> loadGameCallback) {
-        this(port);
+    public void setNotificationCallback(Consumer<String> notificationCallback) {
         this.notificationCallback = notificationCallback;
+        if (webSocket != null) {
+            webSocket.setNotificationCallback(notificationCallback);
+        }
+    }
+
+    public void setErrorCallback(Consumer<Exception> errorCallback) {
         this.errorCallback = errorCallback;
+        if (webSocket != null) {
+            webSocket.setErrorCallback(errorCallback);
+        }
+    }
+
+    public void setLoadGameCallback(Consumer<Integer> loadGameCallback) {
         this.loadGameCallback = loadGameCallback;
+            if (webSocket != null) {
+                webSocket.setLoadGameCallback(loadGameCallback);
+            }
     }
 
     private void addAuthorization(AuthData auth, HttpRequest.Builder builder) throws UnauthorizedException {
@@ -205,7 +219,7 @@ public class ServerFacade {
         handleStatusCode(response.statusCode());
         this.activeGameID = gameID;
         // Initialize WebSocket connection if not already open
-        if (webSocket == null && loadGameCallback != null) {
+        if (webSocket == null) {
             try {
                 webSocket = new WebSocketListener(
                         wsEndpoint,
@@ -213,13 +227,12 @@ public class ServerFacade {
                         errorCallback,
                         loadGameCallback
                 );
-                // Send initial CONNECT command after connection opening
-                UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, auth.authToken(), gameID);
-                webSocket.sendCommand(connectCommand);
             } catch (Exception e) {
                 throw new ServerException("Failed to establish WebSocket connection: " + e.getMessage());
             }
         }
+        UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, auth.authToken(), gameID);
+        webSocket.sendCommand(connectCommand);
     }
 
     public void joinGame(int gameID, String playerColor)

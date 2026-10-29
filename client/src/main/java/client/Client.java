@@ -22,6 +22,9 @@ public class Client {
         commands = new CommandEngine();
         display = new TerminalDisplay(server);
 
+
+        server.setNotificationCallback(display::notification);
+
         //PRELOGIN
         commands.addCommand(new LoginCommand(server, display), State.PRELOGIN);
         commands.addCommand(new RegisterCommand(server, display), State.PRELOGIN);

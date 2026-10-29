@@ -3,6 +3,7 @@ package client.internal;
 import chess.ChessPosition;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import java.net.URI;
@@ -16,9 +17,9 @@ public class WebSocketListener implements Listener {
 
     private WebSocket webSocket;
     private final Gson serializer;
-    private final Consumer<String> notificationCallback;
-    private final Consumer<Exception> errorCallback;
-    private final Consumer<Integer> loadGameCallback;
+    private Consumer<String> notificationCallback;
+    private Consumer<Exception> errorCallback;
+    private Consumer<Integer> loadGameCallback;
 
     public WebSocketListener(URI endpoint,
                      Consumer<String> notificationCallback,
@@ -38,7 +39,19 @@ public class WebSocketListener implements Listener {
                 .join();
     }
 
-    public void sendCommand(Object command) {
+    public void setNotificationCallback(Consumer<String> notificationCallback) {
+        this.notificationCallback = notificationCallback;
+    }
+
+    public void setErrorCallback(Consumer<Exception> errorCallback) {
+        this.errorCallback = errorCallback;
+    }
+
+    public void setLoadGameCallback(Consumer<Integer> loadGameCallback) {
+        this.loadGameCallback = loadGameCallback;
+    }
+
+    public void sendCommand(UserGameCommand command) {
         webSocket.sendText(serializer.toJson(command), true);
     }
 

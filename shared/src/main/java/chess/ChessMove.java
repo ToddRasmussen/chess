@@ -97,6 +97,10 @@ public class ChessMove {
         return false;
     }
 
+    public String toString() {
+        return startPosition.toString() + " -> " + endPosition.toString();
+    }
+
     /**
      *
      * @return unique hash code

@@ -46,7 +46,7 @@ public class MovesCommand extends Command {
 
             GameData gameData = server.game(gameID);
             Collection<ChessMove> validMoves = gameData.getGame().validMoves(pos);
-
+            display.clearhighlights();
             if (validMoves.isEmpty()) {
                 out.println("No valid moves available for piece at " + input[1]);
             } else {

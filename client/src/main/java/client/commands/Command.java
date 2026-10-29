@@ -17,10 +17,18 @@ public class Command {
     }
 
     /**
+     *
+     * @return information about command
+     */
+    public String getInformation() {
+        return information;
+    }
+
+    /**
      * Displays help message of command
      */
     public void displayHelp(PrintStream out) {
-        String line = "\u001b[36m"+ command + "\u001b[39m" + " - " + information;
+        String line = "\u001b[36m"+ command + "\u001b[39m" + " - " + getInformation();
         out.println(line);
     }
 

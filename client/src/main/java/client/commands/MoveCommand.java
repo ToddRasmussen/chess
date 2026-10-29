@@ -26,6 +26,14 @@ public class MoveCommand extends Command {
         this.server = server;
     }
 
+    public boolean isCommand(String input) {
+        try {
+            return super.isCommand(input) && !server.game().getGame().getResults().isFinished();
+        } catch (Exception e) {
+            return super.isCommand(input);
+        }
+    }
+
     public boolean validateInput(String[] input) {
         if (input.length != 3 && input.length != 4) {
             return false;
@@ -46,13 +54,12 @@ public class MoveCommand extends Command {
             GameData gameData = server.game(gameID);
             ChessPiece piece = gameData.getGame().getBoard().getPiece(start);
 
-            if (piece == null || piece.getTeamColor() != team || gameData.getGame().getTeamTurn() != team) {
+            if (piece == null || piece.getTeamColor() != team) {
                 return false;
             }
 
             boolean isPawn = (piece.getPieceType() == ChessPiece.PieceType.PAWN);
-            boolean isPromotionRow = (team == ChessGame.TeamColor.WHITE && end.getRow() == 8) ||
-                    (team == ChessGame.TeamColor.BLACK && end.getRow() == 1);
+            boolean isPromotionRow = end.getRow() == team.getOpposite().getHomeRow();
 
             boolean isPromotionMove = isPawn && isPromotionRow;
 
@@ -71,12 +78,15 @@ public class MoveCommand extends Command {
         try {
             ChessPosition start = parsePosition(input[1]);
             ChessPosition end = parsePosition(input[2]);
-
+            ChessGame game = server.game().getGame();
+            if (team != game.getTeamTurn()) {
+                out.println("Its not your turn yet");
+                return null;
+            }
             ChessPiece.PieceType promotionPiece = null;
             if (input.length == 4) {
                 promotionPiece = parsePromotion(input[3]);
             }
-
             ChessMove move = new ChessMove(start, end, promotionPiece);
             server.makeMove(move);
             display.updateGame(server.game());

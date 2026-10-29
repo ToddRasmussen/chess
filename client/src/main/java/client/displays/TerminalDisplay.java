@@ -8,13 +8,13 @@ import client.internal.ServerFacade;
 import client.internal.State;
 import model.GameData;
 
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
 public class TerminalDisplay implements Display {
-    private final Scanner scanner = new Scanner(System.in);
     private final ServerFacade server;
     private GameData game;
     private boolean gameUpdated = false;
@@ -26,6 +26,11 @@ public class TerminalDisplay implements Display {
 
     public void updateGame(GameData game) {
         this.game = game;
+        clearhighlights();
+        gameUpdated = true;
+    }
+
+    public void clearhighlights() {
         highlighted.clear();
         gameUpdated = true;
     }
@@ -38,6 +43,10 @@ public class TerminalDisplay implements Display {
     private PrintStream out = System.out;
     public void setOutput(PrintStream out) {
         this.out = out;
+    }
+    private Scanner scanner = new Scanner(System.in);
+    public void setInput(InputStream in) {
+        scanner = new Scanner(in);
     }
 
     private int clearSize = 100;
@@ -54,16 +63,35 @@ public class TerminalDisplay implements Display {
         return out;
     }
 
+    private boolean dropInput = false;
+    public void resetInput() {
+        dropInput = true;
+        out.print("Press Enter to Continue:");
+    }
+
     public String[] getInput() {
-        String line = scanner.nextLine().trim();
-        return line.isEmpty() ? new String[0] : line.split("\\s+");
+        StringBuilder input = new StringBuilder();
+        while (true) {
+            String line = scanner.nextLine().trim();
+            if (dropInput) {
+                input.append(line);
+                out.print(state.prefix() + "\u001b[32m" + input + "\u001b[39m");
+                dropInput = false;
+                continue;
+            }
+            input.append(line);
+            String fullCommand = input.toString().trim();
+            return fullCommand.isEmpty() ? new String[0] : fullCommand.split("\\s+");
+        }
     }
 
     public void init() {
         clear();
     }
 
+    private State state;
     public void tick(State state) {
+        this.state = state;
         switch (state) {
             case State.OFF -> {return;}
             case State.WHITETEAM -> whiteTeam();
@@ -75,6 +103,14 @@ public class TerminalDisplay implements Display {
 
     public void close() {
         //Nothing to do
+    }
+
+    public void notification(String message) {
+        out.println();
+        out.println();
+        out.println("Got a Notification: " + message);
+        out.println();
+        resetInput();
     }
 
 

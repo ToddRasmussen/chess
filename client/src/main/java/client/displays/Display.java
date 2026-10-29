@@ -10,6 +10,7 @@ public interface Display {
 
     void updateGame(GameData game);
     void clear();
+    void clearhighlights();
     void highlight(ChessPosition position);
 
     PrintStream getPrintStream();
@@ -18,4 +19,6 @@ public interface Display {
     void init();
     void tick(State state);
     void close();
+
+    void notification(String message);
 }
