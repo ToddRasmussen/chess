@@ -88,8 +88,17 @@ public class WebSocketHandler {
             ChessGame updatedGame = service.makeMove(command.getAuthToken(), gameID, move);
 
             broadcastToAll(gameID, new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, updatedGame));
-
-            broadcast(gameID, session, new ServerMessage("Player " + username + " made move: " + move.toString()));
+            ChessGame game = service.getChessGame(gameID);
+            ChessGame.TeamColor team = game.getTeamTurn();
+            String message = "Player " + username + " made move: " + move.toString();
+            if (game.isInCheckmate(team)) {
+                message += " " + team.toString() + " is now Checkmated";
+            } else if (game.isInCheck(team)) {
+                message += " " + team.toString() + " is now in Check";
+            } else if (game.isInStalemate(team)) {
+                message += " " + team.toString() + " is Unable to Make Any Moves";
+            }
+            broadcast(gameID, session, new ServerMessage(message));
 
             if (updatedGame.getResults().isFinished()) {
                 broadcastToAll(gameID, new ServerMessage("Game over! Result: " + updatedGame.getResults()));

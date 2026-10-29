@@ -117,7 +117,7 @@ public class TerminalDisplay implements Display {
     private void blackTeam() {
         if (gameUpdated) {
             clear();
-            out.println("Playing Against " + game.getWhiteUsername());
+            out.println("You are Black; Playing Against " + game.getWhiteUsername());
             printDrawnBoard(flipDrawnBoard(drawBoard(game.getGame())));
             gameUpdated = false;
         }
@@ -126,7 +126,7 @@ public class TerminalDisplay implements Display {
     private void whiteTeam() {
         if (gameUpdated) {
             clear();
-            out.println("Playing Against " + game.getBlackUsername());
+            out.println("You are White; Playing Against " + game.getBlackUsername());
             printDrawnBoard(drawBoard(game.getGame()));
             gameUpdated = false;
         }
