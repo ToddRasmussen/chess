@@ -40,8 +40,8 @@ public class MoveCommand extends Command {
         }
 
         try {
-            ChessPosition start = parsePosition(input[1]);
-            ChessPosition end = parsePosition(input[2]);
+            ChessPosition start = ChessPosition.parsePosition(input[1]);
+            ChessPosition end = ChessPosition.parsePosition(input[2]);
             if (start == null || end == null) {
                 return false;
             }
@@ -76,8 +76,8 @@ public class MoveCommand extends Command {
 
     public State run(String[] input, PrintStream out) {
         try {
-            ChessPosition start = parsePosition(input[1]);
-            ChessPosition end = parsePosition(input[2]);
+            ChessPosition start = ChessPosition.parsePosition(input[1]);
+            ChessPosition end = ChessPosition.parsePosition(input[2]);
             ChessGame game = server.game().getGame();
             if (team != game.getTeamTurn()) {
                 out.println("Its not your turn yet");
@@ -85,7 +85,7 @@ public class MoveCommand extends Command {
             }
             ChessPiece.PieceType promotionPiece = null;
             if (input.length == 4) {
-                promotionPiece = parsePromotion(input[3]);
+                promotionPiece = ChessPiece.PieceType.parsePromotion(input[3]);
             }
             ChessMove move = new ChessMove(start, end, promotionPiece);
             server.makeMove(move);
@@ -96,29 +96,5 @@ public class MoveCommand extends Command {
         return null;
     }
 
-    private ChessPosition parsePosition(String posStr) {
-        if (posStr == null || posStr.length() < 2) {
-            return null;
-        }
-        char colChar = Character.toLowerCase(posStr.charAt(0));
-        int col = colChar - 'a' + 1;
-        int row;
-        try {
-            row = Character.getNumericValue(posStr.charAt(1));
-        } catch (Exception e) {
-            return null;
-        }
-        ChessPosition pos = new ChessPosition(row, col);
-        return pos.isInBounds() ? pos : null;
-    }
 
-    private ChessPiece.PieceType parsePromotion(String promo) {
-        return switch (promo.toUpperCase()) {
-            case "Q", "QUEEN" -> ChessPiece.PieceType.QUEEN;
-            case "R", "ROOK" -> ChessPiece.PieceType.ROOK;
-            case "B", "BISHOP" -> ChessPiece.PieceType.BISHOP;
-            case "N", "KNIGHT" -> ChessPiece.PieceType.KNIGHT;
-            default -> null;
-        };
-    }
 }

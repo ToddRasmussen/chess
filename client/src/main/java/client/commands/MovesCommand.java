@@ -32,7 +32,7 @@ public class MovesCommand extends Command {
 
     public State run(String[] input, PrintStream out) {
         try {
-            ChessPosition pos = parsePosition(input[1]);
+            ChessPosition pos = ChessPosition.parsePosition(input[1]);
             if (pos == null) {
                 out.println("Invalid position.");
                 return null;
@@ -64,21 +64,5 @@ public class MovesCommand extends Command {
             out.println("Unexpected Error: " + e.getMessage());
         }
         return null;
-    }
-
-    private ChessPosition parsePosition(String posStr) {
-        if (posStr == null || posStr.length() < 2) {
-            return null;
-        }
-        char colChar = Character.toLowerCase(posStr.charAt(0));
-        int col = colChar - 'a' + 1;
-        int row;
-        try {
-            row = Character.getNumericValue(posStr.charAt(1));
-        } catch (Exception e) {
-            return null;
-        }
-        ChessPosition pos = new ChessPosition(row, col);
-        return pos.isInBounds() ? pos : null;
     }
 }

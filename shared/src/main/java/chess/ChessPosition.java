@@ -127,4 +127,20 @@ public class ChessPosition {
         return "" + colChar + row;
     }
 
+
+    public static ChessPosition parsePosition(String posStr) {
+        if (posStr == null || posStr.length() < 2) {
+            return null;
+        }
+        char colChar = Character.toLowerCase(posStr.charAt(0));
+        int col = colChar - 'a' + 1;
+        int row;
+        try {
+            row = Character.getNumericValue(posStr.charAt(1));
+        } catch (Exception e) {
+            return null;
+        }
+        ChessPosition pos = new ChessPosition(row, col);
+        return pos.isInBounds() ? pos : null;
+    }
 }

@@ -58,6 +58,16 @@ public class ChessPiece {
         public char getChar(ChessGame.TeamColor teamColor) {
             return teamColor == ChessGame.TeamColor.WHITE ? whiteChar : blackChar;
         }
+
+        public static PieceType parsePromotion(String promo) {
+            return switch (promo.toUpperCase()) {
+                case "Q", "QUEEN" -> PieceType.QUEEN;
+                case "R", "ROOK" -> PieceType.ROOK;
+                case "B", "BISHOP" -> PieceType.BISHOP;
+                case "N", "KNIGHT" -> PieceType.KNIGHT;
+                default -> null;
+            };
+        }
     }
 
     /**

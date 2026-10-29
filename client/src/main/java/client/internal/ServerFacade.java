@@ -52,9 +52,9 @@ public class ServerFacade {
                 .enableComplexMapKeySerialization()
                 .registerTypeAdapter(ChessPosition.class, new ChessPositionDeserializer())
                 .create();
-        loadGameCallback = (Integer)->{};
-        errorCallback = (Exception)->{};
-        notificationCallback = (String)->{};
+        loadGameCallback = (Integer gameID)->{};
+        errorCallback = (Exception e)->{};
+        notificationCallback = (String message)->{};
     }
 
     public void setNotificationCallback(Consumer<String> notificationCallback) {

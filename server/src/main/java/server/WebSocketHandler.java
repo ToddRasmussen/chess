@@ -152,11 +152,15 @@ public class WebSocketHandler {
 
     private void broadcast(Integer gameID, Session excludeSession, ServerMessage message) {
         List<Session> sessions = gameSessions.get(gameID);
-        if (sessions == null) return;
+        if (sessions == null) {
+            return;
+        }
         String json = serializer.toJson(message);
         System.out.println("Sending Message: " + message.getMessage());
         for (Session session : sessions) {
-            if (session.equals(excludeSession)) continue;
+            if (session.equals(excludeSession)) {
+                continue;
+            }
             try {
                 session.getRemote().sendString(json);
             } catch (IOException e) {
