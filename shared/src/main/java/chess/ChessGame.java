@@ -31,25 +31,6 @@ public class ChessGame {
         DRAW,
         IN_PROGRESS;
 
-        public TeamColor getWinner() {
-            if (this == WHITE_WIN) {
-                return TeamColor.WHITE;
-            } else if (this == BLACK_WIN) {
-                return TeamColor.BLACK;
-            } else {
-                return null;
-            }
-        }
-        public TeamColor getLoser() {
-            if (this == WHITE_WIN) {
-                return TeamColor.BLACK;
-            } else if (this == BLACK_WIN) {
-                return TeamColor.WHITE;
-            } else {
-                return null;
-            }
-        }
-
         public boolean isFinished() {
             return this != IN_PROGRESS;
         }

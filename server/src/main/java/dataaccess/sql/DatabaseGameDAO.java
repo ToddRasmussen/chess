@@ -227,11 +227,11 @@ public class DatabaseGameDAO implements GameDAO {
                     ChessPosition position = entry.getKey();
                     ChessPiece piece = entry.getValue();
                     try (var statement = conn.prepareStatement(insertBoardSql)) {
-                        statement.setInt(1, game.getGameID());
-                        statement.setInt(2, position.getRow());
-                        statement.setInt(3, position.getColumn());
-                        statement.setString(4, piece.getPieceType().name());
                         statement.setString(5, piece.getTeamColor().name());
+                        statement.setString(4, piece.getPieceType().name());
+                        statement.setInt(3, position.getColumn());
+                        statement.setInt(2, position.getRow());
+                        statement.setInt(1, game.getGameID());
                         statement.executeUpdate();
                     }
                 }
